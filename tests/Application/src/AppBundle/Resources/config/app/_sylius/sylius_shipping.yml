@@ -1,0 +1,8 @@
+sylius_shipping:
+    resources:
+        shipment:
+            classes:
+                model: AppBundle\Model\Shipment
+        shipping_method:
+            classes:
+                model: AppBundle\Model\ShippingMethod

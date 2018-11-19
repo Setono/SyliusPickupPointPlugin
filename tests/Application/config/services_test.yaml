@@ -1,0 +1,8 @@
+services:
+    setono.sylius_pickup_point.provider.gls:
+        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\GlsProviderMocker
+        public: true
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: setono.sylius_pickup_point.provider }

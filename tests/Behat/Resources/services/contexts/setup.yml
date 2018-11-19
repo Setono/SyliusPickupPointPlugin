@@ -1,0 +1,8 @@
+services:
+    setono_sylius_pickup_point.behat.context.setup.shipping_method:
+        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup\ShippingContext
+        arguments:
+            - "@__symfony__.setono.sylius_pickup_point.manager.provider_manager"
+            - "@__symfony__.sylius.manager.shipping_method"
+        tags:
+            - { name: fob.context_service }

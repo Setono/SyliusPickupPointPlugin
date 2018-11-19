@@ -1,0 +1,17 @@
+services:
+    setono_sylius_pickup_point.behat.context.ui.shop.shipping:
+        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Shop\ShippingContext
+        arguments:
+            - "@setono_sylius_pickup_point.page.shop.select_shipping"
+            - "@sylius.behat.page.shop.checkout.complete"
+            - "@sylius.behat.shared_storage"
+            - "@__symfony__.sylius.repository.order"
+        tags:
+            - { name: fob.context_service }
+
+    setono_sylius_pickup_point.behat.context.ui.admin.shipping:
+        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Admin\ShippingContext
+        arguments:
+            - "@setono_sylius_pickup_point.page.admin.shipping_method.create"
+        tags:
+            - { name: fob.context_service }

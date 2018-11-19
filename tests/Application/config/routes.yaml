@@ -1,0 +1,2 @@
+setono_sylius_pickup_point_plugin:
+    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yml"

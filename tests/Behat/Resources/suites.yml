@@ -1,0 +1,47 @@
+default:
+    suites:
+        ui_shipping:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+
+                - sylius.behat.context.transform.address
+                - sylius.behat.context.transform.product
+                - sylius.behat.context.transform.shipping_method
+
+                - sylius.behat.context.setup.channel
+                - sylius.behat.context.setup.product
+                - sylius.behat.context.setup.shipping
+                - sylius.behat.context.setup.payment
+
+                - setono_sylius_pickup_point.behat.context.setup.shipping_method
+
+                - sylius.behat.context.ui.shop.cart
+                - sylius.behat.context.ui.shop.checkout
+                - sylius.behat.context.ui.shop.checkout.addressing
+                - sylius.behat.context.ui.shop.checkout.payment
+                - sylius.behat.context.ui.shop.checkout.shipping
+                - sylius.behat.context.ui.shop.currency
+                - sylius.behat.context.ui.shop.checkout.complete
+
+                - sylius.behat.context.transform.channel
+
+                - setono_sylius_pickup_point.behat.context.ui.shop.shipping
+            filters:
+                tags: "@shop_shipping_pickup"
+
+        admin_shipping:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+
+                - sylius.behat.context.setup.channel
+                - sylius.behat.context.setup.admin_security
+                - sylius.behat.context.setup.shipping
+
+                - sylius.behat.context.transform.channel
+
+                - sylius.behat.context.ui.admin.managing_shipping_methods
+                - sylius.behat.context.ui.admin.notification
+
+                - setono_sylius_pickup_point.behat.context.ui.admin.shipping
+            filters:
+                tags: "@managing_shipping_providers"

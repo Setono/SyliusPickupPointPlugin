@@ -1,0 +1,5 @@
+services:
+    setono_sylius_pickup_point.page.shop.select_shipping:
+        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Shop\ShippingPickup\SelectShippingPage
+        parent: sylius.behat.page.shop.checkout.select_shipping
+        public: false
