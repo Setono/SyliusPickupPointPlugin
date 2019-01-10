@@ -48,9 +48,9 @@ parameters:
 
 [ico-version]: https://img.shields.io/packagist/v/setono/sylius-pickup-point-plugin.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/Setono/SyliusPickupPointPlugin/master.svg?style=flat-square
+[ico-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin.svg?branch=master
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/Setono/SyliusPickupPointPlugin.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-pickup-point-plugin
-[link-travis]: https://travis-ci.org/Setono/SyliusPickupPointPlugin
+[link-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin
 [link-code-quality]: https://scrutinizer-ci.com/g/Setono/SyliusPickupPointPlugin
