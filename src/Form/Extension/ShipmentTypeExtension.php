@@ -24,11 +24,8 @@ final class ShipmentTypeExtension extends AbstractTypeExtension
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getExtendedType(): string
+    public static function getExtendedTypes(): iterable
     {
-        return ShipmentType::class;
+        return [ShipmentType::class];
     }
 }

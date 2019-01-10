@@ -29,7 +29,7 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointProvider', ChoiceType::class, [
             'placeholder' => 'setono_sylius_pickup_point.form.shipping_method.select_pickup_point_provider',
@@ -38,12 +38,9 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getExtendedType(): string
+    public function getExtendedTypes(): iterable
     {
-        return ShippingMethodType::class;
+        return [ShippingMethodType::class];
     }
 
     /**

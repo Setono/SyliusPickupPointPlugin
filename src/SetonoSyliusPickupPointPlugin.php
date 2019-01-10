@@ -13,7 +13,7 @@ final class SetonoSyliusPickupPointPlugin extends Bundle
 {
     use SyliusPluginTrait;
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new ProviderPass());
     }

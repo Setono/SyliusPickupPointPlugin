@@ -13,7 +13,7 @@ final class ProviderPass implements CompilerPassInterface
     /**
      * @param ContainerBuilder $container
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         /** @var bool $hasService */
         $hasService = $container->has('setono.sylius_pickup_point.manager.provider_manager');
@@ -27,7 +27,7 @@ final class ProviderPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('setono.sylius_pickup_point.provider');
 
         foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addProvider', [new Reference($id)]);
+            $definition->addArgument(new Reference($id));
         }
     }
 }

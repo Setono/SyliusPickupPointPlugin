@@ -12,57 +12,46 @@ use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
 
 final class ProviderManagerSpec extends ObjectBehavior
 {
-    function it_is_initializable(): void
+    public function let(ProviderInterface $provider): void
+    {
+        $provider->getCode()->willReturn('gls');
+
+        $this->beConstructedWith($provider);
+    }
+
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(ProviderManager::class);
     }
 
-    function it_implements_an_provider_manager_interface(): void
+    public function it_implements_an_provider_manager_interface(): void
     {
         $this->shouldImplement(ProviderManagerInterface::class);
     }
 
-    function it_adds_a_provider(ProviderInterface $glsProvider): void
+    public function it_throws_an_exception_if_provider_code_is_not_unique(ProviderInterface $provider1, ProviderInterface $provider2): void
     {
-        $glsProvider->getCode()->willReturn('gls');
 
-        $this->addProvider($glsProvider);
+        $provider1->getCode()->willReturn('gls');
+        $provider2->getCode()->willReturn('gls');
 
-        $this->findByCode('gls')->shouldReturn($glsProvider);
+        $this->beConstructedWith($provider1, $provider2);
+
+        $this->shouldThrow(NonUniqueProviderCodeException::class)->duringInstantiation();
     }
 
-    function it_throws_an_exception_if_provider_code_is_not_unique(ProviderInterface $glsProvider): void
+    public function it_shows_all_providers(ProviderInterface $provider): void
     {
-        $glsProvider->getCode()->willReturn('gls');
-
-        $this->addProvider($glsProvider);
-
-        $this
-            ->shouldThrow(NonUniqueProviderCodeException::create($glsProvider->getWrappedObject()))
-            ->during('addProvider', [$glsProvider->getWrappedObject()])
-        ;
+        $this->all()->shouldReturn(['gls' => $provider]);
     }
 
-    function it_shows_all_providers(ProviderInterface $glsProvider): void
+    public function it_finds_provider_by_class_name(ProviderInterface $provider): void
     {
-        $this->addProvider($glsProvider);
-
-        $this->all()->shouldReturn([$glsProvider]);
+        $this->findByClassName(get_class($provider->getWrappedObject()))->shouldReturn($provider->getWrappedObject());
     }
 
-    function it_finds_provider_by_class_name(ProviderInterface $glsProvider): void
+    public function it_finds_provider_by_code(ProviderInterface $provider): void
     {
-        $this->addProvider($glsProvider->getWrappedObject());
-
-        $this->findByClassName(get_class($glsProvider->getWrappedObject()))->shouldReturn($glsProvider->getWrappedObject());
-    }
-
-    function it_finds_provider_by_code(ProviderInterface $glsProvider): void
-    {
-        $glsProvider->getCode()->willReturn('gls');
-
-        $this->addProvider($glsProvider);
-
-        $this->findByCode('gls')->shouldReturn($glsProvider);
+        $this->findByCode('gls')->shouldReturn($provider);
     }
 }

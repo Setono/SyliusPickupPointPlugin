@@ -32,13 +32,11 @@ final class GlsProvider implements ProviderInterface
         } catch (\SoapFault $e) {
             return [];
         }
-        if (!($result instanceof \stdClass)
-            || !isset($result->SearchNearestParcelShopsResult)
-            || !isset($result->SearchNearestParcelShopsResult->parcelshops)
-            || empty($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData)
-        ) {
+
+        if (!$result instanceof \stdClass || !isset($result->SearchNearestParcelShopsResult->parcelshops) || empty($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData)) {
             return [];
         }
+
         $pickupPoints = [];
         foreach ($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData as $item) {
             $pickupPoints[] = new PickupPoint($item->Number, $item->CompanyName, $item->Streetname, $item->ZipCode, $item->CityName, $item->CountryCodeISO3166A2, $item->Latitude, $item->Longitude);

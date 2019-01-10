@@ -14,18 +14,23 @@ class ProviderManager implements ProviderManagerInterface
      */
     private $providers = [];
 
+    public function __construct(ProviderInterface ...$providers)
+    {
+        foreach ($providers as $provider) {
+            $this->addProvider($provider);
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function addProvider(ProviderInterface $provider): void
+    protected function addProvider(ProviderInterface $provider): void
     {
-        foreach ($this->providers as $item) {
-            if ($provider->getCode() === $item->getCode()) {
-                throw NonUniqueProviderCodeException::create($provider);
-            }
+        if ($this->has($provider->getCode())) {
+            throw new NonUniqueProviderCodeException($provider);
         }
 
-        $this->providers[] = $provider;
+        $this->providers[$provider->getCode()] = $provider;
     }
 
     /**
@@ -34,6 +39,11 @@ class ProviderManager implements ProviderManagerInterface
     public function all(): array
     {
         return $this->providers;
+    }
+
+    public function has(string $code): bool
+    {
+        return \array_key_exists($code, $this->providers);
     }
 
     /**

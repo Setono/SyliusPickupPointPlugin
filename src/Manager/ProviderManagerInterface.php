@@ -9,11 +9,6 @@ use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 interface ProviderManagerInterface
 {
     /**
-     * @param ProviderInterface $provider
-     */
-    public function addProvider(ProviderInterface $provider): void;
-
-    /**
      * @return ProviderInterface[]
      */
     public function all(): array;
