@@ -8,7 +8,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Repository\ShippingMethodRepositoryInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
