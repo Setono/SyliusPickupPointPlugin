@@ -40,38 +40,30 @@ final class FindPickupPointsAction
     private $providerManager;
 
     /**
-     * @var ShippingMethodRepositoryInterface
-     */
-    private $shippingMethodRepository;
-
-    /**
      * @param ViewHandlerInterface $viewHandler
      * @param CartContextInterface $cartContext
      * @param CsrfTokenManagerInterface $csrfTokenManager
      * @param ProviderManagerInterface $providerManager
-     * @param ShippingMethodRepositoryInterface $shippingMethodRepository
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         CartContextInterface $cartContext,
         CsrfTokenManagerInterface $csrfTokenManager,
-        ProviderManagerInterface $providerManager,
-        ShippingMethodRepositoryInterface $shippingMethodRepository
+        ProviderManagerInterface $providerManager
     ) {
         $this->viewHandler = $viewHandler;
         $this->cartContext = $cartContext;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->providerManager = $providerManager;
-        $this->shippingMethodRepository = $shippingMethodRepository;
     }
 
     /**
      * @param Request $request
-     * @param string $provider
+     * @param string $providerCode
      *
      * @return Response
      */
-    public function __invoke(Request $request, string $provider): Response
+    public function __invoke(Request $request, string $providerCode): Response
     {
         /** @var OrderInterface $order */
         $order = $this->cartContext->getCart();
@@ -80,7 +72,7 @@ final class FindPickupPointsAction
             throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
         }
 
-        $provider = $this->providerManager->findByCode($provider);
+        $provider = $this->providerManager->findByCode($providerCode);
 
         if (null === $provider) {
             throw new NotFoundHttpException();

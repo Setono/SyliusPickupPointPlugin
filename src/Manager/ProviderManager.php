@@ -12,12 +12,7 @@ class ProviderManager implements ProviderManagerInterface
     /**
      * @var ProviderInterface[]
      */
-    private $providers;
-
-    public function __construct()
-    {
-        $this->providers = [];
-    }
+    private $providers = [];
 
     /**
      * {@inheritdoc}

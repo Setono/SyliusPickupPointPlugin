@@ -40,7 +40,6 @@
             <argument type="service" id="sylius.context.cart.composite" />
             <argument type="service" id="security.csrf.token_manager" />
             <argument type="service" id="setono.sylius_pickup_point.manager.provider_manager" />
-            <argument type="service" id="sylius.repository.shipping_method" />
         </service>
 
         <service id="setono.sylius_pickup_point.validator.has_all_prices_defined" class="Setono\SyliusPickupPointPlugin\Validator\Constraints\HasPickupPointSelectedValidator">

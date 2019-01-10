@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
@@ -20,6 +21,7 @@ final class GlsProvider implements ProviderInterface
         }
         /** @var GlsSoapClientInterface $client */
         $client = $this->getClient();
+
         try {
             $result = $client->SearchNearestParcelShops([
                 'street' => $order->getShippingAddress()->getStreet(),
@@ -41,6 +43,7 @@ final class GlsProvider implements ProviderInterface
         foreach ($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData as $item) {
             $pickupPoints[] = new PickupPoint($item->Number, $item->CompanyName, $item->Streetname, $item->ZipCode, $item->CityName, $item->CountryCodeISO3166A2, $item->Latitude, $item->Longitude);
         }
+
         return $pickupPoints;
     }
 
@@ -48,6 +51,7 @@ final class GlsProvider implements ProviderInterface
     {
         /** @var GlsSoapClientInterface $client */
         $client = $this->getClient();
+
         try {
             $parcelShop = $client->GetOneParcelShop([
                 'ParcelShopNumber' => $id,
@@ -57,6 +61,7 @@ final class GlsProvider implements ProviderInterface
         }
         $data = $parcelShop->GetOneParcelShopResult;
         $pickupPoint = new PickupPoint($data->Number, $data->CompanyName, $data->Streetname, $data->ZipCode, $data->CityName, $data->CountryCodeISO3166A2, $data->Latitude, $data->Longitude);
+
         return $pickupPoint;
     }
 

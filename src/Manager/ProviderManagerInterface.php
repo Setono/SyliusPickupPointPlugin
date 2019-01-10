@@ -28,7 +28,7 @@ interface ProviderManagerInterface
     /**
      * @param string $code
      *
-     * @return null|ProviderInterface
+     * @return ProviderInterface|null
      */
     public function findByCode(string $code): ?ProviderInterface;
 }

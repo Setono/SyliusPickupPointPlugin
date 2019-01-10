@@ -19,7 +19,6 @@ final class ProviderPass implements CompilerPassInterface
         $hasService = $container->has('setono.sylius_pickup_point.manager.provider_manager');
 
         if (!$hasService) {
-
             return;
         }
 
