@@ -2,7 +2,7 @@
     "name": "setono/sylius-pickup-point-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
-    "description": "Acme example plugin for Sylius.",
+    "description": "Pickup point plugin for Sylius",
     "license": "MIT",
     "require": {
         "php": "^7.2",
