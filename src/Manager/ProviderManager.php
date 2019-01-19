@@ -14,6 +14,11 @@ class ProviderManager implements ProviderManagerInterface
      */
     private $providers = [];
 
+    /**
+     * ProviderManager constructor.
+     *
+     * @param ProviderInterface ...$providers
+     */
     public function __construct(ProviderInterface ...$providers)
     {
         foreach ($providers as $provider) {
@@ -30,7 +35,9 @@ class ProviderManager implements ProviderManagerInterface
             throw new NonUniqueProviderCodeException($provider);
         }
 
-        $this->providers[$provider->getCode()] = $provider;
+        if ($provider->isActive()) {
+            $this->providers[$provider->getCode()] = $provider;
+        }
     }
 
     /**
@@ -41,6 +48,11 @@ class ProviderManager implements ProviderManagerInterface
         return $this->providers;
     }
 
+    /**
+     * @param string $code
+     *
+     * @return bool
+     */
     public function has(string $code): bool
     {
         return \array_key_exists($code, $this->providers);

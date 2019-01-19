@@ -38,4 +38,9 @@ interface ProviderInterface
      * @return PickupPointInterface|null
      */
     public function getPickupPointById(string $id): ?PickupPointInterface;
+
+    /**
+     * @return bool true if provider is enabled
+     */
+    public function isEnabled() : bool;
 }

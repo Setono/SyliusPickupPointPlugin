@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusPickupPointPlugin\SoapClient;
+namespace Setono\SyliusPickupPointPlugin\Client;
 
-interface GlsSoapClientInterface
+interface PostNordClientInterface
 {
     public function GetOneParcelShop(array $params): \stdClass;
 
