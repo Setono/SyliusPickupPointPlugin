@@ -48,7 +48,7 @@ final class PostNordProvider implements ProviderInterface
         foreach ($result as $parcelShop) {
             [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
             $pickupPoints[] = new PickupPoint(
-                $parcelShop->getNumber(),
+                sprintf("%s.%s", $parcelShop->getNumber(), $parcelShop->getZipcode()),
                 $parcelShop->getCompanyname(),
                 $parcelShop->getStreetname(),
                 $parcelShop->getZipcode(),
@@ -69,15 +69,17 @@ final class PostNordProvider implements ProviderInterface
     {
         $client = $this->getClient();
 
+        list($id, $zipCode) = explode('.', $id);
+
         try {
-            $parcelShop = $client->getParcelshop(0, $id);
+            $parcelShop = $client->getParcelshop($zipCode, intval($id));
         } catch (ParcelNotFoundException $e) {
             return null;
         }
 
         [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
         $pickupPoint = new PickupPoint(
-            $parcelShop->getNumber(),
+            sprintf("%s.%s", $parcelShop->getNumber(), $parcelShop->getZipcode()),
             $parcelShop->getCompanyname(),
             $parcelShop->getStreetname(),
             $parcelShop->getZipcode(),
