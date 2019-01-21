@@ -29,6 +29,7 @@ before_install:
 
     - cp tests/Application/.env.test.dist tests/Application/.env.test
     - set -a && source tests/Application/.env.test && set +a
+    - composer config -g github-oauth.github.com "$TOKEN"
 
 install:
     - composer require "symfony/browser-kit:${SYMFONY_VERSION}" --no-interaction --no-update
