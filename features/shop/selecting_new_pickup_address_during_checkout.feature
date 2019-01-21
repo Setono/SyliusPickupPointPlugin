@@ -11,7 +11,7 @@ Feature: Selecting new pickup address during the checkout
         And the store has "GLS" shipping method with "$5.00" fee
         And the store has "PostNord" shipping method with "$5.00" fee
         And shipping method "GLS" has the selected "GLS" pickup point provider
-        And shipping method "PostNord" has the selected "PostNord" pickup point provider
+        And shipping method "PostNord" has the selected "Post_Nord" pickup point provider
 
     @ui @javascript
     Scenario: Selecting shipping provider and choosing shipping point
