@@ -12,11 +12,14 @@ use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
 
 final class ProviderManagerSpec extends ObjectBehavior
 {
-    public function let(ProviderInterface $provider): void
+    public function let(ProviderInterface $providerGls, ProviderInterface $providerPostNord): void
     {
-        $provider->getCode()->willReturn('gls');
+        $providerGls->isEnabled()->willReturn(true);
+        $providerGls->getCode()->willReturn('gls');
+        $providerPostNord->isEnabled()->willReturn(true);
+        $providerPostNord->getCode()->willReturn('postnord');
 
-        $this->beConstructedWith($provider);
+        $this->beConstructedWith($providerGls, $providerPostNord);
     }
 
     public function it_is_initializable(): void
@@ -29,29 +32,33 @@ final class ProviderManagerSpec extends ObjectBehavior
         $this->shouldImplement(ProviderManagerInterface::class);
     }
 
-    public function it_throws_an_exception_if_provider_code_is_not_unique(ProviderInterface $provider1, ProviderInterface $provider2): void
+    public function it_throws_an_exception_if_provider_code_is_not_unique(ProviderInterface $providerGls, ProviderInterface $providerGls2): void
     {
+        $providerGls->isEnabled()->willReturn(true);
+        $providerGls->getCode()->willReturn('gls');
+        $providerGls2->isEnabled()->willReturn(true);
+        $providerGls2->getCode()->willReturn('gls');
 
-        $provider1->getCode()->willReturn('gls');
-        $provider2->getCode()->willReturn('gls');
-
-        $this->beConstructedWith($provider1, $provider2);
+        $this->beConstructedWith($providerGls, $providerGls2);
 
         $this->shouldThrow(NonUniqueProviderCodeException::class)->duringInstantiation();
     }
 
-    public function it_shows_all_providers(ProviderInterface $provider): void
+    public function it_shows_all_providers(ProviderInterface $providerGls, ProviderInterface $providerPostNord): void
     {
-        $this->all()->shouldReturn(['gls' => $provider]);
+
+        $this->beConstructedWith($providerGls, $providerPostNord);
+
+        $this->all()->shouldReturn(['gls' => $providerGls, 'postnord' => $providerPostNord]);
     }
 
-    public function it_finds_provider_by_class_name(ProviderInterface $provider): void
+    public function it_finds_provider_by_class_name(ProviderInterface $providerGls): void
     {
-        $this->findByClassName(get_class($provider->getWrappedObject()))->shouldReturn($provider->getWrappedObject());
+        $this->findByClassName(get_class($providerGls->getWrappedObject()))->shouldReturn($providerGls->getWrappedObject());
     }
 
-    public function it_finds_provider_by_code(ProviderInterface $provider): void
+    public function it_finds_provider_by_code(ProviderInterface $providerGls): void
     {
-        $this->findByCode('gls')->shouldReturn($provider);
+        $this->findByCode('gls')->shouldReturn($providerGls);
     }
 }
