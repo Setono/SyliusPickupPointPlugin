@@ -35,7 +35,7 @@ class ProviderManager implements ProviderManagerInterface
             throw new NonUniqueProviderCodeException($provider);
         }
 
-        if ($provider->isActive()) {
+        if ($provider->isEnabled()) {
             $this->providers[$provider->getCode()] = $provider;
         }
     }

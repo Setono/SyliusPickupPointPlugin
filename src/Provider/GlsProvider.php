@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Setono\SyliusPickupPointPlugin\Client\GlsSoapClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
-use Setono\SyliusPickupPointPlugin\Client\GlsSoapClientInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider implements ProviderInterface
@@ -89,7 +89,7 @@ final class GlsProvider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isEnabled(): bool
     {

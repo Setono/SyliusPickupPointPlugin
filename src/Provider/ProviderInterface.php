@@ -42,5 +42,5 @@ interface ProviderInterface
     /**
      * @return bool true if provider is enabled
      */
-    public function isEnabled() : bool;
+    public function isEnabled(): bool;
 }

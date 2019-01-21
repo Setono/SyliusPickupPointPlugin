@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Lsv\PdDk\Client;
 use Lsv\PdDk\Exceptions\MalformedAddressException;
 use Lsv\PdDk\Exceptions\ParcelNotFoundException;
-use Lsv\PdDk\Client;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -20,7 +20,7 @@ final class PostNordProvider implements ProviderInterface
     public const MODE_SANDBOX = 'sandbox';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function findPickupPoints(OrderInterface $order): array
     {
@@ -46,7 +46,7 @@ final class PostNordProvider implements ProviderInterface
 
         $pickupPoints = [];
         foreach ($result as $parcelShop) {
-            list($lng, $lat) = explode(',', $parcelShop->getCoordinate());
+            [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
             $pickupPoints[] = new PickupPoint(
                 $parcelShop->getNumber(),
                 $parcelShop->getCompanyname(),
@@ -63,7 +63,7 @@ final class PostNordProvider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPickupPointById(string $id): ?PickupPointInterface
     {
@@ -75,7 +75,7 @@ final class PostNordProvider implements ProviderInterface
             return null;
         }
 
-        list($lng, $lat) = explode(',', $parcelShop->getCoordinate());
+        [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
         $pickupPoint = new PickupPoint(
             $parcelShop->getNumber(),
             $parcelShop->getCompanyname(),
@@ -86,6 +86,7 @@ final class PostNordProvider implements ProviderInterface
             $lat,
             $lng
         );
+
         return $pickupPoint;
     }
 
@@ -120,7 +121,7 @@ final class PostNordProvider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isEnabled(): bool
     {
