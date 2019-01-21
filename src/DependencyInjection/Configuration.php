@@ -20,7 +20,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('postnord')
+                ->arrayNode('post_nord')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('api_key')->end()

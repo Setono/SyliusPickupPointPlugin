@@ -7,7 +7,7 @@ services:
         class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\GlsProviderMocker
         arguments:
             - "@sylius.behat.mocker"
-    setono_sylius_pickup_point.behat.postnord_provider_mocker:
+    setono_sylius_pickup_point.behat.post_nord_provider_mocker:
         class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\PostNordProviderMocker
         arguments:
             - "@sylius.behat.mocker"

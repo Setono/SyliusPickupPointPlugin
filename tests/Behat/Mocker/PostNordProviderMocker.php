@@ -25,7 +25,7 @@ class PostNordProviderMocker implements ProviderInterface
 
     public function getCode(): string
     {
-        return 'postnord';
+        return 'post_nord';
     }
 
     public function getName(): string
@@ -63,7 +63,7 @@ class PostNordProviderMocker implements ProviderInterface
 
     public function getClient(): Client
     {
-        return $this->container->get('setono.sylius_pickup_point.provider.postnord')->getClient();
+        return $this->container->get('setono.sylius_pickup_point.provider.post_nord')->getClient();
     }
 
     /**

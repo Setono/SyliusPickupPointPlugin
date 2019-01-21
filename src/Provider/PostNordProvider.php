@@ -97,9 +97,9 @@ final class PostNordProvider implements ProviderInterface
      */
     public function getClient(): Client
     {
-        $client = new Client($this->container->getParameter('setono_sylius_pickup_point_postnord_apikey'));
+        $client = new Client($this->container->getParameter('setono_sylius_pickup_point_post_nord_apikey'));
 
-        if ($this->container->getParameter('setono_sylius_pickup_point_postnord_mode') == self::MODE_SANDBOX) {
+        if ($this->container->getParameter('setono_sylius_pickup_point_post_nord_mode') == self::MODE_SANDBOX) {
             $client->setUseSandbox(true);
         }
 
@@ -111,7 +111,7 @@ final class PostNordProvider implements ProviderInterface
      */
     public function getCode(): string
     {
-        return 'postnord';
+        return 'post_nord';
     }
 
     /**
@@ -127,6 +127,6 @@ final class PostNordProvider implements ProviderInterface
      */
     public function isEnabled(): bool
     {
-        return $this->container->hasParameter('setono_sylius_pickup_point_postnord_apikey');
+        return $this->container->hasParameter('setono_sylius_pickup_point_post_nord_apikey');
     }
 }

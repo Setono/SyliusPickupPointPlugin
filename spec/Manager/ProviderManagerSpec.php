@@ -17,7 +17,7 @@ final class ProviderManagerSpec extends ObjectBehavior
         $providerGls->isEnabled()->willReturn(true);
         $providerGls->getCode()->willReturn('gls');
         $providerPostNord->isEnabled()->willReturn(true);
-        $providerPostNord->getCode()->willReturn('postnord');
+        $providerPostNord->getCode()->willReturn('post_nord');
 
         $this->beConstructedWith($providerGls, $providerPostNord);
     }
@@ -49,7 +49,7 @@ final class ProviderManagerSpec extends ObjectBehavior
 
         $this->beConstructedWith($providerGls, $providerPostNord);
 
-        $this->all()->shouldReturn(['gls' => $providerGls, 'postnord' => $providerPostNord]);
+        $this->all()->shouldReturn(['gls' => $providerGls, 'post_nord' => $providerPostNord]);
     }
 
     public function it_finds_provider_by_class_name(ProviderInterface $providerGls): void

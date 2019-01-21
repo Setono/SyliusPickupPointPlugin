@@ -6,7 +6,7 @@ services:
             - "@service_container"
         tags:
             - { name: setono.sylius_pickup_point.provider }
-    setono.sylius_pickup_point.provider.postnord:
+    setono.sylius_pickup_point.provider.post_nord:
         class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\PostNordProviderMocker
         public: true
         arguments:
