@@ -66,7 +66,7 @@ class GlsProviderMocker implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isEnabled(): bool
     {

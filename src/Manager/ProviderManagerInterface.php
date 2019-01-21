@@ -14,6 +14,13 @@ interface ProviderManagerInterface
     public function all(): array;
 
     /**
+     * @param string $code
+     *
+     * @return bool
+     */
+    public function has(string $code): bool;
+
+    /**
      * @param string $class
      *
      * @return ProviderInterface|null

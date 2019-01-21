@@ -14,11 +14,6 @@ class ProviderManager implements ProviderManagerInterface
      */
     private $providers = [];
 
-    /**
-     * ProviderManager constructor.
-     *
-     * @param ProviderInterface ...$providers
-     */
     public function __construct(ProviderInterface ...$providers)
     {
         foreach ($providers as $provider) {
@@ -49,9 +44,7 @@ class ProviderManager implements ProviderManagerInterface
     }
 
     /**
-     * @param string $code
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function has(string $code): bool
     {

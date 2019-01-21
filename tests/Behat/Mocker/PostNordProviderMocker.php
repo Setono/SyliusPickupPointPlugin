@@ -67,7 +67,7 @@ class PostNordProviderMocker implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isEnabled(): bool
     {
