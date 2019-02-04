@@ -144,6 +144,6 @@ final class PostNordProvider implements ProviderInterface
      */
     public function isEnabled(): bool
     {
-        return !is_null($this->apiKey);
+        return null !== $this->apiKey;
     }
 }
