@@ -10,14 +10,31 @@ use Lsv\PdDk\Exceptions\ParcelNotFoundException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 final class PostNordProvider implements ProviderInterface
 {
-    use ContainerAwareTrait;
-
     public const MODE_PRODUCTION = 'production';
     public const MODE_SANDBOX = 'sandbox';
+
+    /**
+     * @var string
+     */
+    private $apiKey;
+
+    /**
+     * @var string
+     */
+    private $mode;
+
+    /**
+     * @param string|null $apiKey
+     * @param string|null $mode
+     */
+    public function __construct(string $apiKey = null, string $mode = null)
+    {
+        $this->apiKey = $apiKey;
+        $this->mode = $mode;
+    }
 
     /**
      * {@inheritdoc}
@@ -97,9 +114,9 @@ final class PostNordProvider implements ProviderInterface
      */
     public function getClient(): Client
     {
-        $client = new Client($this->container->getParameter('setono_sylius_pickup_point_post_nord_apikey'));
+        $client = new Client($this->apiKey);
 
-        if ($this->container->getParameter('setono_sylius_pickup_point_post_nord_mode') == self::MODE_SANDBOX) {
+        if ($this->mode == self::MODE_SANDBOX) {
             $client->setUseSandbox(true);
         }
 
@@ -127,6 +144,6 @@ final class PostNordProvider implements ProviderInterface
      */
     public function isEnabled(): bool
     {
-        return $this->container->hasParameter('setono_sylius_pickup_point_post_nord_apikey');
+        return !is_null($this->apiKey);
     }
 }
