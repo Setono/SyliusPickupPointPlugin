@@ -17,12 +17,12 @@ final class PostNordProvider implements ProviderInterface
     public const MODE_SANDBOX = 'sandbox';
 
     /**
-     * @var string
+     * @var string|null
      */
     private $apiKey;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mode;
 
