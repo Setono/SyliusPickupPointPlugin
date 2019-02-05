@@ -7,6 +7,10 @@
 
 Add a map of pickup points to your pickup point enabled shipping methods.
 
+### Supported providers
+- GLS
+- PostNord
+
 ## Installation
 
 

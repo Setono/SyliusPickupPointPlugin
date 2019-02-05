@@ -30,7 +30,9 @@ class ProviderManager implements ProviderManagerInterface
             throw new NonUniqueProviderCodeException($provider);
         }
 
-        $this->providers[$provider->getCode()] = $provider;
+        if ($provider->isEnabled()) {
+            $this->providers[$provider->getCode()] = $provider;
+        }
     }
 
     /**
@@ -41,6 +43,9 @@ class ProviderManager implements ProviderManagerInterface
         return $this->providers;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has(string $code): bool
     {
         return \array_key_exists($code, $this->providers);

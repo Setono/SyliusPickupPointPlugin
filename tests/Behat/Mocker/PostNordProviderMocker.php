@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
 
+use Lsv\PdDk\Client;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class GlsProviderMocker implements ProviderInterface
+class PostNordProviderMocker implements ProviderInterface
 {
     const PICKUP_POINT_ID = '001';
 
@@ -24,12 +25,12 @@ class GlsProviderMocker implements ProviderInterface
 
     public function getCode(): string
     {
-        return 'gls';
+        return 'post_nord';
     }
 
     public function getName(): string
     {
-        return 'GLS';
+        return 'PostNord';
     }
 
     public function findPickupPoints(OrderInterface $order): array
@@ -60,9 +61,9 @@ class GlsProviderMocker implements ProviderInterface
         );
     }
 
-    public function getClient(): \SoapClient
+    public function getClient(): Client
     {
-        return $this->container->get('setono.sylius_pickup_point.provider.gls')->getClient();
+        return $this->container->get('setono.sylius_pickup_point.provider.post_nord')->getClient();
     }
 
     /**

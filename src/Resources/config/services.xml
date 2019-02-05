@@ -34,6 +34,12 @@
             <tag name="setono.sylius_pickup_point.provider" />
         </service>
 
+        <service id="setono.sylius_pickup_point.provider.post_nord" class="Setono\SyliusPickupPointPlugin\Provider\PostNordProvider">
+            <argument key="setono_sylius_pickup_point_post_nord.api_key" />
+            <argument key="setono_sylius_pickup_point_post_nord.mode" />
+            <tag name="setono.sylius_pickup_point.provider" />
+        </service>
+
         <!-- Controller actions -->
         <service id="setono.sylius_pickup_point.controller.action.find_pickup_points" class="Setono\SyliusPickupPointPlugin\Controller\Action\FindPickupPointsAction">
             <argument type="service" id="fos_rest.view_handler.default" />
