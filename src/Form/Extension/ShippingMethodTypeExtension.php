@@ -38,6 +38,9 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getExtendedTypes(): iterable
     {
         return [ShippingMethodType::class];

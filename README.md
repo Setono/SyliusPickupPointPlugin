@@ -14,7 +14,7 @@ Add a map of pickup points to your pickup point enabled shipping methods.
 ## Installation
 
 
-### Step 1: Download the plugin
+### Step 1: Install and enable plugin
 
 Open a command console, enter your project directory and execute the following command to download the latest stable version of this plugin:
 
@@ -24,30 +24,74 @@ $ composer require setono/sylius-pickup-point-plugin
 
 This command requires you to have Composer installed globally, as explained in the [installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
 
-
-### Step 2: Enable the plugin
-
-Then, enable the plugin by adding it to the list of registered plugins/bundles
-in the `app/AppKernel.php` file of your project:
+Add the plugin to `bundles.php`.
 
 ```php
-$bundles = [
-   new \Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin(),
-];
+Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
 ```
 
-### Step 3: Import routing
+### Step 2: Import routing
 
 ````yaml
 setono_sylius_pickup_point_plugin:
     resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yml"
 ````
 
-### Step 4: Addition of a validation group `checkout_select_shipping`
+### Step 3: Addition of a validation group `checkout_select_shipping`
 
 ````yaml
 parameters:
     sylius.form.type.checkout_select_shipping.validation_groups: ['sylius', 'checkout_select_shipping']
+````
+
+### Step 4: Update templates
+
+Add the following to the admin shipping method form `SyliusAdminBundle/ShippingMethod/_form.html.twig`
+````twig
+{{ form_row(form.pickupPointProvider) }}
+````
+
+and to `SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig`
+````twig
+{{ form_row(form.pickupPointId) }}
+````
+
+### Step 5: Customize entities
+
+Add `PickupPointIdTrait` and `PickupPointIdAwareInterface` to you `Shipment` entity.
+
+Add `PickupPointProviderTrait` and `PickupPointProviderAwareInterface` to your `ShippingMethod` entity.
+
+Include these fields in your custom entities
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="App\Entity\Shipment" table="sylius_shipment">
+        <field name="pickupPointId" column="pickup_point_id" length="191" nullable="true" />
+    </mapped-superclass>
+
+</doctrine-mapping>
+````
+
+````xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="App\Entity\ShippingMethod" table="sylius_shipping_method">
+        <field name="pickupPointProvider" column="pickup_point_provider" length="191" nullable="true" />
+    </mapped-superclass>
+
+</doctrine-mapping>
 ````
 
 [ico-version]: https://img.shields.io/packagist/v/setono/sylius-pickup-point-plugin.svg?style=flat-square
