@@ -35,8 +35,8 @@
         </service>
 
         <service id="setono.sylius_pickup_point.provider.post_nord" class="Setono\SyliusPickupPointPlugin\Provider\PostNordProvider">
-            <argument key="setono_sylius_pickup_point_post_nord.api_key" />
-            <argument key="setono_sylius_pickup_point_post_nord.mode" />
+            <argument>%setono_sylius_pickup_point_post_nord_api_key%</argument>
+            <argument>%setono_sylius_pickup_point_post_nord_mode%</argument>
             <tag name="setono.sylius_pickup_point.provider" />
         </service>
 
