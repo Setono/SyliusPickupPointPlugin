@@ -73,7 +73,7 @@ Include these fields in your custom entities
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <mapped-superclass name="App\Entity\Shipment" table="sylius_shipment">
-        <field name="pickupPointId" column="pickup_point_id" length="191" nullable="true" />
+        <field name="pickupPointId" column="pickup_point_id" nullable="true" />
     </mapped-superclass>
 
 </doctrine-mapping>
@@ -88,7 +88,7 @@ Include these fields in your custom entities
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <mapped-superclass name="App\Entity\ShippingMethod" table="sylius_shipping_method">
-        <field name="pickupPointProvider" column="pickup_point_provider" length="191" nullable="true" />
+        <field name="pickupPointProvider" column="pickup_point_provider" nullable="true" />
     </mapped-superclass>
 
 </doctrine-mapping>

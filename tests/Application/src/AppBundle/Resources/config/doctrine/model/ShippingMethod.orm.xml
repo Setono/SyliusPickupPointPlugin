@@ -6,7 +6,7 @@
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <mapped-superclass name="AppBundle\Model\ShippingMethod" table="sylius_shipping_method">
-        <field name="pickupPointProvider" column="pickup_point_provider" length="191" nullable="true" />
+        <field name="pickupPointProvider" column="pickup_point_provider" nullable="true" />
     </mapped-superclass>
 
 </doctrine-mapping>
