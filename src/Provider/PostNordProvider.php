@@ -157,6 +157,7 @@ final class PostNordProvider implements ProviderInterface
         if (false !== strpos($id, '.')) {
             return [$id, 0];
         }
+
         return explode('.', $id);
     }
 }
