@@ -57,7 +57,7 @@ final class PostNordProvider implements ProviderInterface
             return [];
         }
 
-        if (!count($result) > 0) {
+        if (count($result) <= 0) {
             return [];
         }
 
@@ -116,7 +116,7 @@ final class PostNordProvider implements ProviderInterface
     {
         $client = new Client($this->apiKey);
 
-        if ($this->mode == self::MODE_SANDBOX) {
+        if ($this->mode === self::MODE_SANDBOX) {
             $client->setUseSandbox(true);
         }
 
