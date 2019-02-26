@@ -86,7 +86,7 @@ final class PostNordProvider implements ProviderInterface
     {
         $client = $this->getClient();
 
-        [$id, $zipCode] = explode('.', $id);
+        [$id, $zipCode] = $this->validatePickupPointId($id);
 
         try {
             $parcelShop = $client->getParcelshop($zipCode, (int) $id);
@@ -145,5 +145,19 @@ final class PostNordProvider implements ProviderInterface
     public function isEnabled(): bool
     {
         return null !== $this->apiKey;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    private function validatePickupPointId(string $id): array
+    {
+        if (false !== strpos($id, '.')) {
+            return [$id, 0];
+        }
+
+        return explode('.', $id);
     }
 }

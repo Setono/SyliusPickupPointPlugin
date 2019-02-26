@@ -12,8 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 final class ShipmentTypeExtension extends AbstractTypeExtension
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,6 +23,9 @@ final class ShipmentTypeExtension extends AbstractTypeExtension
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getExtendedTypes(): iterable
     {
         return [ShipmentType::class];

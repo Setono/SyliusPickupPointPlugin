@@ -22,5 +22,8 @@ interface PickupPointProviderAwareInterface
      */
     public function getPickupPointProvider(): ?string;
 
+    /**
+     * @param string|null $pickupPointProvider
+     */
     public function setPickupPointProvider(?string $pickupPointProvider): void;
 }
