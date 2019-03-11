@@ -20,6 +20,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->booleanNode('autoload_javascript')->defaultTrue()->end()
                 ->arrayNode('post_nord')
                     ->addDefaultsIfNotSet()
                     ->children()

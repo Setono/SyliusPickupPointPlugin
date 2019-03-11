@@ -4,11 +4,6 @@
     <services>
         <defaults public="true" />
 
-        <service id="Sylius\Bundle\UiBundle\Block\BlockEventListener">
-            <argument>SetonoSyliusPickupPointPlugin::_javascripts.html.twig</argument>
-            <tag name="kernel.event_listener" event="sonata.block.event.sylius.shop.layout.javascripts" method="onBlockEvent" />
-        </service>
-
         <service id="setono.sylius_pickup_point.manager.provider_manager" class="Setono\SyliusPickupPointPlugin\Manager\ProviderManager" />
 
         <!-- Form extensions -->

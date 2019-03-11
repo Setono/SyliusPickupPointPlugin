@@ -94,6 +94,16 @@ Include these fields in your custom entities
 </doctrine-mapping>
 ````
 
+### Disable javascript autoloading
+
+If you for some reason don't want the javascript to be autoloaded with sonata, there is config option to turn it off.
+
+```yaml
+# config/packages/setono_sylius_pickup_point.yaml
+setono_sylius_pickup_point:
+    autoload_javascript: false
+```
+
 [ico-version]: https://img.shields.io/packagist/v/setono/sylius-pickup-point-plugin.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
 [ico-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin.svg?branch=master
