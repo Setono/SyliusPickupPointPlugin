@@ -1,4 +1,3 @@
 setono_sylius_pickup_point:
     post_nord:
-        api_key: "1234"
-        mode: "sandbox"
+        api_key: "%env(POSTNORD_API_KEY)%"

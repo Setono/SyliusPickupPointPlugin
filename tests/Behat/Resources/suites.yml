@@ -1,7 +1,7 @@
 default:
     suites:
         ui_shipping:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
 
                 - sylius.behat.context.transform.address
@@ -30,7 +30,7 @@ default:
                 tags: "@shop_shipping_pickup"
 
         admin_shipping:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
 
                 - sylius.behat.context.setup.channel

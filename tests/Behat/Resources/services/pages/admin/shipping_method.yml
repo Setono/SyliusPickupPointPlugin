@@ -1,5 +1,0 @@
-services:
-    setono_sylius_pickup_point.page.admin.shipping_method.create:
-        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Admin\ShippingMethod\CreatePage
-        parent: sylius.behat.page.admin.shipping_method.create
-        public: false
