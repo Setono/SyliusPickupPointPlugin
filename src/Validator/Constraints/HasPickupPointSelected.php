@@ -18,17 +18,11 @@ final class HasPickupPointSelected extends Constraint
      */
     public $pickupPointNotExists = 'setono_pickup_point.shipment.pickup_point.not_exists';
 
-    /**
-     * {@inheritdoc}
-     */
     public function validatedBy(): string
     {
         return 'setono_pickup_point_has_pickup_point_selected';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargets(): string
     {
         return Constraint::CLASS_CONSTRAINT;

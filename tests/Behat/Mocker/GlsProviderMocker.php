@@ -17,6 +17,7 @@ class GlsProviderMocker implements ProviderInterface
     /** @var ContainerInterface */
     private $container;
 
+    // todo do not inject container
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -65,9 +66,6 @@ class GlsProviderMocker implements ProviderInterface
         return $this->container->get('setono.sylius_pickup_point.provider.gls')->getClient();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEnabled(): bool
     {
         return true;

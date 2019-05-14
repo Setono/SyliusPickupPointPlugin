@@ -25,10 +25,6 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
         $this->providerManager = $providerManager;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointProvider', ChoiceType::class, [
@@ -38,17 +34,11 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtendedTypes(): iterable
     {
         return [ShippingMethodType::class];
     }
 
-    /**
-     * @return array
-     */
     private function getChoices(): array
     {
         $choices = [];

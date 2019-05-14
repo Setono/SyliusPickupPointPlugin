@@ -26,19 +26,12 @@ final class PostNordProvider implements ProviderInterface
      */
     private $mode;
 
-    /**
-     * @param string|null $apiKey
-     * @param string|null $mode
-     */
     public function __construct(string $apiKey = null, string $mode = null)
     {
         $this->apiKey = $apiKey;
         $this->mode = $mode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findPickupPoints(OrderInterface $order): array
     {
         if (null === $order->getShippingAddress()) {
@@ -79,9 +72,6 @@ final class PostNordProvider implements ProviderInterface
         return $pickupPoints;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPickupPointById(string $id): ?PickupPointInterface
     {
         $client = $this->getClient();
@@ -109,9 +99,6 @@ final class PostNordProvider implements ProviderInterface
         return $pickupPoint;
     }
 
-    /**
-     * @return Client
-     */
     public function getClient(): Client
     {
         $client = new Client($this->apiKey);
@@ -123,25 +110,16 @@ final class PostNordProvider implements ProviderInterface
         return $client;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCode(): string
     {
         return 'post_nord';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'PostNord';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEnabled(): bool
     {
         return null !== $this->apiKey;

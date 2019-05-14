@@ -40,6 +40,8 @@ interface ProviderInterface
     public function getPickupPointById(string $id): ?PickupPointInterface;
 
     /**
+     * todo refactor this. I do not think this is needed
+     *
      * @return bool true if provider is enabled
      */
     public function isEnabled(): bool;

@@ -7,13 +7,13 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Setono\SyliusPickupPointPlugin\Client\GlsSoapClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use SoapClient;
+use SoapFault;
+use stdClass;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider implements ProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findPickupPoints(OrderInterface $order): array
     {
         if (null === $order->getShippingAddress()) {
@@ -30,11 +30,11 @@ final class GlsProvider implements ProviderInterface
                 'countryIso3166A2' => $order->getShippingAddress()->getCountryCode(),
                 'Amount' => 10,
             ]);
-        } catch (\SoapFault $e) {
+        } catch (SoapFault $e) {
             return [];
         }
 
-        if (!$result instanceof \stdClass || !isset($result->SearchNearestParcelShopsResult->parcelshops) || empty($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData)) {
+        if (!$result instanceof stdClass || !isset($result->SearchNearestParcelShopsResult->parcelshops) || empty($result->SearchNearestParcelShopsResult->parcelshops->PakkeshopData)) {
             return [];
         }
 
@@ -55,7 +55,7 @@ final class GlsProvider implements ProviderInterface
             $parcelShop = $client->GetOneParcelShop([
                 'ParcelShopNumber' => $id,
             ]);
-        } catch (\SoapFault $e) {
+        } catch (SoapFault $e) {
             return null;
         }
         $data = $parcelShop->GetOneParcelShopResult;
@@ -64,33 +64,21 @@ final class GlsProvider implements ProviderInterface
         return $pickupPoint;
     }
 
-    /**
-     * @return \SoapClient
-     */
-    public function getClient(): \SoapClient
+    public function getClient(): SoapClient
     {
-        return new \SoapClient('http://www.gls.dk/webservices_v4/wsShopFinder.asmx?WSDL');
+        return new SoapClient('http://www.gls.dk/webservices_v4/wsShopFinder.asmx?WSDL');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCode(): string
     {
         return 'gls';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'GLS';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEnabled(): bool
     {
         return true;

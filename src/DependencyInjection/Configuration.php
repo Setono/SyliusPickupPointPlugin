@@ -10,13 +10,17 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('setono_sylius_pickup_point');
+        if (method_exists(TreeBuilder::class, 'getRootNode')) {
+            $treeBuilder = new TreeBuilder('setono_sylius_pickup_point');
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $treeBuilder = new TreeBuilder();
+            $rootNode = $treeBuilder->root('setono_sylius_pickup_point');
+        }
+
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()

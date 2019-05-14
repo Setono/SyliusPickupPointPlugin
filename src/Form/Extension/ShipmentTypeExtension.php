@@ -11,9 +11,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShipmentTypeExtension extends AbstractTypeExtension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointId', HiddenType::class, [
@@ -23,9 +20,6 @@ final class ShipmentTypeExtension extends AbstractTypeExtension
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getExtendedTypes(): iterable
     {
         return [ShipmentType::class];

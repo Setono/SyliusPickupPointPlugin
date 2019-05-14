@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
+use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -14,7 +15,7 @@ final class SetonoSyliusPickupPointExtension extends Extension
     /**
      * {@inheritdoc}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function load(array $config, ContainerBuilder $container): void
     {

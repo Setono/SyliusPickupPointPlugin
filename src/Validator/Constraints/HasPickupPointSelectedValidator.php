@@ -28,9 +28,6 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
         $this->providerManager = $providerManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate($shipment, Constraint $constraint): void
     {
         /** @var $constraint HasPickupPointSelected */

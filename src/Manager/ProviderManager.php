@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Manager;
 
+use function array_key_exists;
 use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 
@@ -21,9 +22,6 @@ class ProviderManager implements ProviderManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function addProvider(ProviderInterface $provider): void
     {
         if ($this->has($provider->getCode())) {
@@ -35,25 +33,16 @@ class ProviderManager implements ProviderManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function all(): array
     {
         return $this->providers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has(string $code): bool
     {
-        return \array_key_exists($code, $this->providers);
+        return array_key_exists($code, $this->providers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByClassName(string $class): ?ProviderInterface
     {
         foreach ($this->providers as $provider) {
@@ -65,9 +54,6 @@ class ProviderManager implements ProviderManagerInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByCode(string $code): ?ProviderInterface
     {
         foreach ($this->providers as $provider) {

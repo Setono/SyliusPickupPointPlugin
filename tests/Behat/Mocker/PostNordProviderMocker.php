@@ -66,9 +66,6 @@ class PostNordProviderMocker implements ProviderInterface
         return $this->container->get('setono.sylius_pickup_point.provider.post_nord')->getClient();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isEnabled(): bool
     {
         return true;
