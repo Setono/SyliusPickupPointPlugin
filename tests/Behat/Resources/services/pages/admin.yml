@@ -1,2 +1,0 @@
-imports:
-    - { resource: "admin/shipping_method.yml" }
