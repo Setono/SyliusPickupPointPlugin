@@ -16,15 +16,15 @@ final class ProviderPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         /** @var bool $hasService */
-        $hasService = $container->has('setono.sylius_pickup_point.manager.provider_manager');
+        $hasService = $container->has('setono_sylius_pickup_point.manager.provider_manager');
 
         if (!$hasService) {
             return;
         }
 
-        $definition = $container->getDefinition('setono.sylius_pickup_point.manager.provider_manager');
+        $definition = $container->getDefinition('setono_sylius_pickup_point.manager.provider_manager');
 
-        $taggedServices = $container->findTaggedServiceIds('setono.sylius_pickup_point.provider');
+        $taggedServices = $container->findTaggedServiceIds('setono_sylius_pickup_point.provider');
 
         foreach ($taggedServices as $id => $tags) {
             $definition->addArgument(new Reference($id));

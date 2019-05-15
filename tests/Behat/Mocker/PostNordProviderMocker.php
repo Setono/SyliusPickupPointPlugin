@@ -51,7 +51,7 @@ class PostNordProviderMocker implements ProviderInterface
     {
         return new PickupPoint(
             self::PICKUP_POINT_ID,
-            'Somewher',
+            'Some where',
             'Rainbow',
             '12345',
             'Nice City',
@@ -63,7 +63,7 @@ class PostNordProviderMocker implements ProviderInterface
 
     public function getClient(): Client
     {
-        return $this->container->get('setono.sylius_pickup_point.provider.post_nord')->getClient();
+        return $this->container->get('setono_sylius_pickup_point.provider.post_nord')->getClient();
     }
 
     public function isEnabled(): bool

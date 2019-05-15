@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class GlsProviderMocker implements ProviderInterface
 {
-    const PICKUP_POINT_ID = '001';
+    public const PICKUP_POINT_ID = '001';
 
     /** @var ContainerInterface */
     private $container;
@@ -51,7 +51,7 @@ class GlsProviderMocker implements ProviderInterface
     {
         return new PickupPoint(
             self::PICKUP_POINT_ID,
-            'Somewher',
+            'Some where',
             'Rainbow',
             '12345',
             'Nice City',
@@ -63,7 +63,7 @@ class GlsProviderMocker implements ProviderInterface
 
     public function getClient(): \SoapClient
     {
-        return $this->container->get('setono.sylius_pickup_point.provider.gls')->getClient();
+        return $this->container->get('setono_gls_webservice.factory.soap_client')->create();
     }
 
     public function isEnabled(): bool
