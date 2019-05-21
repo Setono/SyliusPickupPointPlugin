@@ -7,16 +7,16 @@ namespace spec\Setono\SyliusPickupPointPlugin\Form\Extension;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodTypeExtension;
-use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ShippingMethodTypeExtensionSpec extends ObjectBehavior
 {
-    public function let(ProviderManagerInterface $providerManager)
+    public function let(ServiceRegistryInterface $providerRegistry)
     {
-        $providerManager->all()->willReturn([]);
-        $this->beConstructedWith($providerManager);
+        $providerRegistry->all()->willReturn([]);
+        $this->beConstructedWith($providerRegistry);
     }
 
     public function it_is_initializable(): void

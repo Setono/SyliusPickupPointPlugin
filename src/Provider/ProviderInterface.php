@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
@@ -28,21 +28,14 @@ interface ProviderInterface
      *
      * @param OrderInterface $order
      *
-     * @return array|PickupPointInterface[]
+     * @return PickupPoint[]
      */
     public function findPickupPoints(OrderInterface $order): array;
 
     /**
      * @param string $id
      *
-     * @return PickupPointInterface|null
+     * @return PickupPoint|null
      */
-    public function getPickupPointById(string $id): ?PickupPointInterface;
-
-    /**
-     * todo refactor this. I do not think this is needed
-     *
-     * @return bool true if provider is enabled
-     */
-    public function isEnabled(): bool;
+    public function getPickupPointById(string $id): ?PickupPoint;
 }

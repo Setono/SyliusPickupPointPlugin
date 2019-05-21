@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
-use Setono\SyliusPickupPointPlugin\Provider\PostNordProvider;
+use Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle;
+use Setono\PostNordBundle\SetonoPostNordBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -24,11 +25,19 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('post_nord')
+                ->arrayNode('providers')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('api_key')->end()
-                        ->scalarNode('mode')->defaultValue(PostNordProvider::MODE_PRODUCTION)->end()
+                        ->booleanNode('gls')
+                            ->example(true)
+                            ->info('Whether to enable the GLS provider')
+                            ->defaultValue(class_exists(SetonoGlsWebserviceBundle::class))
+                        ->end()
+                        ->booleanNode('post_nord')
+                            ->example(true)
+                            ->info('Whether to enable the PostNord provider')
+                            ->defaultValue(class_exists(SetonoPostNordBundle::class))
+                        ->end()
                     ->end()
                 ->end()
             ->end()

@@ -3,6 +3,9 @@ setono_sylius_pickup_point:
         shipping_method:
             pickup_point_provider: Pickup point provider
             select_pickup_point_provider: Select pickup point provider
+    provider:
+        gls: GLS
+        post_nord: PostNord
     ui:
         null_pickup_point_id: PickupPointId contains null.
         not_exists: PickupPointID does not exists.

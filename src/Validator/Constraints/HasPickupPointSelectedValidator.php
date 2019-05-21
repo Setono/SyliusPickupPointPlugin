@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Validator\Constraints;
 
-use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointIdAwareInterface;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Webmozart\Assert\Assert;
@@ -16,16 +16,13 @@ use Webmozart\Assert\Assert;
 final class HasPickupPointSelectedValidator extends ConstraintValidator
 {
     /**
-     * @var ProviderManagerInterface
+     * @var ServiceRegistryInterface
      */
-    private $providerManager;
+    private $providerRegistry;
 
-    /**
-     * @param ProviderManagerInterface $providerManager
-     */
-    public function __construct(ProviderManagerInterface $providerManager)
+    public function __construct(ServiceRegistryInterface $providerRegistry)
     {
-        $this->providerManager = $providerManager;
+        $this->providerRegistry = $providerRegistry;
     }
 
     public function validate($shipment, Constraint $constraint): void
@@ -33,8 +30,8 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
         /** @var $constraint HasPickupPointSelected */
         Assert::isInstanceOf($constraint, HasPickupPointSelected::class);
 
-        /** @var $shipment PickupPointIdAwareInterface|ShipmentInterface */
-        Assert::isInstanceOf($shipment, PickupPointIdAwareInterface::class);
+        /** @var $shipment PickupPointAwareInterface|ShipmentInterface */
+        Assert::isInstanceOf($shipment, PickupPointAwareInterface::class);
         Assert::isInstanceOf($shipment, ShipmentInterface::class);
 
         /** @var PickupPointProviderAwareInterface $method */
@@ -44,8 +41,13 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
             return;
         }
 
+        if (!$this->providerRegistry->has($method->getPickupPointProvider())) {
+            return;
+        }
+
         if (!$shipment->hasPickupPointId()) {
-            $this->context->buildViolation($constraint->pickupPointNotBlank)
+            $this->context
+                ->buildViolation($constraint->pickupPointNotBlank)
                 ->addViolation()
             ;
 
@@ -53,10 +55,11 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
         }
 
         /** @var ProviderInterface $provider */
-        $provider = $this->providerManager->findByClassName($method->getPickupPointProvider());
+        $provider = $this->providerRegistry->get($method->getPickupPointProvider());
 
         if (null === $provider->getPickupPointById($shipment->getPickupPointId())) {
-            $this->context->buildViolation($constraint->pickupPointNotExists)
+            $this->context
+                ->buildViolation($constraint->pickupPointNotExists)
                 ->addViolation()
             ;
 

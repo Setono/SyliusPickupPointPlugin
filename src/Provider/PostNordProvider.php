@@ -4,110 +4,73 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
-use Lsv\PdDk\Client;
-use Lsv\PdDk\Exceptions\MalformedAddressException;
-use Lsv\PdDk\Exceptions\ParcelNotFoundException;
+use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class PostNordProvider implements ProviderInterface
 {
-    public const MODE_PRODUCTION = 'production';
-    public const MODE_SANDBOX = 'sandbox';
-
     /**
-     * @var string|null
+     * @var ClientInterface
      */
-    private $apiKey;
+    private $client;
 
-    /**
-     * @var string|null
-     */
-    private $mode;
-
-    public function __construct(string $apiKey = null, string $mode = null)
+    public function __construct(ClientInterface $client)
     {
-        $this->apiKey = $apiKey;
-        $this->mode = $mode;
+        $this->client = $client;
     }
 
     public function findPickupPoints(OrderInterface $order): array
     {
-        if (null === $order->getShippingAddress()) {
+        $shippingAddress = $order->getShippingAddress();
+        if (null === $shippingAddress) {
             return [];
         }
 
-        $client = $this->getClient();
+        $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
+            'countryCode' => $shippingAddress->getCountryCode(),
+            'postalCode' => $shippingAddress->getPostcode(),
+            'streetName' => $shippingAddress->getStreet(),
+            'numberOfServicePoints' => 10,
+        ]);
 
-        try {
-            $result = $client->getParcelshopsNearAddress(
-                $order->getShippingAddress()->getStreet(),
-                $order->getShippingAddress()->getPostcode(),
-                10
-            );
-        } catch (MalformedAddressException $e) {
+        if (!isset($result['servicePointInformationResponse']['servicePoints'])) {
             return [];
         }
 
-        if (count($result) <= 0) {
+        $servicePoints = $result['servicePointInformationResponse']['servicePoints'];
+
+        if (!is_array($servicePoints) || count($servicePoints) <= 0) {
             return [];
         }
 
         $pickupPoints = [];
-        foreach ($result as $parcelShop) {
-            [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
-            $pickupPoints[] = new PickupPoint(
-                sprintf('%s.%s', $parcelShop->getNumber(), $parcelShop->getZipcode()),
-                $parcelShop->getCompanyname(),
-                $parcelShop->getStreetname(),
-                $parcelShop->getZipcode(),
-                $parcelShop->getCity(),
-                $parcelShop->getCountrycode(),
-                $lat,
-                $lng
-            );
+        foreach ($servicePoints as $servicePoint) {
+            $pickupPoints[] = $this->populatePickupPoint($shippingAddress->getCountryCode(), $servicePoint);
         }
 
         return $pickupPoints;
     }
 
-    public function getPickupPointById(string $id): ?PickupPointInterface
+    public function getPickupPointById(string $id): ?PickupPoint
     {
-        $client = $this->getClient();
+        [$countryCode, $id] = $this->reverseTransformId($id);
 
-        [$id, $zipCode] = $this->validatePickupPointId($id);
+        $result = $this->client->get('rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
+            'countryCode' => $countryCode,
+            'servicePointId' => $id,
+        ]);
 
-        try {
-            $parcelShop = $client->getParcelshop($zipCode, (int) $id);
-        } catch (ParcelNotFoundException $e) {
+        if (!isset($result['servicePointInformationResponse']['servicePoints'])) {
             return null;
         }
 
-        [$lng, $lat] = explode(',', $parcelShop->getCoordinate());
-        $pickupPoint = new PickupPoint(
-            sprintf('%s.%s', $parcelShop->getNumber(), $parcelShop->getZipcode()),
-            $parcelShop->getCompanyname(),
-            $parcelShop->getStreetname(),
-            $parcelShop->getZipcode(),
-            $parcelShop->getCity(),
-            $parcelShop->getCountrycode(),
-            $lat,
-            $lng
-        );
-
-        return $pickupPoint;
-    }
-
-    public function getClient(): Client
-    {
-        $client = new Client($this->apiKey);
-
-        if ($this->mode === self::MODE_SANDBOX) {
-            $client->setUseSandbox(true);
+        $servicePoints = $result['servicePointInformationResponse']['servicePoints'];
+        if (!is_array($servicePoints) || count($servicePoints) !== 1) {
+            return null;
         }
 
-        return $client;
+        return $this->populatePickupPoint($countryCode, $servicePoints[0]);
     }
 
     public function getCode(): string
@@ -120,22 +83,27 @@ final class PostNordProvider implements ProviderInterface
         return 'PostNord';
     }
 
-    public function isEnabled(): bool
+    private function populatePickupPoint(string $countryCode, array $servicePoint): PickupPoint
     {
-        return null !== $this->apiKey;
+        return new PickupPoint(
+            $this->transformId($countryCode, $servicePoint['servicePointId']),
+            $servicePoint['name'],
+            $servicePoint['deliveryAddress']['streetName'] . ' ' . $servicePoint['deliveryAddress']['streetNumber'],
+            $servicePoint['deliveryAddress']['postalCode'],
+            $servicePoint['deliveryAddress']['city'],
+            $servicePoint['deliveryAddress']['countryCode'],
+            $servicePoint['coordinate']['northing'],
+            $servicePoint['coordinate']['easting']
+        );
     }
 
-    /**
-     * @param string $id
-     *
-     * @return array
-     */
-    private function validatePickupPointId(string $id): array
+    private function transformId(string $countryCode, string $servicePointId): string
     {
-        if (false !== strpos($id, '.')) {
-            return [$id, 0];
-        }
+        return $countryCode . '|' . $servicePointId;
+    }
 
-        return explode('.', $id);
+    private function reverseTransformId(string $id): array
+    {
+        return explode('|', $id);
     }
 }

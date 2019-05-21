@@ -1,0 +1,2 @@
+setono_post_nord:
+    api_key: '%env(POST_NORD_API_KEY)%'

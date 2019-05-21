@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
-trait PickupPointIdTrait
+trait PickupPointAwareTrait
 {
     /**
      * @var string|null
@@ -13,7 +13,7 @@ trait PickupPointIdTrait
 
     public function hasPickupPointId(): bool
     {
-        return $this->pickupPointId !== null;
+        return null !== $this->pickupPointId;
     }
 
     public function setPickupPointId(?string $pickupPointId): void

@@ -6,9 +6,10 @@ namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
+use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -34,34 +35,22 @@ final class FindPickupPointsAction
     private $csrfTokenManager;
 
     /**
-     * @var ProviderManagerInterface
+     * @var ServiceRegistryInterface
      */
-    private $providerManager;
+    private $providerRegistry;
 
-    /**
-     * @param ViewHandlerInterface $viewHandler
-     * @param CartContextInterface $cartContext
-     * @param CsrfTokenManagerInterface $csrfTokenManager
-     * @param ProviderManagerInterface $providerManager
-     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         CartContextInterface $cartContext,
         CsrfTokenManagerInterface $csrfTokenManager,
-        ProviderManagerInterface $providerManager
+        ServiceRegistryInterface $providerRegistry
     ) {
         $this->viewHandler = $viewHandler;
         $this->cartContext = $cartContext;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->providerManager = $providerManager;
+        $this->providerRegistry = $providerRegistry;
     }
 
-    /**
-     * @param Request $request
-     * @param string $providerCode
-     *
-     * @return Response
-     */
     public function __invoke(Request $request, string $providerCode): Response
     {
         /** @var OrderInterface $order */
@@ -71,23 +60,17 @@ final class FindPickupPointsAction
             throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
         }
 
-        $provider = $this->providerManager->findByCode($providerCode);
-
-        if (null === $provider) {
+        if (!$this->providerRegistry->has($providerCode)) {
             throw new NotFoundHttpException();
         }
 
+        /** @var ProviderInterface $provider */
+        $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
 
         return $this->viewHandler->handle(View::create($pickupPoints));
     }
 
-    /**
-     * @param string $id
-     * @param string|null $token
-     *
-     * @return bool
-     */
     private function isCsrfTokenValid(string $id, ?string $token): bool
     {
         return $this->csrfTokenManager->isTokenValid(new CsrfToken($id, $token));

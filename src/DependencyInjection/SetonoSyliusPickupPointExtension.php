@@ -20,14 +20,18 @@ final class SetonoSyliusPickupPointExtension extends Extension
     public function load(array $config, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
-
-        if (isset($config['post_nord']['api_key'])) {
-            $container->setParameter('setono_sylius_pickup_point_post_nord_api_key', $config['post_nord']['api_key']);
-            $container->setParameter('setono_sylius_pickup_point_post_nord_mode', $config['post_nord']['mode']);
-        }
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $loader->load('services.xml');
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['SetonoGlsWebserviceBundle']) && $config['providers']['gls']) {
+            $loader->load('services/providers/gls.xml');
+        }
+
+        if (isset($bundles['SetonoPostNordBundle']) && $config['providers']['post_nord']) {
+            $loader->load('services/providers/post_nord.xml');
+        }
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace spec\Setono\SyliusPickupPointPlugin\Exception;
 
-use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
 use PhpSpec\ObjectBehavior;
+use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 
 final class NonUniqueProviderCodeExceptionSpec extends ObjectBehavior

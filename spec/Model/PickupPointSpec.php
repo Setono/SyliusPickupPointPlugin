@@ -1,26 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\Setono\SyliusPickupPointPlugin\Model;
 
 use PhpSpec\ObjectBehavior;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 
 final class PickupPointSpec extends ObjectBehavior
 {
     function let(): void
     {
-        $this->beConstructedWith('1','gls','Address','12345','London','England','23N','180E');
+        $this->beConstructedWith('1', 'gls', 'Address', '12345', 'London', 'England', '23N', '180E');
     }
 
     function it_is_initializable(): void
     {
         $this->shouldHaveType(PickupPoint::class);
-    }
-
-    function it_implements_an_pickup_point_interface(): void
-    {
-        $this->shouldImplement(PickupPointInterface::class);
     }
 
     function it_has_id(): void

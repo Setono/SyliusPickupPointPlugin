@@ -6,26 +6,22 @@ namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup;
 
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 
 final class ShippingContext implements Context
 {
-    /** @var ProviderManagerInterface */
-    private $providerManager;
+    /** @var ServiceRegistryInterface */
+    private $providerRegistry;
 
     /** @var EntityManagerInterface */
     private $shippingMethodEntityManager;
 
-    /**
-     * @param ProviderManagerInterface $providerManager
-     * @param EntityManagerInterface $shippingMethodEntityManager
-     */
     public function __construct(
-        ProviderManagerInterface $providerManager,
+        ServiceRegistryInterface $providerRegistry,
         EntityManagerInterface $shippingMethodEntityManager
     ) {
-        $this->providerManager = $providerManager;
+        $this->providerRegistry = $providerRegistry;
         $this->shippingMethodEntityManager = $shippingMethodEntityManager;
     }
 
@@ -36,7 +32,7 @@ final class ShippingContext implements Context
         PickupPointProviderAwareInterface $shippingMethod,
         string $namePickupPointProvider
     ): void {
-        $provider = $this->providerManager->findByCode(strtolower($namePickupPointProvider));
+        $provider = $this->providerRegistry->get(strtolower($namePickupPointProvider));
 
         $shippingMethod->setPickupPointProvider(get_class($provider));
 

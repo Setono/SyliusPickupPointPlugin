@@ -7,8 +7,8 @@ namespace spec\Setono\SyliusPickupPointPlugin\Form\Extension;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension;
-use Setono\SyliusPickupPointPlugin\Manager\ProviderManagerInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -16,9 +16,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class ShippingMethodChoiceTypeExtensionSpec extends ObjectBehavior
 {
-    public function let(ProviderManagerInterface $providerManager, RouterInterface $router, CartContextInterface $cartContext, CsrfTokenManagerInterface $csrfTokenManager)
+    public function let(ServiceRegistryInterface $providerRegistry, RouterInterface $router, CartContextInterface $cartContext, CsrfTokenManagerInterface $csrfTokenManager)
     {
-        $this->beConstructedWith($providerManager, $router, $cartContext, $csrfTokenManager);
+        $this->beConstructedWith($providerRegistry, $router, $cartContext, $csrfTokenManager);
     }
 
     public function it_is_initializable(): void

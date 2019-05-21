@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
-class PickupPoint implements PickupPointInterface
+final class PickupPoint
 {
     /** @var string */
-    protected $id;
+    private $id;
 
     /** @var string */
-    protected $name;
+    private $name;
 
     /** @var string */
-    protected $address;
+    private $address;
 
     /** @var string */
-    protected $zipCode;
+    private $zipCode;
 
     /** @var string */
-    protected $city;
+    private $city;
 
     /** @var string */
-    protected $country;
+    private $country;
 
     /** @var string */
-    protected $latitude;
+    private $latitude;
 
     /** @var string */
-    protected $longitude;
+    private $longitude;
 
     public function __construct(string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
     {

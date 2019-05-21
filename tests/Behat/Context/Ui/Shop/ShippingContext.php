@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Shop;
 
 use Behat\Behat\Context\Context;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointIdAwareInterface;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareInterface;
 use Sylius\Behat\Page\Shop\Checkout\CompletePageInterface;
 use Sylius\Behat\Service\SharedStorageInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -55,7 +55,7 @@ final class ShippingContext implements Context
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findAll()[0];
 
-        /** @var PickupPointIdAwareInterface $shipment */
+        /** @var PickupPointAwareInterface $shipment */
         $shipment = $order->getShipments()->first();
 
         Assert::notNull($shipment->getPickupPointId());

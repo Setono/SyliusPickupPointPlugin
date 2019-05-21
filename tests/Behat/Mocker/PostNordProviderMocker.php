@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
 
-use Lsv\PdDk\Client;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,7 +45,7 @@ class PostNordProviderMocker implements ProviderInterface
         ];
     }
 
-    public function getPickupPointById(string $id): ?PickupPointInterface
+    public function getPickupPointById(string $id): ?PickupPoint
     {
         return new PickupPoint(
             self::PICKUP_POINT_ID,
@@ -59,11 +57,6 @@ class PostNordProviderMocker implements ProviderInterface
             '',
             ''
         );
-    }
-
-    public function getClient(): Client
-    {
-        return $this->container->get('setono_sylius_pickup_point.provider.post_nord')->getClient();
     }
 
     public function isEnabled(): bool
