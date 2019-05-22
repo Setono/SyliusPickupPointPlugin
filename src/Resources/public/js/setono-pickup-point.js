@@ -1,93 +1,64 @@
 (function ($) {
-  $(function () {
-    $('input.input-shipping-method').findPickupPoints();
-    $('input.input-shipping-method:checked').change();
-  });
-})(jQuery);
-
-(function ($) {
   'use strict';
 
-  $.fn.extend({
-    findPickupPoints: function () {
-      return this.each(function () {
-        let $element = $(this);
-        let $container = $(this).closest('.item');
-        let url = $element.data('pickup-point-provider-url');
-        let csrfToken = $element.data('csrf-token');
+  let pickupPoints = {};
 
-        if (!url) {
-          return;
-        }
+  $(function () {
+    // cache pickup points
+    $('input.input-shipping-method').each(function () {
+      let $element = $(this);
+      let provider = $element.data('pickup-point-provider');
+      let url = $element.data('pickup-point-provider-url');
+      let csrfToken = $element.data('csrf-token');
 
-        $element.api({
-          method: 'GET',
-          on: 'change',
-          cache: false,
-          url: url,
-          beforeSend: function (settings) {
-            settings.data = {
-              _csrf_token: csrfToken
-            };
+      if (!url) {
+        return;
+      }
 
-            removePickupPoints($container);
-            $container.addClass('loading');
-
-            return settings;
-          },
-          onSuccess: function (response) {
-            addPickupPoints($container, response);
-            $('.ui.fluid.selection.dropdown').dropdown('setting', 'onChange', function () {
-              let id = ($('.ui.fluid.selection.dropdown').dropdown('get value'));
-              $(".pickup-point-id").val(id);
-            });
-          },
-          onFailure: function (response) {
-            console.log(response);
-          },
-          onComplete: function () {
-            $container.removeClass('loading');
+      $.ajax({
+        method: 'GET',
+        cache: false,
+        url: url,
+        data: {
+          _csrf_token: csrfToken
+        },
+        success: function (response) {
+          if (!pickupPoints.hasOwnProperty(provider)) {
+            pickupPoints[provider] = [];
           }
-        });
+          response.forEach(function (element) {
+            pickupPoints[provider].push(element);
+          });
+        },
       });
+    }).on('change', populate);
+
+    setTimeout(populate, 1000);
+
+    function populate() {
+      let $selectedMethod = $('input.input-shipping-method:checked');
+      let provider = $selectedMethod.data('pickup-point-provider');
+      let $pickupPointContainer = $('.input-pickup-point-id').closest('.field');
+
+      if(!provider) {
+        $pickupPointContainer.find('select').empty();
+        $pickupPointContainer.hide();
+        return;
+      }
+
+      if(!pickupPoints.hasOwnProperty(provider)) {
+        $pickupPointContainer.find('select').empty();
+        $pickupPointContainer.hide();
+        return;
+      }
+
+      let html = '';
+      pickupPoints[provider].forEach(function(pickupPoint) {
+        html += '<option value="' + pickupPoint.id + '">' + pickupPoint.name + ', ' + pickupPoint.address + ', ' + pickupPoint.zipCode + ' ' + pickupPoint.city + '</option>';
+      });
+
+      $pickupPointContainer.find('select').html(html);
+      $pickupPointContainer.show();
     }
   });
-
-  function removePickupPoints($container) {
-    $container.find('.pickup-points').remove();
-  }
-
-  function addPickupPoints($container, pickupPoints) {
-    if (document.querySelector('.ui.fluid.selection.dropdown') == null) {
-      let list = '<div class="ui fluid selection dropdown pickup-point-dropdown" style="width:250px">' +
-        '<input type="hidden" name="pickupPoint">' +
-        '<i class="dropdown icon"></i>' +
-        '<div class="default text">Select Pickup Point</div>' +
-        '<div class="menu">'
-      ;
-
-      pickupPoints.forEach(function (element) {
-        list += '<div class="item" data-value="' + element.id + '">';
-        list += ' ' + element.name;
-        list += ' ' + element.address;
-        list += ' ' + element.zipCode;
-        list += ' ' + element.country + '</div>'
-      });
-
-      list += '</div>' +
-        '</div>' +
-        '</div>'
-      ;
-
-      $container.find('.content').append(list);
-
-      let $dropdown = $('.ui.fluid.selection.dropdown');
-
-      $dropdown.dropdown();
-
-      let id = $(".pickup-point-id").val();
-
-      $dropdown.dropdown('set selected', id);
-    }
-  }
 })(jQuery);

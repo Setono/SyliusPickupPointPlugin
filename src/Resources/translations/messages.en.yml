@@ -1,5 +1,7 @@
 setono_sylius_pickup_point:
     form:
+        shipment:
+            pickup_point_id: Pickup point id
         shipping_method:
             pickup_point_provider: Pickup point provider
             select_pickup_point_provider: Select pickup point provider

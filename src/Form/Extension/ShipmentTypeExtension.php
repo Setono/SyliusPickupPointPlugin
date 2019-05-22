@@ -6,17 +6,19 @@ namespace Setono\SyliusPickupPointPlugin\Form\Extension;
 
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType;
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShipmentTypeExtension extends AbstractTypeExtension
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('pickupPointId', HiddenType::class, [
+        $builder->add('pickupPointId', ChoiceType::class, [
+            'label' => 'setono_sylius_pickup_point.form.shipment.pickup_point_id',
+            'required' => false,
             'attr' => [
-                'class' => 'pickup-point-id',
-            ],
+                'class' => 'input-pickup-point-id'
+            ]
         ]);
     }
 

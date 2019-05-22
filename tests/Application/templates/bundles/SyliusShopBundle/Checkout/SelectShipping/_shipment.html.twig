@@ -6,9 +6,12 @@
             {% set fee = form.method.vars.shipping_costs[choice_form.vars.value] %}
             {% set method = form.method.vars.choices[key].data %}
             {% include '@SyliusShop/Checkout/SelectShipping/_choice.html.twig' with {'form': choice_form, 'method': method, 'fee': fee} %}
-            {{ form_row(form.pickupPointId) }}
         {% else %}
             {% include '@SyliusShop/Checkout/SelectShipping/_unavailable.html.twig' %}
         {% endfor %}
+
+        {% if form.method|length %}
+            {{ form_row(form.pickupPointId) }}
+        {% endif %}
     </div>
 </div>
