@@ -45,20 +45,6 @@ class PostNordProviderMocker implements ProviderInterface
         ];
     }
 
-    public function getPickupPointById(string $id): ?PickupPoint
-    {
-        return new PickupPoint(
-            self::PICKUP_POINT_ID,
-            'Some where',
-            'Rainbow',
-            '12345',
-            'Nice City',
-            'Nice City',
-            '',
-            ''
-        );
-    }
-
     public function isEnabled(): bool
     {
         return true;

@@ -45,28 +45,4 @@ class GlsProviderMocker implements ProviderInterface
             ],
         ];
     }
-
-    public function getPickupPointById(string $id): ?PickupPoint
-    {
-        return new PickupPoint(
-            self::PICKUP_POINT_ID,
-            'Some where',
-            'Rainbow',
-            '12345',
-            'Nice City',
-            'Nice City',
-            '',
-            ''
-        );
-    }
-
-    public function getClient(): \SoapClient
-    {
-        return $this->container->get('setono_gls_webservice.factory.soap_client')->create();
-    }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

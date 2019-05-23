@@ -43,17 +43,6 @@ final class GlsProvider implements ProviderInterface
         return $pickupPoints;
     }
 
-    public function getPickupPointById(string $id): ?PickupPoint
-    {
-        try {
-            $parcelShop = $this->client->getOneParcelShop($id);
-        } catch (ParcelShopNotFoundException $e) {
-            return null;
-        }
-
-        return $this->transform($parcelShop);
-    }
-
     public function getCode(): string
     {
         return 'gls';
@@ -62,11 +51,6 @@ final class GlsProvider implements ProviderInterface
     public function getName(): string
     {
         return 'GLS';
-    }
-
-    public function isEnabled(): bool
-    {
-        return true;
     }
 
     private function transform(ParcelShop $parcelShop): PickupPoint

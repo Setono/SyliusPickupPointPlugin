@@ -52,27 +52,6 @@ final class PostNordProvider implements ProviderInterface
         return $pickupPoints;
     }
 
-    public function getPickupPointById(string $id): ?PickupPoint
-    {
-        [$countryCode, $id] = $this->reverseTransformId($id);
-
-        $result = $this->client->get('rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
-            'countryCode' => $countryCode,
-            'servicePointId' => $id,
-        ]);
-
-        if (!isset($result['servicePointInformationResponse']['servicePoints'])) {
-            return null;
-        }
-
-        $servicePoints = $result['servicePointInformationResponse']['servicePoints'];
-        if (!is_array($servicePoints) || count($servicePoints) !== 1) {
-            return null;
-        }
-
-        return $this->populatePickupPoint($countryCode, $servicePoints[0]);
-    }
-
     public function getCode(): string
     {
         return 'post_nord';

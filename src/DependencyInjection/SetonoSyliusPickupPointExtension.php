@@ -26,6 +26,10 @@ final class SetonoSyliusPickupPointExtension extends Extension
 
         $bundles = $container->getParameter('kernel.bundles');
 
+        if (isset($bundles['SetonoDAOBundle']) && $config['providers']['dao']) {
+            $loader->load('services/providers/dao.xml');
+        }
+
         if (isset($bundles['SetonoGlsWebserviceBundle']) && $config['providers']['gls']) {
             $loader->load('services/providers/gls.xml');
         }

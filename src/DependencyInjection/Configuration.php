@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
+use Setono\DAOBundle\SetonoDAOBundle;
 use Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle;
 use Setono\PostNordBundle\SetonoPostNordBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -28,6 +29,11 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('providers')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->booleanNode('dao')
+                            ->example(true)
+                            ->info('Whether to enable the DAO provider')
+                            ->defaultValue(class_exists(SetonoDAOBundle::class))
+                        ->end()
                         ->booleanNode('gls')
                             ->example(true)
                             ->info('Whether to enable the GLS provider')

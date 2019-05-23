@@ -13,11 +13,6 @@ final class HasPickupPointSelected extends Constraint
      */
     public $pickupPointNotBlank = 'setono_pickup_point.shipment.pickup_point.not_blank';
 
-    /**
-     * @var string
-     */
-    public $pickupPointNotExists = 'setono_pickup_point.shipment.pickup_point.not_exists';
-
     public function validatedBy(): string
     {
         return 'setono_pickup_point_has_pickup_point_selected';
