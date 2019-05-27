@@ -1,0 +1,56 @@
+sylius_fixtures:
+    suites:
+        default:
+            listeners:
+                orm_purger: ~
+                logger: ~
+
+            fixtures:
+                locale: ~
+                currency:
+                    options:
+                        currencies: ['DKK']
+
+                geographical:
+                    options:
+                        countries:
+                            - "DK"
+                            - "US"
+                        zones:
+                            US:
+                                name: "Denmark"
+                                countries:
+                                    - "DK"
+                shipping_method:
+                    options:
+                        custom:
+                            dao_pickup_point:
+                                code: "dao_pickup_point"
+                                name: "DAO with pickup points"
+                                enabled: true
+                                channels:
+                                    - "US_WEB"
+                            gls_pickup_point:
+                                code: "gls_pickup_point"
+                                name: "GLS with pickup points"
+                                enabled: true
+                                channels:
+                                    - "US_WEB"
+                            gls_home:
+                                code: "gls_home"
+                                name: "GLS home delivery"
+                                enabled: true
+                                channels:
+                                    - "US_WEB"
+                            post_nord_pickup_point:
+                                code: "post_nord_pickup_point"
+                                name: "PostNord with pickup points"
+                                enabled: true
+                                channels:
+                                    - "US_WEB"
+                            post_nord_home:
+                                code: "post_nord_home"
+                                name: "PostNord home delivery"
+                                enabled: true
+                                channels:
+                                    - "US_WEB"

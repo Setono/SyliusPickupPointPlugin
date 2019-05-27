@@ -1,0 +1,3 @@
+setono_dao:
+    customer_id: '%env(DAO_CUSTOMER_ID)%'
+    password: '%env(DAO_PASSWORD)%'

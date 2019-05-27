@@ -18,7 +18,7 @@ final class ShipmentTypeExtension extends AbstractTypeExtension
             'required' => false,
             'attr' => [
                 'class' => 'input-pickup-point-id'
-            ]
+            ],
         ]);
     }
 

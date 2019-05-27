@@ -60,4 +60,5 @@ return [
     FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true, 'test_cached' => true],
     Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle::class => ['all' => true],
     Setono\PostNordBundle\SetonoPostNordBundle::class => ['all' => true],
+    Setono\DAOBundle\SetonoDAOBundle::class => ['all' => true],
 ];

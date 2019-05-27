@@ -2,8 +2,13 @@
   'use strict';
 
   let pickupPoints = {};
+  let cached = false;
 
   $(function () {
+    let deferreds = [];
+
+    let populateTimer = setTimeout(populate, 1000);
+
     // cache pickup points
     $('input.input-shipping-method').each(function () {
       let $element = $(this);
@@ -15,7 +20,7 @@
         return;
       }
 
-      $.ajax({
+      deferreds.push($.ajax({
         method: 'GET',
         cache: false,
         url: url,
@@ -30,12 +35,20 @@
             pickupPoints[provider].push(element);
           });
         },
-      });
+      }));
     }).on('change', populate);
 
-    setTimeout(populate, 1000);
+    $.when.apply($, deferreds).always(function () {
+      cached = true;
+      clearTimeout(populateTimer);
+      populate();
+    });
 
     function populate() {
+      if(!cached) {
+        return;
+      }
+
       let $selectedMethod = $('input.input-shipping-method:checked');
       let provider = $selectedMethod.data('pickup-point-provider');
       let $pickupPointContainer = $('.input-pickup-point-id').closest('.field');

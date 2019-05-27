@@ -68,21 +68,16 @@ final class PostNordProvider implements ProviderInterface
             $this->transformId($countryCode, $servicePoint['servicePointId']),
             $servicePoint['name'],
             $servicePoint['deliveryAddress']['streetName'] . ' ' . $servicePoint['deliveryAddress']['streetNumber'],
-            $servicePoint['deliveryAddress']['postalCode'],
+            (string) $servicePoint['deliveryAddress']['postalCode'],
             $servicePoint['deliveryAddress']['city'],
-            $servicePoint['deliveryAddress']['countryCode'],
-            $servicePoint['coordinate']['northing'],
-            $servicePoint['coordinate']['easting']
+            (string) $servicePoint['deliveryAddress']['countryCode'],
+            (string) $servicePoint['coordinate']['northing'],
+            (string) $servicePoint['coordinate']['easting']
         );
     }
 
     private function transformId(string $countryCode, string $servicePointId): string
     {
         return $countryCode . '|' . $servicePointId;
-    }
-
-    private function reverseTransformId(string $id): array
-    {
-        return explode('|', $id);
     }
 }
