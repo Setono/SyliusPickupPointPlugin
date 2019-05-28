@@ -43,5 +43,21 @@
             <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
             <tag name="validator.constraint_validator" alias="setono_pickup_point_has_pickup_point_selected" />
         </service>
+
+        <!-- Fixtures -->
+        <service id="setono_sylius_pickup_point.fixture.shipping_method" class="Setono\SyliusPickupPointPlugin\Fixture\ShippingMethodFixture">
+            <argument type="service" id="sylius.manager.shipping_method" />
+            <argument type="service" id="setono_sylius_pickup_point.fixture.example_factory.shipping_method" />
+            <tag name="sylius_fixtures.fixture" />
+        </service>
+
+        <service id="setono_sylius_pickup_point.fixture.example_factory.shipping_method" class="Setono\SyliusPickupPointPlugin\Fixture\Factory\ShippingMethodExampleFactory">
+            <argument type="service" id="sylius.factory.shipping_method" />
+            <argument type="service" id="sylius.repository.zone" />
+            <argument type="service" id="sylius.repository.shipping_category" />
+            <argument type="service" id="sylius.repository.locale" />
+            <argument type="service" id="sylius.repository.channel" />
+            <argument type="service" id="sylius.repository.tax_category" />
+        </service>
     </services>
 </container>

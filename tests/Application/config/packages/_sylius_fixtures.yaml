@@ -21,19 +21,21 @@ sylius_fixtures:
                                 name: "Denmark"
                                 countries:
                                     - "DK"
-                shipping_method:
+                setono_sylius_pickup_point_shipping_method:
                     options:
                         custom:
                             dao_pickup_point:
                                 code: "dao_pickup_point"
                                 name: "DAO with pickup points"
                                 enabled: true
+                                pickup_point_provider: dao
                                 channels:
                                     - "US_WEB"
                             gls_pickup_point:
                                 code: "gls_pickup_point"
                                 name: "GLS with pickup points"
                                 enabled: true
+                                pickup_point_provider: gls
                                 channels:
                                     - "US_WEB"
                             gls_home:
@@ -46,6 +48,7 @@ sylius_fixtures:
                                 code: "post_nord_pickup_point"
                                 name: "PostNord with pickup points"
                                 enabled: true
+                                pickup_point_provider: post_nord
                                 channels:
                                     - "US_WEB"
                             post_nord_home:

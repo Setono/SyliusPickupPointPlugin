@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+
 trait PickupPointAwareTrait
 {
     /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $pickupPointId;
 

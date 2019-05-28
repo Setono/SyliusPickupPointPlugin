@@ -1,13 +1,15 @@
 # Sylius Pickup Point Plugin
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Latest Version][ico-version]][link-packagist]
+[![Latest Unstable Version][ico-unstable-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-travis]][link-travis]
 [![Quality Score][ico-code-quality]][link-code-quality]
 
-Add a map of pickup points to your pickup point enabled shipping methods.
+Add a `<select>` that containts pickup points to your select shipping checkout step.
 
-### Supported providers
+**Supported providers**
+- DAO
 - GLS
 - PostNord
 
@@ -24,10 +26,18 @@ $ composer require setono/sylius-pickup-point-plugin
 
 This command requires you to have Composer installed globally, as explained in the [installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
 
-Add the plugin to `bundles.php`.
+Add bundle to your `config/bundles.php`:
 
 ```php
-Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
+<?php
+# config/bundles.php
+
+return [
+    // ...
+    Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
+    // ...
+];
+
 ```
 
 ### Step 2: Import routing
@@ -46,56 +56,101 @@ parameters:
 
 ### Step 4: Update templates
 
-Add the following to the admin shipping method form `SyliusAdminBundle/ShippingMethod/_form.html.twig`
-````twig
+Add the following to the admin template `SyliusAdminBundle/ShippingMethod/_form.html.twig`
+
+```twig
 {{ form_row(form.pickupPointProvider) }}
-````
+```
 
-and to `SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig`
-````twig
+See an example [here](tests/Application/templates/bundles/SyliusAdminBundle/ShippingMethod/_form.html.twig).
+
+Next add the following to the shop template `SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig`
+
+```twig
 {{ form_row(form.pickupPointId) }}
-````
+```
 
-### Step 5: Customize entities
+See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig).
 
-Add `PickupPointIdTrait` and `PickupPointIdAwareInterface` to you `Shipment` entity.
+### Step 5: Customize resources
 
-Add `PickupPointProviderTrait` and `PickupPointProviderAwareInterface` to your `ShippingMethod` entity.
+**Shipment resource**
 
-Include these fields in your custom entities
+If you haven't extended the shipment resource yet, here is what it should look like:
 
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
+```php
+<?php
+// src/Entity/Shipment.php
 
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+declare(strict_types=1);
 
-    <mapped-superclass name="App\Entity\Shipment" table="sylius_shipment">
-        <field name="pickupPointId" column="pickup_point_id" nullable="true" />
-    </mapped-superclass>
+namespace App\Entity;
 
-</doctrine-mapping>
-````
+use Doctrine\ORM\Mapping as ORM;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareTrait;
+use Setono\SyliusPickupPointPlugin\Model\ShipmentInterface;
+use Sylius\Component\Core\Model\Shipment as BaseShipment;
 
-````xml
-<?xml version="1.0" encoding="UTF-8"?>
+/**
+ * @ORM\Entity()
+ * @ORM\Table(name="sylius_shipment")
+ */
+class Shipment extends BaseShipment implements ShipmentInterface
+{
+    use PickupPointAwareTrait;
+}
+```
 
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+**Shipping method resource**
 
-    <mapped-superclass name="App\Entity\ShippingMethod" table="sylius_shipping_method">
-        <field name="pickupPointProvider" column="pickup_point_provider" nullable="true" />
-    </mapped-superclass>
+If you haven't extended the shipping method resource yet, here is what it should look like:
 
-</doctrine-mapping>
-````
+```php
+<?php
+// src/Entity/ShippingMethod.php
 
-[ico-version]: https://img.shields.io/packagist/v/setono/sylius-pickup-point-plugin.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareTrait;
+use Setono\SyliusPickupPointPlugin\Model\ShippingMethodInterface;
+use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
+
+/**
+ * @ORM\Entity()
+ * @ORM\Table(name="sylius_shipping_method")
+ */
+class ShippingMethod extends BaseShippingMethod implements ShippingMethodInterface
+{
+    use PickupPointProviderAwareTrait;
+}
+
+```
+
+You can read about extending resources [here](https://docs.sylius.com/en/latest/customization/model.html).
+
+**Update shipping resources config**
+
+Next you need to tell Sylius that you will use your own extended resources:
+
+```yaml
+# config/packages/_sylius.yaml
+
+sylius_shipping:
+    resources:
+        shipment:
+            classes:
+                model: App\Entity\Shipment
+        shipping_method:
+            classes:
+                model: App\Entity\ShippingMethod
+```
+
+[ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
+[ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable
+[ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license
 [ico-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin.svg?branch=master
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/Setono/SyliusPickupPointPlugin.svg?style=flat-square
 
