@@ -47,14 +47,7 @@ setono_sylius_pickup_point_plugin:
     resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yml"
 ````
 
-### Step 3: Addition of a validation group `checkout_select_shipping`
-
-````yaml
-parameters:
-    sylius.form.type.checkout_select_shipping.validation_groups: ['sylius', 'checkout_select_shipping']
-````
-
-### Step 4: Update templates
+### Step 3: Update templates
 
 Add the following to the admin template `SyliusAdminBundle/ShippingMethod/_form.html.twig`
 
@@ -72,7 +65,7 @@ Next add the following to the shop template `SyliusShopBundle/Checkout/SelectShi
 
 See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig).
 
-### Step 5: Customize resources
+### Step 4: Customize resources
 
 **Shipment resource**
 
