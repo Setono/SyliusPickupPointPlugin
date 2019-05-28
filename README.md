@@ -6,7 +6,9 @@
 [![Build Status][ico-travis]][link-travis]
 [![Quality Score][ico-code-quality]][link-code-quality]
 
-Add a `<select>` that containts pickup points to your select shipping checkout step.
+Add a `<select>` that contains pickup points to your select shipping checkout step.
+
+![List of pickup points](docs/pickup-points.png)
 
 **Supported providers**
 - DAO
