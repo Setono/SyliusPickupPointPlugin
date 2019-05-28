@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Validator\Constraints;
 
-use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
+use Setono\SyliusPickupPointPlugin\Model\ShipmentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Webmozart\Assert\Assert;
@@ -18,8 +17,7 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
         /** @var $constraint HasPickupPointSelected */
         Assert::isInstanceOf($constraint, HasPickupPointSelected::class);
 
-        /** @var $shipment PickupPointAwareInterface|ShipmentInterface */
-        Assert::isInstanceOf($shipment, PickupPointAwareInterface::class);
+        /** @var $shipment ShipmentInterface */
         Assert::isInstanceOf($shipment, ShipmentInterface::class);
 
         /** @var PickupPointProviderAwareInterface $method */
