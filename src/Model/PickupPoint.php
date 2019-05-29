@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
-final class PickupPoint
+final class PickupPoint implements PickupPointInterface
 {
     /** @var string */
     private $id;

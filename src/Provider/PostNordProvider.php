@@ -6,6 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class PostNordProvider implements ProviderInterface
@@ -62,7 +63,7 @@ final class PostNordProvider implements ProviderInterface
         return 'PostNord';
     }
 
-    private function populatePickupPoint(string $countryCode, array $servicePoint): PickupPoint
+    private function populatePickupPoint(string $countryCode, array $servicePoint): PickupPointInterface
     {
         return new PickupPoint(
             $this->transformId($countryCode, $servicePoint['servicePointId']),
