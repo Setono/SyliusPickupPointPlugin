@@ -6,6 +6,13 @@ namespace Setono\SyliusPickupPointPlugin\Model;
 
 final class PickupPoint implements PickupPointInterface
 {
+    /**
+     * Should not contain self::TYPE_DELIMITER
+     *
+     * @var string
+     */
+    private $providerCode;
+
     /** @var string */
     private $id;
 
@@ -30,8 +37,9 @@ final class PickupPoint implements PickupPointInterface
     /** @var string */
     private $longitude;
 
-    public function __construct(string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
+    public function __construct(string $providerCode, string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
     {
+        $this->providerCode = $providerCode;
         $this->id = $id;
         $this->name = $name;
         $this->address = $address;
@@ -40,6 +48,11 @@ final class PickupPoint implements PickupPointInterface
         $this->country = $country;
         $this->latitude = $latitude;
         $this->longitude = $longitude;
+    }
+
+    public function getProviderCode(): string
+    {
+        return $this->providerCode;
     }
 
     public function getId(): string

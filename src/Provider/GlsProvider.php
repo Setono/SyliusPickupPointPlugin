@@ -68,6 +68,7 @@ final class GlsProvider implements ProviderInterface
     private function transform(ParcelShop $parcelShop): PickupPointInterface
     {
         return new PickupPoint(
+            $this->getCode(),
             $parcelShop->getNumber(),
             $parcelShop->getCompanyName(),
             $parcelShop->getStreetName(),

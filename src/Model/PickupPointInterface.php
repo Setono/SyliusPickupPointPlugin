@@ -6,6 +6,8 @@ namespace Setono\SyliusPickupPointPlugin\Model;
 
 interface PickupPointInterface
 {
+    public function getProviderCode(): string;
+
     public function getId(): string;
 
     public function getName(): string;

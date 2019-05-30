@@ -70,6 +70,7 @@ final class DAOProvider implements ProviderInterface
     private function populatePickupPoint(array $servicePoint): PickupPointInterface
     {
         return new PickupPoint(
+            $this->getCode(),
             $servicePoint['shopId'],
             $servicePoint['navn'],
             $servicePoint['adresse'],

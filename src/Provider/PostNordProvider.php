@@ -71,6 +71,7 @@ final class PostNordProvider implements ProviderInterface
     private function populatePickupPoint(string $countryCode, array $servicePoint): PickupPointInterface
     {
         return new PickupPoint(
+            $this->getCode(),
             $this->transformId($countryCode, $servicePoint['servicePointId']),
             $servicePoint['name'],
             $servicePoint['deliveryAddress']['streetName'] . ' ' . $servicePoint['deliveryAddress']['streetNumber'],
