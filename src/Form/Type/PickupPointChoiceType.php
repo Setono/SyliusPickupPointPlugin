@@ -61,5 +61,4 @@ final class PickupPointChoiceType extends AbstractType
     {
         return 'setono_sylius_pickup_point_choice';
     }
-
 }

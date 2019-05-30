@@ -49,7 +49,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
         }
 
         Assert::true(false !== strpos($value, PickupPointInterface::TYPE_DELIMITER), 'PickupPoint identifier should contain delimiter.');
-        list($pickupPointProvider, $pickupPointId) = explode(PickupPointInterface::TYPE_DELIMITER, $value);
+        [$pickupPointProvider, $pickupPointId] = explode(PickupPointInterface::TYPE_DELIMITER, $value);
 
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($pickupPointProvider);

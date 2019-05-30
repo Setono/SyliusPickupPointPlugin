@@ -21,9 +21,10 @@ final class FakerProvider implements ProviderInterface
     public function findPickupPoints(OrderInterface $order): array
     {
         $pockupPoints = [];
-        for ($i=0; $i < 10; $i++) {
-            $pockupPoints[] = $this->createFakePickupPoint((string)$i);
+        for ($i = 0; $i < 10; ++$i) {
+            $pockupPoints[] = $this->createFakePickupPoint((string) $i);
         }
+
         return $pockupPoints;
     }
 

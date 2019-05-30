@@ -75,6 +75,7 @@ final class FindPickupPointsAction
 
         $view = View::create($pickupPoints);
         $view->getContext()->addGroup('Autocomplete');
+
         return $this->viewHandler->handle($view);
     }
 
