@@ -40,18 +40,30 @@ return [
 
 ```
 
-### Step 2: Import routing and config
+### Step 2: Import routing and configs
 
+#### Import routing
+ 
 ````yaml
 # config/routes/setono_sylius_pickup_point_plugin.yaml
 setono_sylius_pickup_point_plugin:
     resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml"
 ````
 
+#### Import application config
+
 ````yaml
 # config/packages/_sylius.yaml
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }    
+````
+
+#### (Optional) Import fixtures to play in your app
+
+````yaml
+# config/packages/_sylius.yaml
+imports:
+    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }    
 ````
 
 ### Step 3: Update templates
