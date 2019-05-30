@@ -60,9 +60,30 @@ final class PickupPoint implements PickupPointInterface
         return $this->id;
     }
 
+    public function getFullId(): string
+    {
+        return sprintf(
+            '%s%s%s',
+            $this->getProviderCode(),
+            self::TYPE_DELIMITER,
+            $this->getId()
+        );
+    }
+
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getFullName(): string
+    {
+        return sprintf(
+            '%s, %s, %s, %s',
+            $this->getName(),
+            $this->getAddress(),
+            $this->getZipCode(),
+            $this->getCity()
+        );
     }
 
     public function getAddress(): string

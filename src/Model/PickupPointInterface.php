@@ -6,11 +6,17 @@ namespace Setono\SyliusPickupPointPlugin\Model;
 
 interface PickupPointInterface
 {
+    public const TYPE_DELIMITER = '-';
+
     public function getProviderCode(): string;
 
     public function getId(): string;
 
+    public function getFullId(): string;
+
     public function getName(): string;
+
+    public function getFullName(): string;
 
     public function getAddress(): string;
 
