@@ -43,8 +43,9 @@ return [
 ### Step 2: Import routing
 
 ````yaml
+# config/routes/setono_sylius_pickup_point_plugin.yaml
 setono_sylius_pickup_point_plugin:
-    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yml"
+    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml"
 ````
 
 ### Step 3: Update templates
