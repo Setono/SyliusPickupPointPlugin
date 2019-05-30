@@ -6,6 +6,7 @@ setono_sylius_pickup_point:
             pickup_point_provider: Pickup point provider
             select_pickup_point_provider: Select pickup point provider
     provider:
+        faker: Faker
         dao: DAO
         gls: GLS
         post_nord: PostNord
