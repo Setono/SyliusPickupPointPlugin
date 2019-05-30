@@ -15,8 +15,7 @@ class ShippingMethodTypeExtensionSpec extends ObjectBehavior
 {
     public function let(ServiceRegistryInterface $providerRegistry)
     {
-        $providerRegistry->all()->willReturn([]);
-        $this->beConstructedWith($providerRegistry);
+        $this->beConstructedWith([]);
     }
 
     public function it_is_initializable(): void

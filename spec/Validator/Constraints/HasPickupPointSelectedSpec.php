@@ -27,6 +27,5 @@ final class HasPickupPointSelectedSpec extends ObjectBehavior
     function it_has_a_message(): void
     {
         $this->pickupPointNotBlank->shouldReturn('setono_pickup_point.shipment.pickup_point.not_blank');
-        $this->pickupPointNotExists->shouldReturn('setono_pickup_point.shipment.pickup_point.not_exists');
     }
 }

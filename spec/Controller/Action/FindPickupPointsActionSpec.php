@@ -53,6 +53,8 @@ final class FindPickupPointsActionSpec extends ObjectBehavior
         $order->getId()->willReturn(1);
         $cartContext->getCart()->willReturn($order);
         $request->get('_csrf_token')->willReturn('token');
+        $request->get('providerCode')->willReturn('gls');
+        $providerRegistry->has('gls')->willReturn(true);
         $providerRegistry->get('gls')->willReturn($provider);
         $csrfTokenManager->isTokenValid(Argument::any())->willReturn(true);
         $viewHandler->handle(Argument::any())->willReturn($response);

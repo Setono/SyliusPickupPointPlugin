@@ -11,6 +11,3 @@ setono_sylius_pickup_point:
         dao: DAO
         gls: GLS
         post_nord: PostNord
-    ui:
-        null_pickup_point_id: PickupPointId contains null.
-        not_exists: PickupPointID does not exists.
