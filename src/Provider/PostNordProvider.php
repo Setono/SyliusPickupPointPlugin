@@ -53,6 +53,11 @@ final class PostNordProvider implements ProviderInterface
         return $pickupPoints;
     }
 
+    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    {
+        // @todo Implementation
+    }
+
     public function getCode(): string
     {
         return 'post_nord';

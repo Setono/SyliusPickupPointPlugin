@@ -52,6 +52,11 @@ final class DAOProvider implements ProviderInterface
         return $ret;
     }
 
+    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    {
+        // @todo Implementation
+    }
+
     public function getCode(): string
     {
         return 'dao';

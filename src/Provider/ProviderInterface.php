@@ -31,4 +31,11 @@ interface ProviderInterface
      * @return PickupPointInterface[]
      */
     public function findPickupPoints(OrderInterface $order): array;
+
+    /**
+     * @param string $id
+     *
+     * @return PickupPointInterface|null
+     */
+    public function findOnePickupPointById(string $id): ?PickupPointInterface;
 }
