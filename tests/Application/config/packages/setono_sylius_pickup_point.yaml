@@ -1,3 +1,6 @@
 setono_sylius_pickup_point:
     providers:
-        post_nord: true
+        faker: true
+        gls: true
+        post_nord: false
+        dao: false
