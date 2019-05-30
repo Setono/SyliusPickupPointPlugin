@@ -1,77 +1,84 @@
 (function ($) {
   'use strict';
 
-  let pickupPoints = {};
-  let cached = false;
+  // console.log($.fn.api.settings);
+  // return;
 
-  $(function () {
-    let deferreds = [];
+  $.fn.extend({
+    setonoSyliusPickupPointAutoComplete() {
+      this.each((idx, el) => {
+        const element = $(el);
+        const choiceName = element.data('choice-name');
+        const choiceValue = element.data('choice-value');
+        const autocompleteValue = element.find('input.autocomplete').val();
 
-    let populateTimer = setTimeout(populate, 1000);
+        element.dropdown({
+          delay: {
+            search: 250,
+          },
+          forceSelection: false,
+          apiSettings: {
+            dataType: 'JSON',
+            cache: false,
+            beforeSend(settings) {
+              let selectedMethod = $('input.input-shipping-method:checked');
 
-    // cache pickup points
-    $('input.input-shipping-method').each(function () {
-      let $element = $(this);
-      let provider = $element.data('pickup-point-provider');
-      let url = $element.data('pickup-point-provider-url');
-      let csrfToken = $element.data('csrf-token');
+              settings.urlData = {
+                providerCode: selectedMethod.data('pickup-point-provider'),
+                _csrf_token: selectedMethod.data('csrf-token'),
+              }
 
-      if (!url) {
-        return;
-      }
+              console.log(settings.urlData);
 
-      deferreds.push($.ajax({
-        method: 'GET',
-        cache: false,
-        url: url,
-        data: {
-          _csrf_token: csrfToken
-        },
-        success: function (response) {
-          if (!pickupPoints.hasOwnProperty(provider)) {
-            pickupPoints[provider] = [];
-          }
-          response.forEach(function (element) {
-            pickupPoints[provider].push(element);
+              return settings;
+            },
+            onResponse(response) {
+              return {
+                success: true,
+                results: response.map(item => ({
+                  name: item[choiceName],
+                  value: item[choiceValue],
+                })),
+              };
+            },
+          },
+        });
+
+        if (autocompleteValue.split(',').filter(String).length > 0) {
+          const menuElement = element.find('div.menu');
+
+          menuElement.api({
+            on: 'now',
+            method: 'GET',
+            url: element.data('url'),
+            beforeSend(settings) {
+              let selectedMethod = $('input.input-shipping-method:checked');
+
+              settings.urlData = {
+                providerCode: selectedMethod.data('pickup-point-provider'),
+                _csrf_token: selectedMethod.data('csrf-token'),
+              }
+
+              /* eslint-disable-next-line no-param-reassign */
+              settings.data[choiceValue] = autocompleteValue.split(',').filter(String);
+
+              return settings;
+            },
+            onSuccess(response) {
+              response.forEach((item) => {
+                menuElement.append((
+                  $(`<div class="item" data-value="${item[choiceValue]}">${item[choiceName]}</div>`)
+                ));
+              });
+            },
           });
-        },
-      }));
-    }).on('change', populate);
+        }
 
-    $.when.apply($, deferreds).always(function () {
-      cached = true;
-      clearTimeout(populateTimer);
-      populate();
-    });
+        window.setTimeout(() => {
+          element.dropdown('set selected', element.find('input.autocomplete').val().split(',').filter(String));
+        }, 5000);
 
-    function populate() {
-      if(!cached) {
-        return;
-      }
-
-      let $selectedMethod = $('input.input-shipping-method:checked');
-      let provider = $selectedMethod.data('pickup-point-provider');
-      let $pickupPointContainer = $('.input-pickup-point-id').closest('.field');
-
-      if(!provider) {
-        $pickupPointContainer.find('select').empty();
-        $pickupPointContainer.hide();
-        return;
-      }
-
-      if(!pickupPoints.hasOwnProperty(provider)) {
-        $pickupPointContainer.find('select').empty();
-        $pickupPointContainer.hide();
-        return;
-      }
-
-      let html = '';
-      pickupPoints[provider].forEach(function(pickupPoint) {
-        html += '<option value="' + pickupPoint.id + '">' + pickupPoint.name + ', ' + pickupPoint.address + ', ' + pickupPoint.zipCode + ' ' + pickupPoint.city + '</option>';
       });
-
-      $pickupPointContainer.find('select').html(html);
-      $pickupPointContainer.show();
-    }
+    },
   });
 })(jQuery);

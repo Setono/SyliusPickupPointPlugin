@@ -12,6 +12,15 @@
             <argument>Pickup point providers</argument>
         </service>
 
+        <!-- Forms -->
+        <service id="Setono\SyliusPickupPointPlugin\Form\Type\PickupPointChoiceType">
+            <tag name="form.type" />
+        </service>
+
+        <service id="Setono\SyliusPickupPointPlugin\Form\Type\PickupPointIdChoiceType">
+            <tag name="form.type" />
+        </service>
+
         <!-- Form extensions -->
         <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension">
             <argument type="service" id="setono_sylius_pickup_point.registry.provider" />

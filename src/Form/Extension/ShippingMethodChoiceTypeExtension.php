@@ -66,7 +66,6 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
 
             return [
                 'data-pickup-point-provider' => $provider->getCode(),
-                'data-pickup-point-provider-url' => $this->router->generate('setono_sylius_pickup_point_shop_ajax_find_pickup_points', ['providerCode' => $provider->getCode()]),
                 'data-csrf-token' => $this->csrfTokenManager->getToken((string) $this->cartContext->getCart()->getId()),
             ] + $defaultAttr;
         });

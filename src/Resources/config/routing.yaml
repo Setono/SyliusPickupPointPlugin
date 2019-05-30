@@ -1,5 +1,5 @@
 setono_sylius_pickup_point_shop_ajax_find_pickup_points:
-    path: /{_locale}/ajax/pickup-points/find/{providerCode}
+    path: /{_locale}/ajax/pickup-points/find
     methods: [GET]
     defaults:
         _controller: setono_sylius_pickup_point.controller.action.find_pickup_points

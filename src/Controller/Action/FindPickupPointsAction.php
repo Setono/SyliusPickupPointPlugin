@@ -51,13 +51,18 @@ final class FindPickupPointsAction
         $this->providerRegistry = $providerRegistry;
     }
 
-    public function __invoke(Request $request, string $providerCode): Response
+    public function __invoke(Request $request): Response
     {
         /** @var OrderInterface $order */
         $order = $this->cartContext->getCart();
 
         if (!$this->isCsrfTokenValid((string) $order->getId(), $request->get('_csrf_token'))) {
             throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
+        }
+
+        $providerCode = $request->get('providerCode');
+        if (!$providerCode) {
+            throw new NotFoundHttpException();
         }
 
         if (!$this->providerRegistry->has($providerCode)) {

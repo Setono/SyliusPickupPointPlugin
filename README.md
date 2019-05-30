@@ -79,6 +79,8 @@ See an example [here](tests/Application/templates/bundles/SyliusAdminBundle/Ship
 Next add the following to the shop template `SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig`
 
 ```twig
+{% form_theme form.pickupPointId '@SetonoSyliusPickupPointPlugin/Form/theme.html.twig' %}
+
 {{ form_row(form.pickupPointId) }}
 ```
 
