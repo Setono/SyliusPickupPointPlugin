@@ -68,7 +68,9 @@ final class FindPickupPointsAction
         $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
 
-        return $this->viewHandler->handle(View::create($pickupPoints));
+        $view = View::create($pickupPoints);
+        $view->getContext()->addGroup('Autocomplete');
+        return $this->viewHandler->handle($view);
     }
 
     private function isCsrfTokenValid(string $id, ?string $token): bool

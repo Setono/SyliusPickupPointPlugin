@@ -1,0 +1,12 @@
+Setono\SyliusPickupPointPlugin\Model\PickupPoint:
+    exclusion_policy: ALL
+    xml_root_name: setono_sylius_pickup_point
+    virtual_properties:
+        getFullId:
+            serialized_name: full_id
+            type: string
+            groups: [Autocomplete]
+        getFullName:
+            serialized_name: full_name
+            type: string
+            groups: [Autocomplete]
