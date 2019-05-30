@@ -10,7 +10,7 @@
 
         <!-- Setup -->
         <service id="setono_sylius_pickup_point.behat.context.setup.shipping_method" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup\ShippingContext">
-            <argument type="service" id="setono_sylius_pickup_point.manager.provider_manager"/>
+            <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
             <argument type="service" id="sylius.manager.shipping_method"/>
         </service>
 
