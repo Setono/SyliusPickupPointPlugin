@@ -30,15 +30,27 @@ final class SetonoSyliusPickupPointExtension extends Extension
             $loader->load('services/providers/faker.xml');
         }
 
-        if (isset($bundles['SetonoDAOBundle']) && $config['providers']['dao']) {
+        if ($config['providers']['dao']) {
+            if (!isset($bundles['SetonoDAOBundle'])) {
+                throw new Exception('You should use SetonoDAOBundle or disable dao provider.');
+            }
+
             $loader->load('services/providers/dao.xml');
         }
 
-        if (isset($bundles['SetonoGlsWebserviceBundle']) && $config['providers']['gls']) {
+        if ($config['providers']['gls']) {
+            if (!isset($bundles['SetonoGlsWebserviceBundle'])) {
+                throw new Exception('You should use SetonoGlsWebserviceBundle or disable gls provider.');
+            }
+
             $loader->load('services/providers/gls.xml');
         }
 
-        if (isset($bundles['SetonoPostNordBundle']) && $config['providers']['post_nord']) {
+        if ($config['providers']['post_nord']) {
+            if (!isset($bundles['SetonoPostNordBundle'])) {
+                throw new Exception('You should use SetonoPostNordBundle or disable post_nord provider.');
+            }
+
             $loader->load('services/providers/post_nord.xml');
         }
     }
