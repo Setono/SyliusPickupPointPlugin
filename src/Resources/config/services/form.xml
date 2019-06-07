@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <!-- Transformers -->
+        <service id="setono_sylius_pickup_point.form.type.data_transformer.pickup_point_to_identifier"
+                 class="Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointToIdentifierTransformer">
+            <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
+        </service>
+
+        <!-- Forms -->
+        <service id="Setono\SyliusPickupPointPlugin\Form\Type\PickupPointChoiceType">
+            <tag name="form.type" />
+        </service>
+
+        <service id="Setono\SyliusPickupPointPlugin\Form\Type\PickupPointIdChoiceType">
+            <tag name="form.type" />
+        </service>
+
+        <!-- Form extensions -->
+        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension">
+            <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
+            <argument type="service" id="router" />
+            <argument type="service" id="sylius.context.cart.composite" />
+            <argument type="service" id="security.csrf.token_manager" />
+            <tag name="form.type_extension" extended_type="Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType" />
+        </service>
+
+        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodTypeExtension">
+            <argument>%setono_sylius_pickup_point.providers%</argument>
+            <tag name="form.type_extension" extended_type="Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType" />
+        </service>
+
+        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShipmentTypeExtension">
+            <tag name="form.type_extension" extended_type="Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType" />
+        </service>
+
+    </services>
+</container>
