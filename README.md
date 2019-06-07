@@ -232,6 +232,13 @@ setono_sylius_pickup_point:
         pool: setono_sylius_pickup_point.provider_cache_pool
 ```
 
+### Step 6: Update database schema
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate 
+```
+
 ## Troubleshooting
 
 * At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
