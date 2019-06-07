@@ -1,9 +1,6 @@
 (function ($) {
   'use strict';
 
-  // console.log($.fn.api.settings);
-  // return;
-
   $.fn.extend({
     setonoSyliusPickupPointAutoComplete() {
       this.each((idx, el) => {
@@ -21,14 +18,13 @@
             dataType: 'JSON',
             cache: false,
             beforeSend(settings) {
-              let selectedMethod = $('input.input-shipping-method:checked');
+              const selectedMethod = $('input.input-shipping-method:checked');
 
+              /* eslint-disable-next-line no-param-reassign */
               settings.urlData = {
                 providerCode: selectedMethod.data('pickup-point-provider'),
                 _csrf_token: selectedMethod.data('csrf-token'),
-              }
-
-              console.log(settings.urlData);
+              };
 
               return settings;
             },
@@ -52,12 +48,13 @@
             method: 'GET',
             url: element.data('url'),
             beforeSend(settings) {
-              let selectedMethod = $('input.input-shipping-method:checked');
+              const selectedMethod = $('input.input-shipping-method:checked');
 
+              /* eslint-disable-next-line no-param-reassign */
               settings.urlData = {
                 providerCode: selectedMethod.data('pickup-point-provider'),
                 _csrf_token: selectedMethod.data('csrf-token'),
-              }
+              };
 
               /* eslint-disable-next-line no-param-reassign */
               settings.data[choiceValue] = autocompleteValue.split(',').filter(String);
