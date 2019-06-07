@@ -27,6 +27,10 @@ final class SetonoSyliusPickupPointExtension extends Extension
         $bundles = $container->getParameter('kernel.bundles');
 
         if ($config['providers']['faker']) {
+            if ('prod' === $container->getParameter('kernel.environment')) {
+                throw new Exception("You can't use faker provider in production environment.");
+            }
+
             $loader->load('services/providers/faker.xml');
         }
 
