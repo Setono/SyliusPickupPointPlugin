@@ -95,6 +95,15 @@ after shipment method header:
 
 See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_shipments.html.twig).
 
+Next add the following to the admin template `SyliusAdminBundle/Order/Show/_shipment.html.twig`
+after shipment header:
+
+```twig
+{% include "@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig" %}
+```
+
+See an example [here](tests/Application/templates/bundles/SyliusAdminBundle/Order/Show/_shipment.html.twig).
+
 ### Step 4: Customize resources
 
 **Shipment resource**
