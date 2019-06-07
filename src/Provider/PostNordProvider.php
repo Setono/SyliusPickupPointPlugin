@@ -9,8 +9,15 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
+/**
+ * @see https://developer.postnord.com/api/docs/location
+ *
+ * @todo Pass locale parameter so addresses will be localized?
+ */
 final class PostNordProvider implements ProviderInterface
 {
+    public const DELIMITER = '_';
+
     /**
      * @var ClientInterface
      */
@@ -40,14 +47,13 @@ final class PostNordProvider implements ProviderInterface
         }
 
         $servicePoints = $result['servicePointInformationResponse']['servicePoints'];
-
-        if (!is_array($servicePoints) || count($servicePoints) <= 0) {
+        if (!is_array($servicePoints) || count($servicePoints) < 1) {
             return [];
         }
 
         $pickupPoints = [];
         foreach ($servicePoints as $servicePoint) {
-            $pickupPoints[] = $this->populatePickupPoint($shippingAddress->getCountryCode(), $servicePoint);
+            $pickupPoints[] = $this->transform($servicePoint, $shippingAddress->getCountryCode());
         }
 
         return $pickupPoints;
@@ -55,7 +61,23 @@ final class PostNordProvider implements ProviderInterface
 
     public function findOnePickupPointById(string $id): ?PickupPointInterface
     {
-        // @todo Implementation
+        [$countryCode, $id] = $this->reverseTransformId($id);
+
+        $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
+            'countryCode' => $countryCode,
+            'servicePointId' => $id,
+        ]);
+
+        if (!isset($result['servicePointInformationResponse']['servicePoints'])) {
+            return null;
+        }
+
+        $servicePoints = $result['servicePointInformationResponse']['servicePoints'];
+        if (!is_array($servicePoints) || count($servicePoints) < 1) {
+            return null;
+        }
+
+        return $this->transform($servicePoints[0], $countryCode);
     }
 
     public function getCode(): string
@@ -68,7 +90,7 @@ final class PostNordProvider implements ProviderInterface
         return 'PostNord';
     }
 
-    private function populatePickupPoint(string $countryCode, array $servicePoint): PickupPointInterface
+    private function transform(array $servicePoint, string $countryCode): PickupPointInterface
     {
         return new PickupPoint(
             $this->getCode(),
@@ -85,6 +107,16 @@ final class PostNordProvider implements ProviderInterface
 
     private function transformId(string $countryCode, string $servicePointId): string
     {
-        return $countryCode . '|' . $servicePointId;
+        return sprintf(
+            '%s%s%s',
+            $countryCode,
+            self::DELIMITER,
+            $servicePointId
+        );
+    }
+
+    private function reverseTransformId(string $id): array
+    {
+        return explode(self::DELIMITER, $id);
     }
 }
