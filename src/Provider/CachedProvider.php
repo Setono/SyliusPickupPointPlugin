@@ -84,7 +84,8 @@ final class CachedProvider implements ProviderInterface
         // As far as DAO/Gls/PostNord using only these 3 fields to
         // search for pickup points, we should build cache key based on them only
         return sprintf(
-            '%s-%s-%s',
+            '%s-%s-%s-%s',
+            $this->getCode(),
             $shippingAddress->getCountryCode(),
             $shippingAddress->getPostcode(),
             $shippingAddress->getStreet()
