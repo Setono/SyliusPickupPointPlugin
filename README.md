@@ -14,6 +14,20 @@ Add a `<select>` that containts pickup points to your select shipping checkout s
 - PostNord
 - Fake provider (for development/playing purposes)
 
+## Screenshots
+
+Shop:
+
+![Screenshot showing checkout select shipping step with pickup points available](docs/images/shop-checkout-select-shipping-pickup-point.png)
+
+![Screenshot showing checkout complete step with pickup point address](docs/images/shop-checkout-complete-shipping-pickup-point.png)
+
+Admin:
+
+![Screenshot showing admin order shipping page with pickup point address](docs/images/admin-order-shipping-pickup-point.png)
+
+![Screenshot showing admin shipping method with some pickup point providers](docs/images/admin-shipping-method-pickup-point-provider.png)
+
 ## Installation
 
 ### Step 1: Install and enable plugin
