@@ -1,0 +1,3 @@
+setono_sylius_pickup_point:
+    providers:
+        faker: false
