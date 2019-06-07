@@ -12,6 +12,11 @@
             <argument>Pickup point providers</argument>
         </service>
 
+        <!-- Transformers -->
+        <service id="setono_sylius_pickup_point.form.type.data_transformer.pickup_point_to_identifier" class="Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointToIdentifierTransformer">
+            <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
+        </service>
+
         <!-- Forms -->
         <service id="Setono\SyliusPickupPointPlugin\Form\Type\PickupPointChoiceType">
             <tag name="form.type" />
@@ -45,6 +50,12 @@
             <argument type="service" id="sylius.context.cart.composite" />
             <argument type="service" id="security.csrf.token_manager" />
             <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service id="setono_sylius_pickup_point.controller.action.pickup_point" class="Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointAction">
+            <argument type="service" id="fos_rest.view_handler.default" />
+            <argument type="service" id="setono_sylius_pickup_point.form.type.data_transformer.pickup_point_to_identifier" />
             <tag name="controller.service_arguments"/>
         </service>
 

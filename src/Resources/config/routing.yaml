@@ -6,3 +6,12 @@ setono_sylius_pickup_point_shop_ajax_find_pickup_points:
         _format: json
     requirements:
         _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
+setono_sylius_pickup_point_shop_ajax_pickup_point:
+    path: /{_locale}/ajax/pickup-points/find/{pickupPointId}
+    methods: [GET]
+    defaults:
+        _controller: setono_sylius_pickup_point.controller.action.pickup_point
+        _format: json
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
