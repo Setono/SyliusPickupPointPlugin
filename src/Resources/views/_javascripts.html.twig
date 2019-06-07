@@ -4,6 +4,8 @@
         $('.setono-sylius-pickup-point-label').setonoSyliusPickupPointLabel();
 
         $('.setono-sylius-pickup-point-autocomplete').setonoSyliusPickupPointAutoComplete();
+
+        const initialProvider = $('input.input-shipping-method:checked').data('pickup-point-provider');
         $('input.input-shipping-method').on('change', function(){
             let selectedMethod = $('input.input-shipping-method:checked');
             let provider = selectedMethod.data('pickup-point-provider');
@@ -15,7 +17,9 @@
                 pickupPointContainer.hide();
             }
 
-            $('.setono-sylius-pickup-point-autocomplete').dropdown('clear');
+            if (initialProvider != provider) {
+                $('.setono-sylius-pickup-point-autocomplete').dropdown('clear');
+            }
         });
         $('input.input-shipping-method').change();
     });
