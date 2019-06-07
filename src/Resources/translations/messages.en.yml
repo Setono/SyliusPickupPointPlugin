@@ -1,4 +1,6 @@
 setono_sylius_pickup_point:
+    ui:
+        shipment_to: To pickup point
     form:
         shipment:
             pickup_point_id: Pickup point id

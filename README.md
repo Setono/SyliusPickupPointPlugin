@@ -86,6 +86,15 @@ Next add the following to the shop template `SyliusShopBundle/Checkout/SelectShi
 
 See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig).
 
+Next add the following to the shop template `SyliusShopBundle/Common/Order/_shipments.html.twig`
+after shipment method header:
+
+```twig
+{% include "@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig" %}
+```
+
+See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_shipments.html.twig).
+
 ### Step 4: Customize resources
 
 **Shipment resource**

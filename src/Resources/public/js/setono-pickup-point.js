@@ -2,6 +2,27 @@
   'use strict';
 
   $.fn.extend({
+    setonoSyliusPickupPointLabel() {
+      this.each((idx, el) => {
+        const element = $(el);
+        const pickupPointId = element.data('pickup-point-id');
+
+        if (pickupPointId.length > 0) {
+          element.api({
+            on: 'now',
+            method: 'GET',
+            url: element.data('url'),
+            onSuccess(response) {
+              element
+                .append('<i>"' + response.full_name + '"</i>')
+                .show()
+              ;
+            },
+          });
+        }
+      });
+    },
+
     setonoSyliusPickupPointAutoComplete() {
       this.each((idx, el) => {
         const element = $(el);

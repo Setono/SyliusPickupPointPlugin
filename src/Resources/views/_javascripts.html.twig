@@ -1,6 +1,8 @@
 <script src="{{ asset('bundles/setonosyliuspickuppointplugin/js/setono-pickup-point.js') }}"></script>
 <script>
     $(document).ready(() => {
+        $('.setono-sylius-pickup-point-label').setonoSyliusPickupPointLabel();
+
         $('.setono-sylius-pickup-point-autocomplete').setonoSyliusPickupPointAutoComplete();
         $('input.input-shipping-method').on('change', function(){
             let selectedMethod = $('input.input-shipping-method:checked');
