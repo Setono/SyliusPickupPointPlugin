@@ -78,8 +78,8 @@ final class PostNordProvider implements ProviderInterface
             (string) $servicePoint['deliveryAddress']['postalCode'],
             $servicePoint['deliveryAddress']['city'],
             (string) $servicePoint['deliveryAddress']['countryCode'],
-            (string) $servicePoint['coordinate']['northing'],
-            (string) $servicePoint['coordinate']['easting']
+            isset($servicePoint['coordinate']) ? (string) $servicePoint['coordinate']['northing'] : '',
+            isset($servicePoint['coordinate']) ? (string) $servicePoint['coordinate']['easting'] : ''
         );
     }
 
