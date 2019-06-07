@@ -194,6 +194,44 @@ sylius_shipping:
                 model: App\Entity\ShippingMethod
 ```
 
+### Step 5: Configure plugin
+
+**Enable desired providers**
+
+Note that:
+- `faker` provider will not work on prod environment
+- `gls` provider require `setono/gls-webservice-bundle` to be installed
+- `dao` provider require `setono/dao-bundle` to be installed
+- `post_nord` provider require `setono/post-nord-bundle` to be installed
+
+```yaml
+# config/packages/setono_sylius_pickup_point.yaml
+setono_sylius_pickup_point:
+    providers:
+        faker: true
+        gls: true
+        post_nord: true
+        dao: true
+```
+
+**If you want to use cache**
+
+Cache disabled by default. To enable it, make next configuration:
+
+```yaml
+# config/packages/setono_sylius_pickup_point.yaml
+framework:
+    cache:
+        pools:
+            setono_sylius_pickup_point.provider_cache_pool:
+                adapter: cache.app
+
+setono_sylius_pickup_point:
+    cache:
+        enabled: true
+        pool: setono_sylius_pickup_point.provider_cache_pool
+```
+
 ## Troubleshooting
 
 * At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
