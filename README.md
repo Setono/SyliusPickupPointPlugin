@@ -171,6 +171,13 @@ sylius_shipping:
                 model: App\Entity\ShippingMethod
 ```
 
+## Troubleshooting
+
+* At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
+  
+  Check your browser's developer console and make sure JS scripts loaded correctly.
+  Also make sure `setono-pickup-point.js` compiled (read as you not forgot to run `sylius:install:assets`).
+
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable
 [ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license
