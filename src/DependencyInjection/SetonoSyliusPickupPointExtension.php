@@ -8,7 +8,6 @@ use Exception;
 use LogicException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -40,7 +39,7 @@ final class SetonoSyliusPickupPointExtension extends Extension
                 throw new LogicException('You should specify pool in order to use cache for pickup point providers.');
             }
 
-            $container->setAlias(new Alias('setono_sylius_pickup_point.cache'), $config['cache']['pool']);
+            $container->setAlias('setono_sylius_pickup_point.cache', $config['cache']['pool']);
         }
 
         $container->setParameter('setono_sylius_pickup_point.cache.enabled', $cacheEnabled);
