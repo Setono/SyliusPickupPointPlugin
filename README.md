@@ -12,9 +12,9 @@ Add a `<select>` that containts pickup points to your select shipping checkout s
 - DAO
 - GLS
 - PostNord
+- Fake provider (for development/playing purposes)
 
 ## Installation
-
 
 ### Step 1: Install and enable plugin
 
