@@ -11,7 +11,7 @@ trait PickupPointProviderAwareTrait
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="pickup_point_provider", type="string", nullable=true)
      */
     protected $pickupPointProvider;
 
