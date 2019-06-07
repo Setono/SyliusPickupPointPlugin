@@ -5,7 +5,7 @@
         {{- form_label(form) -}}
         <div
                 class="setono-sylius-pickup-point-autocomplete ui fluid search selection dropdown {% if multiple %}multiple{% endif %}"
-                data-url="{{ path('setono_sylius_pickup_point_shop_ajax_find_pickup_points') }}?providerCode={providerCode}&_csrf_token={_csrf_token}"
+                data-url="{{ path('setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address') }}?providerCode={providerCode}&_csrf_token={_csrf_token}"
                 data-choice-name="{{ choice_name }}"
                 data-choice-value="{{ choice_value }}"
         >

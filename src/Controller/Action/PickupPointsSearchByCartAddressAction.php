@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-final class FindPickupPointsAction
+final class PickupPointsSearchByCartAddressAction
 {
     /**
      * @var ViewHandlerInterface

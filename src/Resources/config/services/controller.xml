@@ -5,8 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
-        <service id="setono_sylius_pickup_point.controller.action.find_pickup_points"
-                 class="Setono\SyliusPickupPointPlugin\Controller\Action\FindPickupPointsAction">
+        <service id="setono_sylius_pickup_point.controller.action.pickup_points_search_by_cart_address"
+                 class="Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction">
             <argument type="service" id="fos_rest.view_handler.default" />
             <argument type="service" id="sylius.context.cart.composite" />
             <argument type="service" id="security.csrf.token_manager" />
@@ -14,8 +14,8 @@
             <tag name="controller.service_arguments"/>
         </service>
 
-        <service id="setono_sylius_pickup_point.controller.action.pickup_point"
-                 class="Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointAction">
+        <service id="setono_sylius_pickup_point.controller.action.pickup_point_by_id"
+                 class="Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction">
             <argument type="service" id="fos_rest.view_handler.default" />
             <argument type="service" id="setono_sylius_pickup_point.form.type.data_transformer.pickup_point_to_identifier" />
             <tag name="controller.service_arguments"/>
