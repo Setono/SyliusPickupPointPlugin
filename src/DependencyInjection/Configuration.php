@@ -33,6 +33,7 @@ final class Configuration implements ConfigurationInterface
                             ->defaultFalse()
                         ->end()
                         ->scalarNode('pool')
+                            ->defaultNull()
                         ->end()
                     ->end()
                 ->end()
