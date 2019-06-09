@@ -26,13 +26,22 @@
             <argument type="service" id="setono_sylius_pickup_point.page.admin.shipping_method.create"/>
         </service>
 
-        <!-- Mocks -->
-        <service id="setono_sylius_pickup_point.behat.gls_provider_mocker" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\GlsProviderMocker">
-            <argument type="service" id="sylius.behat.mocker"/>
+        <!-- Providers Mocks -->
+        <service id="setono_sylius_pickup_point.provider.gls"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\GlsProviderMocker">
+            <argument type="service" id="setono_gls_webservice.client"/>
+            <tag name="setono_sylius_pickup_point.provider"
+                 code="gls"
+                 label="setono_sylius_pickup_point.provider.gls" />
         </service>
 
-        <service id="setono_sylius_pickup_point.behat.post_nord_provider_mocker" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\PostNordProviderMocker">
-            <argument type="service" id="sylius.behat.mocker"/>
+        <service id="setono_sylius_pickup_point.provider.post_nord"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\PostNordProviderMocker">
+            <argument type="service" id="setono_post_nord.client"/>
+            <tag name="setono_sylius_pickup_point.provider"
+                 code="post_nord"
+                 label="setono_sylius_pickup_point.provider.post_nord" />
         </service>
+
     </services>
 </container>

@@ -1,16 +1,3 @@
 imports:
     - { resource: "../../Behat/Resources/services.xml" }
     - { resource: "../../../vendor/sylius/sylius/src/Sylius/Behat/Resources/config/services.xml" }
-
-# todo move these services to "../../Behat/Resources/services.xml"
-services:
-    setono_sylius_pickup_point.provider.gls:
-        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\GlsProviderMocker
-        public: true
-        tags:
-            - { name: setono_sylius_pickup_point.provider, code: gls, label: setono_sylius_pickup_point.provider.gls }
-    setono_sylius_pickup_point.provider.post_nord:
-        class: Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker\PostNordProviderMocker
-        public: true
-        tags:
-            - { name: setono_sylius_pickup_point.provider, code: gls, label: setono_sylius_pickup_point.provider.post_nord }
