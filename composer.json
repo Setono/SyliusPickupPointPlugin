@@ -98,6 +98,8 @@
         ],
         "check-style": "./vendor/bin/ecs check src/ spec/",
         "checks": [
+            "composer validate --strict",
+            "composer normalize --dry-run",
             "@check-style",
             "@analyse"
         ],
