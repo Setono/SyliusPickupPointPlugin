@@ -94,7 +94,7 @@
             "SYMFONY_ENV=test composer ensure-database-created",
             "SYMFONY_ENV=test composer ensure-schema-updated",
             "SYMFONY_ENV=test composer ensure-env-copied",
-            "./vendor/bin/behat --tags=\"~@javascript\" --no-interaction --format=progress"
+            "php -d memory_limit=-1 ./vendor/bin/behat --tags=\"~@javascript\" --no-interaction --format=progress"
         ],
         "check-style": "./vendor/bin/ecs check src/ spec/",
         "checks": [
