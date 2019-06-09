@@ -26,7 +26,7 @@ final class ShippingContext implements Context
     }
 
     /**
-     * @Given /^(shipping method "([^"]+)") has the selected "([^"]+)" pickup point provider$/
+     * @Given /^(shipping method "[^"]+") has the selected "([^"]+)" pickup point provider$/
      */
     public function theShippingMethodHasTheSelectedGlsPickupPointProvider(
         PickupPointProviderAwareInterface $shippingMethod,
