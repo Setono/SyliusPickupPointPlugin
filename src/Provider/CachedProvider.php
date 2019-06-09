@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Behat\Transliterator\Transliterator;
 use Psr\Cache\CacheItemPoolInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -86,9 +87,9 @@ final class CachedProvider implements ProviderInterface
         return sprintf(
             '%s-%s-%s-%s',
             $this->getCode(),
-            $shippingAddress->getCountryCode(),
-            $shippingAddress->getPostcode(),
-            $shippingAddress->getStreet()
+            Transliterator::transliterate($shippingAddress->getCountryCode()),
+            Transliterator::transliterate($shippingAddress->getPostcode()),
+            Transliterator::transliterate($shippingAddress->getStreet())
         );
     }
 
