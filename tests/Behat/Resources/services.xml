@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <defaults public="true"/>
 
         <!-- Pages -->
-        <service id="setono_sylius_pickup_point.page.admin.shipping_method.create" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Admin\ShippingMethod\CreatePage" parent="sylius.behat.page.admin.shipping_method.create" public="false"/>
-        <service id="setono_sylius_pickup_point.page.shop.select_shipping" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Shop\ShippingPickup\SelectShippingPage" parent="sylius.behat.page.shop.checkout.select_shipping" public="false"/>
+        <service id="setono_sylius_pickup_point.page.admin.shipping_method.create"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Admin\ShippingMethod\CreatePage"
+                 parent="sylius.behat.page.admin.shipping_method.create" public="false"/>
+
+        <service id="setono_sylius_pickup_point.page.shop.select_shipping"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Shop\ShippingPickup\SelectShippingPage"
+                 parent="sylius.behat.page.shop.checkout.select_shipping" public="false"/>
 
         <!-- Setup -->
-        <service id="setono_sylius_pickup_point.behat.context.setup.shipping_method" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup\ShippingContext">
+        <service id="setono_sylius_pickup_point.behat.context.setup.shipping_method"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup\ShippingContext">
             <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
             <argument type="service" id="sylius.manager.shipping_method"/>
         </service>
 
         <!-- UI -->
-        <service id="setono_sylius_pickup_point.behat.context.ui.shop.shipping" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Shop\ShippingContext">
+        <service id="setono_sylius_pickup_point.behat.context.ui.shop.shipping"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Shop\ShippingContext">
             <argument type="service" id="setono_sylius_pickup_point.page.shop.select_shipping"/>
             <argument type="service" id="sylius.behat.page.shop.checkout.complete"/>
             <argument type="service" id="sylius.behat.shared_storage"/>
             <argument type="service" id="sylius.repository.order"/>
         </service>
 
-        <service id="setono_sylius_pickup_point.behat.context.ui.admin.shipping" class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Admin\ShippingContext">
+        <service id="setono_sylius_pickup_point.behat.context.ui.admin.shipping"
+                 class="Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Admin\ShippingContext">
             <argument type="service" id="setono_sylius_pickup_point.page.admin.shipping_method.create"/>
         </service>
 
