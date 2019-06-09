@@ -8,7 +8,7 @@
         <service id="setono_sylius_pickup_point.registry.provider"
                  class="Sylius\Component\Registry\ServiceRegistry">
             <argument>Setono\SyliusPickupPointPlugin\Provider\ProviderInterface</argument>
-            <argument>Pickup point providers</argument>
+            <argument>pickup point provider</argument>
         </service>
 
     </services>
