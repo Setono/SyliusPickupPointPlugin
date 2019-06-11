@@ -1,77 +1,70 @@
 (function ($) {
   'use strict';
 
-  let pickupPoints = {};
-  let cached = false;
+  $.fn.extend({
+    setonoSyliusPickupPointLabel() {
+      this.each((idx, el) => {
+        const element = $(el);
+        const pickupPointId = element.data('pickup-point-id');
 
-  $(function () {
-    let deferreds = [];
-
-    let populateTimer = setTimeout(populate, 1000);
-
-    // cache pickup points
-    $('input.input-shipping-method').each(function () {
-      let $element = $(this);
-      let provider = $element.data('pickup-point-provider');
-      let url = $element.data('pickup-point-provider-url');
-      let csrfToken = $element.data('csrf-token');
-
-      if (!url) {
-        return;
-      }
-
-      deferreds.push($.ajax({
-        method: 'GET',
-        cache: false,
-        url: url,
-        data: {
-          _csrf_token: csrfToken
-        },
-        success: function (response) {
-          if (!pickupPoints.hasOwnProperty(provider)) {
-            pickupPoints[provider] = [];
-          }
-          response.forEach(function (element) {
-            pickupPoints[provider].push(element);
+        if (pickupPointId.length > 0) {
+          element.api({
+            on: 'now',
+            method: 'GET',
+            url: element.data('url'),
+            onSuccess(response) {
+              element
+                .append('<i>"' + response.full_name + '"</i>')
+                .show()
+              ;
+            },
           });
-        },
-      }));
-    }).on('change', populate);
-
-    $.when.apply($, deferreds).always(function () {
-      cached = true;
-      clearTimeout(populateTimer);
-      populate();
-    });
-
-    function populate() {
-      if(!cached) {
-        return;
-      }
-
-      let $selectedMethod = $('input.input-shipping-method:checked');
-      let provider = $selectedMethod.data('pickup-point-provider');
-      let $pickupPointContainer = $('.input-pickup-point-id').closest('.field');
-
-      if(!provider) {
-        $pickupPointContainer.find('select').empty();
-        $pickupPointContainer.hide();
-        return;
-      }
-
-      if(!pickupPoints.hasOwnProperty(provider)) {
-        $pickupPointContainer.find('select').empty();
-        $pickupPointContainer.hide();
-        return;
-      }
-
-      let html = '';
-      pickupPoints[provider].forEach(function(pickupPoint) {
-        html += '<option value="' + pickupPoint.id + '">' + pickupPoint.name + ', ' + pickupPoint.address + ', ' + pickupPoint.zipCode + ' ' + pickupPoint.city + '</option>';
+        }
       });
+    },
 
-      $pickupPointContainer.find('select').html(html);
-      $pickupPointContainer.show();
-    }
+    setonoSyliusPickupPointAutoComplete() {
+      this.each((idx, el) => {
+        const element = $(el);
+        const choiceName = element.data('choice-name');
+        const choiceValue = element.data('choice-value');
+
+        element.dropdown({
+          delay: {
+            search: 250,
+          },
+          forceSelection: false,
+          apiSettings: {
+            dataType: 'JSON',
+            cache: false,
+            beforeSend(settings) {
+              const selectedMethod = $('input.input-shipping-method:checked');
+
+              /* eslint-disable-next-line no-param-reassign */
+              settings.urlData = {
+                providerCode: selectedMethod.data('pickup-point-provider'),
+                _csrf_token: selectedMethod.data('csrf-token'),
+              };
+
+              return settings;
+            },
+            onResponse(response) {
+              return {
+                success: true,
+                results: response.map(item => ({
+                  name: item[choiceName],
+                  value: item[choiceValue],
+                })),
+              };
+            },
+          },
+        });
+
+        window.setTimeout(() => {
+          element.dropdown('set selected', element.find('input.autocomplete').val().split(',').filter(String));
+        }, 5000);
+
+      });
+    },
   });
 })(jQuery);

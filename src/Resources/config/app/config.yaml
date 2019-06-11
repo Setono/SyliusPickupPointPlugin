@@ -1,0 +1,6 @@
+jms_serializer:
+    metadata:
+        directories:
+            setono-sylius-pickup-point:
+                namespace_prefix: "Setono\\SyliusPickupPointPlugin\\Model"
+                path: "@SetonoSyliusPickupPointPlugin/Resources/config/serializer"

@@ -1,0 +1,19 @@
+{% extends '@SyliusUi/Form/theme.html.twig' %}
+
+{% block setono_sylius_pickup_point_choice_row %}
+    <div class="{% if required %}required {% endif %}field{% if (not compound or force_error|default(false)) and not valid %} error{% endif %}">
+        {{- form_label(form) -}}
+        <div
+                class="setono-sylius-pickup-point-autocomplete ui fluid search selection dropdown {% if multiple %}multiple{% endif %}"
+                data-url="{{ path('setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address') }}?providerCode={providerCode}&_csrf_token={_csrf_token}"
+                data-choice-name="{{ choice_name }}"
+                data-choice-value="{{ choice_value }}"
+        >
+            {{- form_widget(form, {'attr': {'class' : 'autocomplete'}}) -}}
+            <i class="dropdown icon"></i>
+            <div class="default text">{% if placeholder is defined %} {{ placeholder|trans }} {% endif %}</div>
+            <div class="menu"></div>
+        </div>
+        {{- form_errors(form) -}}
+    </div>
+{% endblock %}

@@ -6,6 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class DAOProvider implements ProviderInterface
@@ -51,6 +52,11 @@ final class DAOProvider implements ProviderInterface
         return $ret;
     }
 
+    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    {
+        // @todo Implementation
+    }
+
     public function getCode(): string
     {
         return 'dao';
@@ -61,9 +67,10 @@ final class DAOProvider implements ProviderInterface
         return 'DAO';
     }
 
-    private function populatePickupPoint(array $servicePoint): PickupPoint
+    private function populatePickupPoint(array $servicePoint): PickupPointInterface
     {
         return new PickupPoint(
+            $this->getCode(),
             $servicePoint['shopId'],
             $servicePoint['navn'],
             $servicePoint['adresse'],

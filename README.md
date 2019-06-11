@@ -14,9 +14,23 @@ Add a `<select>` that contains pickup points to your select shipping checkout st
 - DAO
 - GLS
 - PostNord
+- Fake provider (for development/playing purposes)
+
+## Screenshots
+
+Shop:
+
+![Screenshot showing checkout select shipping step with pickup points available](docs/images/shop-checkout-select-shipping-pickup-point.png)
+
+![Screenshot showing checkout complete step with pickup point address](docs/images/shop-checkout-complete-shipping-pickup-point.png)
+
+Admin:
+
+![Screenshot showing admin order shipping page with pickup point address](docs/images/admin-order-shipping-pickup-point.png)
+
+![Screenshot showing admin shipping method with some pickup point providers](docs/images/admin-shipping-method-pickup-point-provider.png)
 
 ## Installation
-
 
 ### Step 1: Install and enable plugin
 
@@ -42,11 +56,30 @@ return [
 
 ```
 
-### Step 2: Import routing
+### Step 2: Import routing and configs
+
+#### Import routing
+ 
+````yaml
+# config/routes/setono_sylius_pickup_point_plugin.yaml
+setono_sylius_pickup_point_plugin:
+    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml"
+````
+
+#### Import application config
 
 ````yaml
-setono_sylius_pickup_point_plugin:
-    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yml"
+# config/packages/_sylius.yaml
+imports:
+    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }    
+````
+
+#### (Optional) Import fixtures to play in your app
+
+````yaml
+# config/packages/_sylius.yaml
+imports:
+    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }    
 ````
 
 ### Step 3: Update templates
@@ -62,10 +95,30 @@ See an example [here](tests/Application/templates/bundles/SyliusAdminBundle/Ship
 Next add the following to the shop template `SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig`
 
 ```twig
+{% form_theme form.pickupPointId '@SetonoSyliusPickupPointPlugin/Form/theme.html.twig' %}
+
 {{ form_row(form.pickupPointId) }}
 ```
 
 See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Checkout/SelectShipping/_shipment.html.twig).
+
+Next add the following to the shop template `SyliusShopBundle/Common/Order/_shipments.html.twig`
+after shipment method header:
+
+```twig
+{% include "@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig" %}
+```
+
+See an example [here](tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_shipments.html.twig).
+
+Next add the following to the admin template `SyliusAdminBundle/Order/Show/_shipment.html.twig`
+after shipment header:
+
+```twig
+{% include "@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig" %}
+```
+
+See an example [here](tests/Application/templates/bundles/SyliusAdminBundle/Order/Show/_shipment.html.twig).
 
 ### Step 4: Customize resources
 
@@ -142,6 +195,58 @@ sylius_shipping:
             classes:
                 model: App\Entity\ShippingMethod
 ```
+
+### Step 5: Configure plugin
+
+**Enable desired providers**
+
+Note that:
+- `faker` provider will not work on prod environment
+- `gls` provider require `setono/gls-webservice-bundle` to be installed
+- `dao` provider require `setono/dao-bundle` to be installed
+- `post_nord` provider require `setono/post-nord-bundle` to be installed
+
+```yaml
+# config/packages/setono_sylius_pickup_point.yaml
+setono_sylius_pickup_point:
+    providers:
+        faker: true
+        gls: true
+        post_nord: true
+        dao: true
+```
+
+**If you want to use cache**
+
+Cache disabled by default. To enable it, make next configuration:
+
+```yaml
+# config/packages/setono_sylius_pickup_point.yaml
+framework:
+    cache:
+        pools:
+            setono_sylius_pickup_point.provider_cache_pool:
+                adapter: cache.app
+
+setono_sylius_pickup_point:
+    cache:
+        enabled: true
+        pool: setono_sylius_pickup_point.provider_cache_pool
+```
+
+### Step 6: Update database schema
+
+```bash
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate 
+```
+
+## Troubleshooting
+
+* At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
+  
+  Check your browser's developer console and make sure JS scripts loaded correctly.
+  Also make sure `setono-pickup-point.js` compiled (read as you not forgot to run `sylius:install:assets`).
 
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable

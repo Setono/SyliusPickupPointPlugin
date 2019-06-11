@@ -1,63 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <services>
-        <service id="setono_sylius_pickup_point.block_event_listener.javascript" class="Sylius\Bundle\UiBundle\Block\BlockEventListener">
-            <argument>SetonoSyliusPickupPointPlugin::_javascripts.html.twig</argument>
-            <tag name="kernel.event_listener" event="sonata.block.event.sylius.shop.layout.javascripts" method="onBlockEvent" />
-        </service>
-
-        <service id="setono_sylius_pickup_point.registry.provider" class="Sylius\Component\Registry\ServiceRegistry">
-            <argument>Setono\SyliusPickupPointPlugin\Provider\ProviderInterface</argument>
-            <argument>Pickup point providers</argument>
-        </service>
-
-        <!-- Form extensions -->
-        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension">
-            <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
-            <argument type="service" id="router" />
-            <argument type="service" id="sylius.context.cart.composite" />
-            <argument type="service" id="security.csrf.token_manager" />
-            <tag name="form.type_extension" extended_type="Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType" />
-        </service>
-
-        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodTypeExtension">
-            <argument>%setono_sylius_pickup_point.providers%</argument>
-            <tag name="form.type_extension" extended_type="Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType" />
-        </service>
-
-        <service id="Setono\SyliusPickupPointPlugin\Form\Extension\ShipmentTypeExtension">
-            <tag name="form.type_extension" extended_type="Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType" />
-        </service>
-
-        <!-- Controller actions -->
-        <service id="setono_sylius_pickup_point.controller.action.find_pickup_points" class="Setono\SyliusPickupPointPlugin\Controller\Action\FindPickupPointsAction">
-            <argument type="service" id="fos_rest.view_handler.default" />
-            <argument type="service" id="sylius.context.cart.composite" />
-            <argument type="service" id="security.csrf.token_manager" />
-            <argument type="service" id="setono_sylius_pickup_point.registry.provider" />
-            <tag name="controller.service_arguments"/>
-        </service>
-
-        <service id="setono_sylius_pickup_point.validator.has_all_prices_defined" class="Setono\SyliusPickupPointPlugin\Validator\Constraints\HasPickupPointSelectedValidator">
-            <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
-            <tag name="validator.constraint_validator" alias="setono_pickup_point_has_pickup_point_selected" />
-        </service>
-
-        <!-- Fixtures -->
-        <service id="setono_sylius_pickup_point.fixture.shipping_method" class="Setono\SyliusPickupPointPlugin\Fixture\ShippingMethodFixture">
-            <argument type="service" id="sylius.manager.shipping_method" />
-            <argument type="service" id="setono_sylius_pickup_point.fixture.example_factory.shipping_method" />
-            <tag name="sylius_fixtures.fixture" />
-        </service>
-
-        <service id="setono_sylius_pickup_point.fixture.example_factory.shipping_method" class="Setono\SyliusPickupPointPlugin\Fixture\Factory\ShippingMethodExampleFactory">
-            <argument type="service" id="sylius.factory.shipping_method" />
-            <argument type="service" id="sylius.repository.zone" />
-            <argument type="service" id="sylius.repository.shipping_category" />
-            <argument type="service" id="sylius.repository.locale" />
-            <argument type="service" id="sylius.repository.channel" />
-            <argument type="service" id="sylius.repository.tax_category" />
-        </service>
-    </services>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="services/controller.xml"/>
+        <import resource="services/event_listener.xml"/>
+        <import resource="services/fixture.xml"/>
+        <import resource="services/form.xml"/>
+        <import resource="services/registry.xml"/>
+        <import resource="services/validator.xml"/>
+    </imports>
 </container>

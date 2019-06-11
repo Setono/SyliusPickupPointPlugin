@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <service id="setono_sylius_pickup_point.fixture.shipping_method"
+                 class="Setono\SyliusPickupPointPlugin\Fixture\ShippingMethodFixture">
+            <argument type="service" id="sylius.manager.shipping_method" />
+            <argument type="service" id="setono_sylius_pickup_point.fixture.example_factory.shipping_method" />
+            <tag name="sylius_fixtures.fixture" />
+        </service>
+
+        <service id="setono_sylius_pickup_point.fixture.example_factory.shipping_method"
+                 class="Setono\SyliusPickupPointPlugin\Fixture\Factory\ShippingMethodExampleFactory">
+            <argument type="service" id="sylius.factory.shipping_method" />
+            <argument type="service" id="sylius.repository.zone" />
+            <argument type="service" id="sylius.repository.shipping_category" />
+            <argument type="service" id="sylius.repository.locale" />
+            <argument type="service" id="sylius.repository.channel" />
+            <argument type="service" id="sylius.repository.tax_category" />
+        </service>
+
+    </services>
+</container>

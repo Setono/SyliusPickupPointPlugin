@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection\Compiler;
 
 use InvalidArgumentException;
+use Setono\SyliusPickupPointPlugin\Provider\CachedProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterProvidersPass implements CompilerPassInterface
@@ -18,6 +20,7 @@ final class RegisterProvidersPass implements CompilerPassInterface
         }
 
         $registry = $container->getDefinition('setono_sylius_pickup_point.registry.provider');
+        $cacheEnabled = $container->getParameter('setono_sylius_pickup_point.cache.enabled');
 
         $typeToLabelMap = [];
         foreach ($container->findTaggedServiceIds('setono_sylius_pickup_point.provider') as $id => $tagged) {
@@ -27,7 +30,18 @@ final class RegisterProvidersPass implements CompilerPassInterface
                 }
 
                 $typeToLabelMap[$attributes['code']] = $attributes['label'];
-                $registry->addMethodCall('register', [$attributes['code'], new Reference($id)]);
+
+                if ($cacheEnabled) {
+                    $cachedDefinition = new Definition(CachedProvider::class);
+                    $cachedDefinition->setDecoratedService($id);
+                    $cachedDefinition->setPrivate(true);
+                    $cachedDefinition->addArgument(new Reference('setono_sylius_pickup_point.cache'));
+                    $cachedDefinition->addArgument(new Reference($id));
+
+                    $registry->addMethodCall('register', [$attributes['code'], $cachedDefinition]);
+                } else {
+                    $registry->addMethodCall('register', [$attributes['code'], new Reference($id)]);
+                }
             }
         }
 

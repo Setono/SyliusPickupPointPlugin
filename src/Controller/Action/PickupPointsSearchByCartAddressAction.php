@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-final class FindPickupPointsAction
+final class PickupPointsSearchByCartAddressAction
 {
     /**
      * @var ViewHandlerInterface
@@ -51,13 +51,18 @@ final class FindPickupPointsAction
         $this->providerRegistry = $providerRegistry;
     }
 
-    public function __invoke(Request $request, string $providerCode): Response
+    public function __invoke(Request $request): Response
     {
         /** @var OrderInterface $order */
         $order = $this->cartContext->getCart();
 
         if (!$this->isCsrfTokenValid((string) $order->getId(), $request->get('_csrf_token'))) {
             throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
+        }
+
+        $providerCode = $request->get('providerCode');
+        if (!$providerCode) {
+            throw new NotFoundHttpException();
         }
 
         if (!$this->providerRegistry->has($providerCode)) {
@@ -68,7 +73,10 @@ final class FindPickupPointsAction
         $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
 
-        return $this->viewHandler->handle(View::create($pickupPoints));
+        $view = View::create($pickupPoints);
+        $view->getContext()->addGroup('Autocomplete');
+
+        return $this->viewHandler->handle($view);
     }
 
     private function isCsrfTokenValid(string $id, ?string $token): bool

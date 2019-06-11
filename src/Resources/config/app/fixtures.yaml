@@ -57,3 +57,10 @@ sylius_fixtures:
                                 enabled: true
                                 channels:
                                     - "US_WEB"
+                            faker:
+                                code: "faker"
+                                name: "Fake delivery"
+                                enabled: true
+                                pickup_point_provider: faker
+                                channels:
+                                    - "US_WEB"

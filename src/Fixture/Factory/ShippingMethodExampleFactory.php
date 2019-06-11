@@ -16,7 +16,7 @@ final class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactor
         /** @var ShippingMethodInterface $shippingMethod */
         $shippingMethod = parent::create($options);
 
-        if(array_key_exists('pickup_point_provider', $options)) {
+        if (array_key_exists('pickup_point_provider', $options)) {
             $shippingMethod->setPickupPointProvider($options['pickup_point_provider']);
         }
 
@@ -32,5 +32,4 @@ final class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactor
             ->setAllowedTypes('pickup_point_provider', ['null', 'string'])
         ;
     }
-
 }
