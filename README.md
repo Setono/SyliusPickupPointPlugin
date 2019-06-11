@@ -12,6 +12,8 @@ Add a `<select>` that contains pickup points to your select shipping checkout st
 
 **Supported providers**
 - DAO
+  (temporarily partially supported - only with caching enabled, 
+  until https://github.com/Setono/SyliusPickupPointPlugin/issues/12 fixed)
 - GLS
 - PostNord
 - Fake provider (for development/playing purposes)

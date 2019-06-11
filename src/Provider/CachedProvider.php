@@ -52,10 +52,14 @@ final class CachedProvider implements ProviderInterface
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($id);
         if (!$this->cacheItemPool->hasItem($pickupPointCacheKey)) {
+            $pickupPoint = $this->provider->findOnePickupPointById($id);
+            if (!$pickupPoint instanceof PickupPointInterface) {
+                // Do not cache PickupPoint that wasn't found
+                return null;
+            }
+
             $pickupPointCacheItem = $this->cacheItemPool->getItem($pickupPointCacheKey);
-            $pickupPointCacheItem->set(
-                $this->provider->findOnePickupPointById($id)
-            );
+            $pickupPointCacheItem->set($pickupPoint);
             $this->cacheItemPool->save($pickupPointCacheItem);
         }
 

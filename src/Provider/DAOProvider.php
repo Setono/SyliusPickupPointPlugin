@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\DAO\Client\ClientInterface;
+use Setono\SyliusPickupPointPlugin\Exception\NotImplementedException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -54,7 +55,7 @@ final class DAOProvider implements ProviderInterface
 
     public function findOnePickupPointById(string $id): ?PickupPointInterface
     {
-        // @todo Implementation
+        throw new NotImplementedException('DAOProvider::findOnePickupPointById currently not implemented');
     }
 
     public function getCode(): string
