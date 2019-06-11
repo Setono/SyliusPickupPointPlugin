@@ -12,6 +12,11 @@ interface PickupPointInterface
 
     public function getId(): string;
 
+    /**
+     * A unique id across all providers, @see PickupPoint::getFullId() for an example
+     *
+     * @return string
+     */
     public function getFullId(): string;
 
     public function getName(): string;
