@@ -26,7 +26,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      *
      * @param PickupPointInterface|null $value
      */
-    public function transform($value)
+    public function transform($value): ?string
     {
         if (null === $value) {
             return null;
@@ -42,7 +42,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      *
      * @return PickupPointInterface|null
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): ?PickupPointInterface
     {
         if (null === $value) {
             return null;
@@ -63,6 +63,9 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @param mixed $value
+     * @param string $expectedType
+     *
      * @throws TransformationFailedException
      */
     private function assertTransformationValueType($value, string $expectedType): void
