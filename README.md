@@ -281,6 +281,9 @@ bin/console sylius:theme:assets:install
 
   You should specify `setono_post_nord.http_client` configuration or define `Buzz\Client\BuzzClientInterface` service to use as default http client.
   See https://github.com/Setono/PostNordBundle/issues/1
+  
+  You should add [config/packages/buzz.yaml](tests/Application/config/packages/buzz.yaml) and 
+  [config/packages/nyholm_psr7.yaml](tests/Application/config/packages/nyholm_psr7.yaml) configs.
 
 * You're facing `Pickup point cannot be blank.` validation error at `/checkout/address` step at your application
 
