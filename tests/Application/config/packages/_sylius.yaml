@@ -11,6 +11,7 @@ imports:
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
+    sylius.form.type.checkout_select_shipping.validation_groups: ['sylius', 'checkout_select_shipping']
 
 sylius_shop:
     product_grid:

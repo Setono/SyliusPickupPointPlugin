@@ -243,17 +243,48 @@ bin/console doctrine:migrations:diff
 bin/console doctrine:migrations:migrate 
 ```
 
+### Step 7: Update validation groups
+
+Add `checkout_select_shipping` to `sylius.form.type.checkout_select_shipping.validation_groups`:
+
+```yaml
+# config/packages/_sylius.yaml
+
+parameters:
+    sylius.form.type.checkout_select_shipping.validation_groups: ['sylius', 'checkout_select_shipping']
+```
+
+# Step 8: Install assets
+
+```bash
+bin/console sylius:install:assets  
+bin/console sylius:theme:assets:install
+```
+
 ## Troubleshooting
 
 * At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
   
-  Check your browser's developer console and make sure JS scripts loaded correctly.
+  - Check your browser's developer console and make sure JS scripts loaded correctly.
   Also make sure `setono-pickup-point.js` compiled (read as you not forgot to run `sylius:install:assets`).
+
+  - Make sure content of plugin's `src/Resources/views/_javascripts.html.twig` actually rendered. 
+  If not - probably, you erased `{{ sonata_block_render_event('sylius.shop.layout.javascripts') }}` 
+  from your custom `layout.html.twig`.
+  
+  Also, make sure `{{ sonata_block_render_event('sylius.admin.layout.javascripts') }}` in place at 
+  your admin's `layout.html.twig` if it was customized.
+  
+  - If you're using themes, make sure you executed `sylius:theme:assets:install` after plugin installation.
 
 * `The service "setono_sylius_pickup_point.registry.provider" has a dependency on a non-existent service "setono_post_nord.http_client".`
 
   You should specify `setono_post_nord.http_client` configuration or define `Buzz\Client\BuzzClientInterface` service to use as default http client.
   See https://github.com/Setono/PostNordBundle/issues/1
+
+* You're facing `Pickup point cannot be blank.` validation error at `/checkout/address` step at your application
+
+  Make sure you're followed instructions from `Installation step 7`. 
 
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable
