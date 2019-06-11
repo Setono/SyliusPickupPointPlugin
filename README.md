@@ -250,6 +250,11 @@ bin/console doctrine:migrations:migrate
   Check your browser's developer console and make sure JS scripts loaded correctly.
   Also make sure `setono-pickup-point.js` compiled (read as you not forgot to run `sylius:install:assets`).
 
+* `The service "setono_sylius_pickup_point.registry.provider" has a dependency on a non-existent service "setono_post_nord.http_client".`
+
+  You should specify `setono_post_nord.http_client` configuration or define `Buzz\Client\BuzzClientInterface` service to use as default http client.
+  See https://github.com/Setono/PostNordBundle/issues/1
+
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable
 [ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license
