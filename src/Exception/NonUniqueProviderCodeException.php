@@ -7,7 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\Exception;
 use InvalidArgumentException;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 
-final class NonUniqueProviderCodeException extends InvalidArgumentException
+final class NonUniqueProviderCodeException extends InvalidArgumentException implements PickupPointException
 {
     public function __construct(ProviderInterface $provider)
     {
