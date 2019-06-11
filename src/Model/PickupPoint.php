@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
+use Webmozart\Assert\Assert;
+
 final class PickupPoint implements PickupPointInterface
 {
     /**
@@ -39,6 +41,8 @@ final class PickupPoint implements PickupPointInterface
 
     public function __construct(string $providerCode, string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
     {
+        Assert::notContains($providerCode, self::TYPE_DELIMITER, sprintf('The provider code "%s" should not contain the delimiter "%s"', $providerCode, self::TYPE_DELIMITER));
+
         $this->providerCode = $providerCode;
         $this->id = $id;
         $this->name = $name;
