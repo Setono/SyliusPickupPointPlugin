@@ -35,16 +35,17 @@
         "localheinz/composer-normalize": "^1.1",
         "nyholm/psr7": "^1.1",
         "phpspec/phpspec": "^5.0",
-        "phpstan/phpstan-doctrine": "^0.10",
-        "phpstan/phpstan-shim": "^0.10",
-        "phpstan/phpstan-symfony": "^0.10",
-        "phpstan/phpstan-webmozart-assert": "^0.10",
+        "phpstan/phpstan-doctrine": "^0.11",
+        "phpstan/phpstan-shim": "^0.11",
+        "phpstan/phpstan-strict-rules": "^0.11",
+        "phpstan/phpstan-symfony": "^0.11",
+        "phpstan/phpstan-webmozart-assert": "^0.11",
         "roave/security-advisories": "dev-master",
         "sensiolabs/security-checker": "^5.0",
         "setono/dao-bundle": "^1.0",
         "setono/gls-webservice-bundle": "^1.0",
         "setono/post-nord-bundle": "^1.0.1",
-        "sylius-labs/coding-standard": "^2.0",
+        "sylius-labs/coding-standard": "^3.0",
         "symfony/browser-kit": "^3.4 || ^4.1",
         "symfony/debug-bundle": "^3.4 || ^4.1",
         "symfony/dotenv": "^4.2",
@@ -56,6 +57,9 @@
         "setono/dao-bundle": "Install this bundle to use the DAO provider",
         "setono/gls-webservice-bundle": "Install this bundle to use the GLS provider",
         "setono/post-nord-bundle": "Install this bundle to use the PostNord provider"
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {

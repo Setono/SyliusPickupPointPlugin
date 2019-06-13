@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\Exception\NotImplementedException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class DAOProvider implements ProviderInterface
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $client;
 
     public function __construct(ClientInterface $client)
@@ -29,17 +26,34 @@ final class DAOProvider implements ProviderInterface
             return [];
         }
 
-        $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', [
+        return $this->_findPickupPoints([
             'postnr' => $shippingAddress->getPostcode(),
             'adresse' => $shippingAddress->getStreet(),
             'antal' => 10,
         ]);
+    }
 
-        if (!isset($result['resultat']['pakkeshops'])) {
-            return [];
+    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    {
+        $pickupPoints = $this->_findPickupPoints([
+            'shopid' => $id,
+        ]);
+
+        if (count($pickupPoints) < 1) {
+            return null;
         }
 
-        $pickupPoints = $result['resultat']['pakkeshops'];
+        return $pickupPoints[0];
+    }
+
+    /**
+     * @return PickupPointInterface[]
+     */
+    private function _findPickupPoints(array $params): array
+    {
+        $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
+
+        $pickupPoints = $result['resultat']['pakkeshops'] ?? [];
 
         if (!is_array($pickupPoints) || count($pickupPoints) <= 0) {
             return [];
@@ -51,11 +65,6 @@ final class DAOProvider implements ProviderInterface
         }
 
         return $ret;
-    }
-
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
-    {
-        throw new NotImplementedException('DAOProvider::findOnePickupPointById currently not implemented');
     }
 
     public function getCode(): string

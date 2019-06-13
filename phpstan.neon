@@ -4,7 +4,7 @@ includes:
     - vendor/phpstan/phpstan-webmozart-assert/extension.neon
 
 parameters:
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
 
     symfony:
         container_xml_path: tests/Application/var/cache/test/ApplicationTests_Setono_SyliusPickupPointPlugin_Application_KernelTestDebugContainer.xml
@@ -13,13 +13,9 @@ parameters:
         # Makes PHPStan crash
         - 'src/DependencyInjection/Configuration.php'
 
-        # @todo Remove
-        - 'src/Provider/CachedProvider.php'
-
         # Test dependencies
         - 'tests/Application/app/**.php'
         - 'tests/Application/src/**.php'
 
     ignoreErrors:
         - '/Parameter #1 $configuration of method Symfony\Component\DependencyInjection\Extension\Extension::processConfiguration() expects Symfony\Component\Config\Definition\ConfigurationInterface, Symfony\Component\Config\Definition\ConfigurationInterface|null given./'
-        - '/PHPDoc tag @throws with type Psr\Cache\InvalidArgumentException is not subtype of Throwable/'

@@ -12,4 +12,4 @@ setono_sylius_pickup_point:
         faker: true
         gls: true
         post_nord: false
-        dao: false
+        dao: true
