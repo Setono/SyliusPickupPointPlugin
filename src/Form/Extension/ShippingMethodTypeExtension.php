@@ -11,9 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShippingMethodTypeExtension extends AbstractTypeExtension
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $providers;
 
     public function __construct(array $providers)

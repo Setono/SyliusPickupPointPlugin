@@ -28,10 +28,6 @@ final class CachedProvider implements ProviderInterface
     }
 
     /**
-     * @param OrderInterface $order
-     *
-     * @return array
-     *
      * @throws InvalidArgumentException
      */
     public function findPickupPoints(OrderInterface $order): array
@@ -57,10 +53,6 @@ final class CachedProvider implements ProviderInterface
     }
 
     /**
-     * @param string $id
-     *
-     * @return PickupPointInterface|null
-     *
      * @throws InvalidArgumentException
      */
     public function findOnePickupPointById(string $id): ?PickupPointInterface

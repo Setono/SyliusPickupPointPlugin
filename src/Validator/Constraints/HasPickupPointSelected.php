@@ -8,9 +8,7 @@ use Symfony\Component\Validator\Constraint;
 
 final class HasPickupPointSelected extends Constraint
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $pickupPointNotBlank = 'setono_pickup_point.shipment.pickup_point.not_blank';
 
     public function validatedBy(): string

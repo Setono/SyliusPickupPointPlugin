@@ -13,9 +13,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider implements ProviderInterface
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $client;
 
     public function __construct(ClientInterface $client)

@@ -39,8 +39,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
 
     /**
      * {@inheritdoc}
-     *
-     * @return PickupPointInterface|null
      */
     public function reverseTransform($value): ?PickupPointInterface
     {
@@ -63,9 +61,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
-     * @param mixed $value
-     * @param string $expectedType
-     *
      * @throws TransformationFailedException
      */
     private function assertTransformationValueType($value, string $expectedType): void

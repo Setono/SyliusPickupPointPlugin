@@ -18,9 +18,7 @@ final class PostNordProvider implements ProviderInterface
 {
     public const DELIMITER = '_';
 
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $client;
 
     public function __construct(ClientInterface $client)
