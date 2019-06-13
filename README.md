@@ -8,27 +8,36 @@
 
 Add a `<select>` that contains pickup points to your select shipping checkout step.
 
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+
 ![List of pickup points](docs/pickup-points.png)
 
 **Supported providers**
 - DAO
-  (temporarily partially supported - only with caching enabled, 
-  until https://github.com/Setono/SyliusPickupPointPlugin/issues/12 fixed)
 - GLS
 - PostNord
 - Fake provider (for development/playing purposes)
 
 ## Screenshots
 
-Shop:
+### Shop
+
+This is the shipping method step in the checkout process where you can choose a pickup point.
 
 ![Screenshot showing checkout select shipping step with pickup points available](docs/images/shop-checkout-select-shipping-pickup-point.png)
 
+On the complete order step in checkout you can see the pickup point you have chosen.
+
 ![Screenshot showing checkout complete step with pickup point address](docs/images/shop-checkout-complete-shipping-pickup-point.png)
 
-Admin:
+### Admin
+
+On the order you can see what pickup point the customer has chosen.
 
 ![Screenshot showing admin order shipping page with pickup point address](docs/images/admin-order-shipping-pickup-point.png)
+
+When you edit shipping method you can associate a pickup point provider to that shipping method.
 
 ![Screenshot showing admin shipping method with some pickup point providers](docs/images/admin-shipping-method-pickup-point-provider.png)
 
