@@ -7,7 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\Fixture;
 use Sylius\Bundle\CoreBundle\Fixture\ShippingMethodFixture as BaseShippingMethodFixture;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
-final class ShippingMethodFixture extends BaseShippingMethodFixture
+class ShippingMethodFixture extends BaseShippingMethodFixture
 {
     public function getName(): string
     {

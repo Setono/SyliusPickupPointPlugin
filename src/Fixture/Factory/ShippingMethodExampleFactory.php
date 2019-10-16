@@ -9,7 +9,7 @@ use Sylius\Bundle\CoreBundle\Fixture\Factory\ShippingMethodExampleFactory as Bas
 use Sylius\Component\Core\Model\ShippingMethodInterface as BaseShippingMethodInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactory
+class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactory
 {
     public function create(array $options = []): BaseShippingMethodInterface
     {
