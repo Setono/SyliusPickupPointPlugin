@@ -58,10 +58,10 @@ final class PickupPoint
     /**
      * @throws StringsException
      */
-    public function getFullName(): string
+    public function getLocation(): string
     {
         return sprintf(
-            '%s, %s, %s, %s',
+            '%s, %s, %s %s',
             $this->getName(),
             $this->getAddress(),
             $this->getZipCode(),
