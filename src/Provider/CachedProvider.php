@@ -37,7 +37,7 @@ final class CachedProvider implements ProviderInterface
      *
      * @return PickupPoint[]
      */
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(OrderInterface $order): iterable
     {
         $orderCacheKey = $this->buildOrderCacheKey($order);
         if (!$this->cacheItemPool->hasItem($orderCacheKey)) {
@@ -84,6 +84,11 @@ final class CachedProvider implements ProviderInterface
         $pickupPoint = $this->cacheItemPool->getItem($pickupPointCacheKey)->get();
 
         return $pickupPoint;
+    }
+
+    public function findAllPickupPoints(): iterable
+    {
+        yield from $this->provider->findAllPickupPoints();
     }
 
     public function getCode(): string

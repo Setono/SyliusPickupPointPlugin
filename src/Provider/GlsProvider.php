@@ -21,7 +21,7 @@ final class GlsProvider implements ProviderInterface
         $this->client = $client;
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(OrderInterface $order): iterable
     {
         if (null === $order->getShippingAddress()) {
             return [];
@@ -50,6 +50,20 @@ final class GlsProvider implements ProviderInterface
             return $this->transform($parcelShop);
         } catch (ParcelShopNotFoundException $e) {
             return null;
+        }
+    }
+
+    public function findAllPickupPoints(): iterable
+    {
+        // todo these country codes should come from a config somewhere, probably on the shipping method
+        $countryCodes = ['DK', 'SE'];
+
+        foreach ($countryCodes as $countryCode) {
+            $parcelShops = $this->client->getAllParcelShops($countryCode);
+
+            foreach ($parcelShops as $item) {
+                yield $this->transform($item);
+            }
         }
     }
 

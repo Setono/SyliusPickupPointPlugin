@@ -17,7 +17,12 @@ final class PickupPointId
     /** @var string */
     private $provider;
 
-    /** @var string|null */
+    /**
+     * Some providers will only have unique ids per country
+     * hence we need the country to make it completely unique in thse cases
+     *
+     * @var string|null
+     */
     private $country;
 
     /**

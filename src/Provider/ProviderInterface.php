@@ -23,9 +23,16 @@ interface ProviderInterface
     /**
      * Will return an array of pickup points
      *
-     * @return PickupPoint[]
+     * @return iterable<PickupPoint>
      */
-    public function findPickupPoints(OrderInterface $order): array;
+    public function findPickupPoints(OrderInterface $order): iterable;
 
     public function findPickupPoint(PickupPointId $id): ?PickupPoint;
+
+    /**
+     * Returns all pickup points for this provider
+     *
+     * @return iterable<PickupPoint>
+     */
+    public function findAllPickupPoints(): iterable;
 }

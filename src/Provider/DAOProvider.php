@@ -19,14 +19,14 @@ final class DAOProvider implements ProviderInterface
         $this->client = $client;
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(OrderInterface $order): iterable
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {
             return [];
         }
 
-        return $this->_findPickupPoints([
+        yield from $this->_findPickupPoints([
             'postnr' => $shippingAddress->getPostcode(),
             'adresse' => $shippingAddress->getStreet(),
             'antal' => 10,
@@ -35,36 +35,39 @@ final class DAOProvider implements ProviderInterface
 
     public function findPickupPoint(PickupPointId $id): ?PickupPoint
     {
-        $pickupPoints = $this->_findPickupPoints([
+        foreach ($this->_findPickupPoints([
             'shopid' => $id->getIdPart(),
-        ]);
-
-        if (count($pickupPoints) < 1) {
-            return null;
+        ]) as $pickupPoint) {
+            return $pickupPoint;
         }
 
-        return $pickupPoints[0];
+        return null;
+    }
+
+    public function findAllPickupPoints(): iterable
+    {
+        yield from $this->_findPickupPoints([
+            'postnr' => '9999', // Notice that this is a hack to get all pickup points
+            'antal' => 5000,
+        ]);
     }
 
     /**
      * @return PickupPoint[]
      */
-    private function _findPickupPoints(array $params): array
+    private function _findPickupPoints(array $params): iterable
     {
         $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
 
         $pickupPoints = $result['resultat']['pakkeshops'] ?? [];
 
-        if (!is_array($pickupPoints) || count($pickupPoints) <= 0) {
+        if (!is_array($pickupPoints)) {
             return [];
         }
 
-        $ret = [];
         foreach ($pickupPoints as $pickupPoint) {
-            $ret[] = $this->populatePickupPoint($pickupPoint);
+            yield $this->populatePickupPoint($pickupPoint);
         }
-
-        return $ret;
     }
 
     public function getCode(): string
