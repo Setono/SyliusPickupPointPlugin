@@ -33,7 +33,7 @@ final class DAOProvider implements ProviderInterface
         ]);
     }
 
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         $pickupPoints = $this->_findPickupPoints([
             'shopid' => $id,

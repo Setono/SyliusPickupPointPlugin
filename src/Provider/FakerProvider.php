@@ -28,7 +28,7 @@ final class FakerProvider implements ProviderInterface
         return $pockupPoints;
     }
 
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         return $this->createFakePickupPoint($id);
     }

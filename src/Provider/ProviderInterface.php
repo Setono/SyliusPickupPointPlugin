@@ -26,5 +26,5 @@ interface ProviderInterface
      */
     public function findPickupPoints(OrderInterface $order): array;
 
-    public function findOnePickupPointById(string $id): ?PickupPointInterface;
+    public function findPickupPoint(string $id): ?PickupPointInterface;
 }

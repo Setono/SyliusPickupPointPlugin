@@ -42,7 +42,7 @@ final class GlsProvider implements ProviderInterface
         return $pickupPoints;
     }
 
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         try {
             $parcelShop = $this->client->getOneParcelShop($id);
