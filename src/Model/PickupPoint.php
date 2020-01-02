@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Model;
 
 use Safe\Exceptions\StringsException;
-use Webmozart\Assert\Assert;
 use function Safe\sprintf;
+use Webmozart\Assert\Assert;
 
 final class PickupPoint implements PickupPointInterface
 {

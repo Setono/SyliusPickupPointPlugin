@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
 use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Webmozart\Assert\Assert;
-use function Safe\sprintf;
 
 final class PickupPointToIdentifierTransformer implements DataTransformerInterface
 {
@@ -24,6 +24,8 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @param mixed $value
+     *
      * @throws StringsException
      */
     public function transform($value): ?string
@@ -38,6 +40,8 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @param mixed $value
+     *
      * @throws StringsException
      */
     public function reverseTransform($value): ?PickupPointInterface
@@ -61,6 +65,8 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @param mixed $value
+     *
      * @throws TransformationFailedException
      * @throws StringsException
      */

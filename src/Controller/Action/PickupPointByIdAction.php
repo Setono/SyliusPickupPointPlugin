@@ -31,11 +31,11 @@ final class PickupPointByIdAction
     public function __invoke(Request $request): Response
     {
         $pickupPointId = $request->get('pickupPointId');
-        if (!$pickupPointId) {
+        if (!is_scalar($pickupPointId) || '' === $pickupPointId) {
             throw new NotFoundHttpException();
         }
 
-        /** @var PickupPointInterface $pickupPoint */
+        /** @var PickupPointInterface|mixed $pickupPoint */
         $pickupPoint = $this->pickupPointToIdentifierTransformer->reverseTransform($pickupPointId);
         if (!$pickupPoint instanceof PickupPointInterface) {
             throw new NotFoundHttpException();

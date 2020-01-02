@@ -7,11 +7,12 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Behat\Transliterator\Transliterator;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
+use RuntimeException;
 use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use function Safe\sprintf;
 
 final class CachedProvider implements ProviderInterface
 {
@@ -32,6 +33,8 @@ final class CachedProvider implements ProviderInterface
     /**
      * @throws InvalidArgumentException
      * @throws StringsException
+     *
+     * @return PickupPointInterface[]
      */
     public function findPickupPoints(OrderInterface $order): array
     {
@@ -52,7 +55,10 @@ final class CachedProvider implements ProviderInterface
             }
         }
 
-        return $this->cacheItemPool->getItem($orderCacheKey)->get();
+        /** @var PickupPointInterface[] $pickupPoints */
+        $pickupPoints = $this->cacheItemPool->getItem($orderCacheKey)->get();
+
+        return $pickupPoints;
     }
 
     /**
@@ -74,7 +80,10 @@ final class CachedProvider implements ProviderInterface
             $this->cacheItemPool->save($pickupPointCacheItem);
         }
 
-        return $this->cacheItemPool->getItem($pickupPointCacheKey)->get();
+        /** @var PickupPointInterface $pickupPoint */
+        $pickupPoint = $this->cacheItemPool->getItem($pickupPointCacheKey)->get();
+
+        return $pickupPoint;
     }
 
     public function getCode(): string
@@ -94,7 +103,7 @@ final class CachedProvider implements ProviderInterface
     {
         $shippingAddress = $order->getShippingAddress();
         if (!$shippingAddress instanceof AddressInterface) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Shipping address was not found for order #%s',
                 $order->getNumber()
             ));

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use function Safe\sprintf;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
@@ -30,6 +30,7 @@ final class PostNordProvider implements ProviderInterface
 
     /**
      * @return PickupPointInterface[]
+     *
      * @throws StringsException
      */
     public function findPickupPoints(OrderInterface $order): array
