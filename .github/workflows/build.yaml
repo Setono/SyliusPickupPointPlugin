@@ -77,7 +77,7 @@ jobs:
                 run: (cd tests/Application && bin/console server:run 127.0.0.1:8080 --quiet > /dev/null 2>&1 &)
                 env:
                     DISPLAY: ':99'
-            -   name: Run behat with javascript
+            -   name: Run behat
                 run: vendor/bin/behat --strict -vvv --no-interaction || vendor/bin/behat --strict -vvv --no-interaction --rerun
                 env:
                     DISPLAY: ':99'
