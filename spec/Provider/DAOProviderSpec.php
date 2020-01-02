@@ -39,7 +39,7 @@ class DAOProviderSpec extends ObjectBehavior
             ],
         ]);
 
-        $pickupPoint = $this->findOnePickupPointById('1234');
+        $pickupPoint = $this->findPickupPoint('1234');
         $pickupPoint->shouldBeAnInstanceOf(PickupPointInterface::class);
 
         $this->testPickupPoint($pickupPoint, '1234');

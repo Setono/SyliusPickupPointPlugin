@@ -67,7 +67,7 @@ final class PostNordProvider implements ProviderInterface
     /**
      * @throws StringsException
      */
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         [$countryCode, $id] = $this->reverseTransformId($id);
 

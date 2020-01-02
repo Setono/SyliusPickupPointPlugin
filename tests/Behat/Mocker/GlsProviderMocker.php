@@ -26,11 +26,11 @@ class GlsProviderMocker implements ProviderInterface
     public function findPickupPoints(OrderInterface $order): array
     {
         return [
-            $this->findOnePickupPointById(''),
+            $this->findPickupPoint(''),
         ];
     }
 
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         return new PickupPoint(
             $this->getCode(),

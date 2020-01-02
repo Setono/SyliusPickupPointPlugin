@@ -57,7 +57,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
         $provider = $this->providerRegistry->get($pickupPointProvider);
 
         /** @var PickupPointInterface $pickupPoint */
-        $pickupPoint = $provider->findOnePickupPointById($pickupPointId);
+        $pickupPoint = $provider->findPickupPoint($pickupPointId);
 
         $this->assertTransformationValueType($pickupPoint, PickupPointInterface::class);
 

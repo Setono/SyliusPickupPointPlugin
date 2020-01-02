@@ -65,11 +65,11 @@ final class CachedProvider implements ProviderInterface
      * @throws InvalidArgumentException
      * @throws StringsException
      */
-    public function findOnePickupPointById(string $id): ?PickupPointInterface
+    public function findPickupPoint(string $id): ?PickupPointInterface
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($id);
         if (!$this->cacheItemPool->hasItem($pickupPointCacheKey)) {
-            $pickupPoint = $this->provider->findOnePickupPointById($id);
+            $pickupPoint = $this->provider->findPickupPoint($id);
             if (!$pickupPoint instanceof PickupPointInterface) {
                 // Do not cache PickupPoint that wasn't found
                 return null;
