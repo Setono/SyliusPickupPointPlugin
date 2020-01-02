@@ -6,12 +6,12 @@ namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
 use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Webmozart\Assert\Assert;
 
 final class PickupPointToIdentifierTransformer implements DataTransformerInterface
 {
@@ -24,19 +24,19 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
-     * @param mixed $value
+     * @param mixed|PickupPoint $value
      *
      * @throws StringsException
      */
-    public function transform($value): ?string
+    public function transform($value): ?PickupPointId
     {
         if (null === $value) {
             return null;
         }
 
-        $this->assertTransformationValueType($value, PickupPointInterface::class);
+        $this->assertTransformationValueType($value, PickupPoint::class);
 
-        return $value->getFullId();
+        return $value->getId();
     }
 
     /**
@@ -44,22 +44,21 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      *
      * @throws StringsException
      */
-    public function reverseTransform($value): ?PickupPointInterface
+    public function reverseTransform($value): ?PickupPoint
     {
         if (null === $value) {
             return null;
         }
 
-        Assert::true(false !== mb_strpos($value, PickupPointInterface::TYPE_DELIMITER), 'PickupPoint identifier should contain delimiter.');
-        [$pickupPointProvider, $pickupPointId] = explode(PickupPointInterface::TYPE_DELIMITER, $value);
+        $pickupPointId = PickupPointId::createFromString($value);
 
         /** @var ProviderInterface $provider */
-        $provider = $this->providerRegistry->get($pickupPointProvider);
+        $provider = $this->providerRegistry->get($pickupPointId->getProviderPart());
 
-        /** @var PickupPointInterface $pickupPoint */
+        /** @var PickupPoint $pickupPoint */
         $pickupPoint = $provider->findPickupPoint($pickupPointId);
 
-        $this->assertTransformationValueType($pickupPoint, PickupPointInterface::class);
+        $this->assertTransformationValueType($pickupPoint, PickupPoint::class);
 
         return $pickupPoint;
     }
@@ -72,7 +71,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      */
     private function assertTransformationValueType($value, string $expectedType): void
     {
-        if (!($value instanceof $expectedType)) {
+        if (!$value instanceof $expectedType) {
             throw new TransformationFailedException(
                 sprintf(
                     'Expected "%s", but got "%s"',

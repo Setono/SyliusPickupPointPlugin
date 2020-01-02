@@ -10,7 +10,8 @@ use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
@@ -34,7 +35,7 @@ final class CachedProvider implements ProviderInterface
      * @throws InvalidArgumentException
      * @throws StringsException
      *
-     * @return PickupPointInterface[]
+     * @return PickupPoint[]
      */
     public function findPickupPoints(OrderInterface $order): array
     {
@@ -55,7 +56,7 @@ final class CachedProvider implements ProviderInterface
             }
         }
 
-        /** @var PickupPointInterface[] $pickupPoints */
+        /** @var PickupPoint[] $pickupPoints */
         $pickupPoints = $this->cacheItemPool->getItem($orderCacheKey)->get();
 
         return $pickupPoints;
@@ -63,14 +64,13 @@ final class CachedProvider implements ProviderInterface
 
     /**
      * @throws InvalidArgumentException
-     * @throws StringsException
      */
-    public function findPickupPoint(string $id): ?PickupPointInterface
+    public function findPickupPoint(PickupPointId $id): ?PickupPoint
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($id);
         if (!$this->cacheItemPool->hasItem($pickupPointCacheKey)) {
             $pickupPoint = $this->provider->findPickupPoint($id);
-            if (!$pickupPoint instanceof PickupPointInterface) {
+            if (null === $pickupPoint) {
                 // Do not cache PickupPoint that wasn't found
                 return null;
             }
@@ -80,7 +80,7 @@ final class CachedProvider implements ProviderInterface
             $this->cacheItemPool->save($pickupPointCacheItem);
         }
 
-        /** @var PickupPointInterface $pickupPoint */
+        /** @var PickupPoint $pickupPoint */
         $pickupPoint = $this->cacheItemPool->getItem($pickupPointCacheKey)->get();
 
         return $pickupPoint;
@@ -120,15 +120,8 @@ final class CachedProvider implements ProviderInterface
         );
     }
 
-    /**
-     * @throws StringsException
-     */
-    private function buildPickupPointIdCacheKey(string $id): string
+    private function buildPickupPointIdCacheKey(PickupPointId $id): string
     {
-        return sprintf(
-            '%s-%s',
-            $this->getCode(),
-            $id
-        );
+        return $id->getValue();
     }
 }

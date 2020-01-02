@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Setono\SyliusPickupPointPlugin\PickupPoint;
+
+use InvalidArgumentException;
+use Webmozart\Assert\Assert;
+
+final class PickupPointId
+{
+    private const DELIMITER = '---';
+
+    /** @var string */
+    private $id;
+
+    /** @var string */
+    private $provider;
+
+    /** @var string|null */
+    private $country;
+
+    /**
+     * @param mixed $id
+     */
+    public function __construct($id, string $provider, string $country = null)
+    {
+        Assert::scalar($id);
+
+        $this->id = (string) $id;
+        $this->provider = $provider;
+        $this->country = $country;
+    }
+
+    public static function createFromString(string $val): self
+    {
+        $parts = explode(self::DELIMITER, $val);
+
+        if (!isset($parts[0])) {
+            throw new InvalidArgumentException('No provider part provided');
+        }
+
+        if (!isset($parts[1])) {
+            throw new InvalidArgumentException('No id part provided');
+        }
+
+        return new self($parts[1], $parts[0], $parts[2] ?? null);
+    }
+
+    public function __toString(): string
+    {
+        return $this->getValue();
+    }
+
+    public function getValue(): string
+    {
+        $value = $this->provider . self::DELIMITER . $this->id;
+        if (null !== $this->country) {
+            $value .= self::DELIMITER . $this->country;
+        }
+
+        return $value;
+    }
+
+    public function getIdPart(): string
+    {
+        return $this->id;
+    }
+
+    public function getProviderPart(): string
+    {
+        return $this->provider;
+    }
+
+    public function getCountryPart(): ?string
+    {
+        return $this->country;
+    }
+}
