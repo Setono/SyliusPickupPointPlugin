@@ -10,7 +10,7 @@ final class SelectShippingPage extends BaseSelectShippingPage implements SelectS
 {
     public function chooseFirstShippingPointFromDropdown(): void
     {
-        $this->getDocument()->waitFor(5, function () {
+        $this->getDocument()->waitFor(15, function () {
             return $this->hasElement('pickup_point_dropdown');
         });
 
@@ -18,7 +18,7 @@ final class SelectShippingPage extends BaseSelectShippingPage implements SelectS
 
         $dropdown->click();
 
-        $this->getDocument()->waitFor(5, function () {
+        $this->getDocument()->waitFor(15, function () {
             return $this->hasElement('pickup_point_dropdown_item');
         });
 

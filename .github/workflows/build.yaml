@@ -1,0 +1,88 @@
+name: build
+on:
+    push: ~
+    pull_request: ~
+    schedule:
+        -   cron: 5 8 * * 3
+jobs:
+    checks:
+        name: PHP ${{ matrix.php-versions }}
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            fail-fast: false
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['7.2', '7.3']
+        steps:
+            -   name: Set environment variables
+                run: |
+                    echo "::set-env name=APP_ENV::test"
+                    echo "::set-env name=DATABASE_URL::mysql://root:root@127.0.0.1/sylius?serverVersion=5.7"
+            -   name: Checkout
+                uses: actions/checkout@v1
+            -   name: Setup PHP, with composer and extensions
+                uses: shivammathur/setup-php@master
+                with:
+                    php-version: ${{ matrix.php-versions }}
+                    extensions: intl
+            -   name: Setup node
+                uses: actions/setup-node@v1
+                with:
+                    node-version: '10.x'
+            -   name: Install Composer dependencies
+                run: composer update --no-progress --no-suggest --prefer-dist --no-interaction
+            -   name: Validate composer
+                run: composer validate --strict
+            -   name: Check composer normalized
+                run: composer normalize --dry-run
+            -   name: Check style
+                run: composer check-style
+            -   name: Static analysis
+                run: composer analyse
+            -   name: Run phpspec
+                run: composer phpspec
+            -   name: Run phpunit
+                run: composer phpunit
+            -   name: Setup database, assets and cache
+                run: |
+                    (cd tests/Application && bin/console doctrine:database:create -vvv)
+                    (cd tests/Application && bin/console doctrine:schema:create -vvv)
+                    (cd tests/Application && bin/console assets:install public -vvv)
+                    (cd tests/Application && bin/console cache:warmup -vvv)
+            ###########################################################################
+            # The steps below is used to run behat with javascript.                   #
+            # If you don't have scenarios with javascript, you can remove these steps #
+            ###########################################################################
+            -   name: Install and build Yarn dependencies
+                run: |
+                    (cd tests/Application && yarn install)
+                    (cd tests/Application && yarn build)
+            -   name: Configure display
+                run: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1680x1050x16
+            -   name: Download and run Chromedriver
+                run: |
+                    curl http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip > chromedriver.zip
+                    unzip chromedriver.zip
+                    chmod +x chromedriver
+                    chromedriver > /dev/null 2>&1 &
+                env:
+                    DISPLAY: ':99'
+            -   name: Download and run Selenium
+                run: |
+                    curl http://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar > selenium.jar
+                    java -Dwebdriver.chrome.driver=chromedriver -jar selenium.jar > /dev/null 2>&1 &
+                env:
+                    DISPLAY: ':99'
+            -   name: Run webserver
+                run: (cd tests/Application && bin/console server:run 127.0.0.1:8080 --quiet > /dev/null 2>&1 &)
+                env:
+                    DISPLAY: ':99'
+            -   name: Run behat
+                run: vendor/bin/behat --strict -vvv --no-interaction || vendor/bin/behat --strict -vvv --no-interaction --rerun
+                env:
+                    DISPLAY: ':99'
+            -   uses: actions/upload-artifact@v1
+                if: failure()
+                with:
+                    name: logs
+                    path: etc/build

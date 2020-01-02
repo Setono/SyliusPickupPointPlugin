@@ -53,7 +53,7 @@ final class PickupPointsSearchByCartAddressAction
         }
 
         $providerCode = $request->get('providerCode');
-        if (!$providerCode) {
+        if (!is_string($providerCode) || '' === $providerCode) {
             throw new NotFoundHttpException();
         }
 

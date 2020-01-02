@@ -12,12 +12,14 @@ use Webmozart\Assert\Assert;
 
 final class HasPickupPointSelectedValidator extends ConstraintValidator
 {
+    /**
+     * @param ShipmentInterface|mixed $shipment
+     * @param HasPickupPointSelected|Constraint $constraint
+     */
     public function validate($shipment, Constraint $constraint): void
     {
-        /** @var $constraint HasPickupPointSelected */
         Assert::isInstanceOf($constraint, HasPickupPointSelected::class);
 
-        /** @var $shipment ShipmentInterface */
         Assert::isInstanceOf($shipment, ShipmentInterface::class);
 
         /** @var PickupPointProviderAwareInterface $method */

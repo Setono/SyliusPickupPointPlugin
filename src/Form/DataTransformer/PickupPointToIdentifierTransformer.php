@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
+use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
@@ -22,9 +24,9 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      *
-     * @param PickupPointInterface|null $value
+     * @throws StringsException
      */
     public function transform($value): ?string
     {
@@ -38,7 +40,9 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
+     *
+     * @throws StringsException
      */
     public function reverseTransform($value): ?PickupPointInterface
     {
@@ -46,7 +50,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
             return null;
         }
 
-        Assert::true(false !== strpos($value, PickupPointInterface::TYPE_DELIMITER), 'PickupPoint identifier should contain delimiter.');
+        Assert::true(false !== mb_strpos($value, PickupPointInterface::TYPE_DELIMITER), 'PickupPoint identifier should contain delimiter.');
         [$pickupPointProvider, $pickupPointId] = explode(PickupPointInterface::TYPE_DELIMITER, $value);
 
         /** @var ProviderInterface $provider */
@@ -61,7 +65,10 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @param mixed $value
+     *
      * @throws TransformationFailedException
+     * @throws StringsException
      */
     private function assertTransformationValueType($value, string $expectedType): void
     {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
+use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 use Webmozart\Assert\Assert;
 
 final class PickupPoint implements PickupPointInterface
@@ -39,6 +41,9 @@ final class PickupPoint implements PickupPointInterface
     /** @var string */
     private $longitude;
 
+    /**
+     * @throws StringsException
+     */
     public function __construct(string $providerCode, string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
     {
         Assert::notContains($providerCode, self::TYPE_DELIMITER, sprintf('The provider code "%s" should not contain the delimiter "%s"', $providerCode, self::TYPE_DELIMITER));
@@ -64,6 +69,9 @@ final class PickupPoint implements PickupPointInterface
         return $this->id;
     }
 
+    /**
+     * @throws StringsException
+     */
     public function getFullId(): string
     {
         return sprintf(
@@ -79,6 +87,9 @@ final class PickupPoint implements PickupPointInterface
         return $this->name;
     }
 
+    /**
+     * @throws StringsException
+     */
     public function getFullName(): string
     {
         return sprintf(
