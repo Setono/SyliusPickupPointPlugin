@@ -6,7 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,9 +35,9 @@ final class PickupPointByIdAction
             throw new NotFoundHttpException();
         }
 
-        /** @var PickupPointInterface|mixed $pickupPoint */
+        /** @var PickupPoint|mixed $pickupPoint */
         $pickupPoint = $this->pickupPointToIdentifierTransformer->reverseTransform($pickupPointId);
-        if (!$pickupPoint instanceof PickupPointInterface) {
+        if (!$pickupPoint instanceof PickupPoint) {
             throw new NotFoundHttpException();
         }
 

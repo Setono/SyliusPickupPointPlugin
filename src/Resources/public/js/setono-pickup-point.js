@@ -14,7 +14,7 @@
             url: element.data('url'),
             onSuccess(response) {
               element
-                .append('<i>"' + response.full_name + '"</i>')
+                .append('<i>"' + response.location + '"</i>')
                 .show()
               ;
             },

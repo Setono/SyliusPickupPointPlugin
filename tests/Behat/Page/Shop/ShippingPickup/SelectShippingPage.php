@@ -23,7 +23,7 @@ final class SelectShippingPage extends BaseSelectShippingPage implements SelectS
         });
 
         $item = $this->getElement('pickup_point_dropdown_item', [
-            '%value%' => 'gls-001',
+            '%value%' => 'gls---001',
         ]);
 
         $item->click();

@@ -2,22 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusPickupPointPlugin\Model;
+namespace Setono\SyliusPickupPointPlugin\PickupPoint;
 
 use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
-use Webmozart\Assert\Assert;
 
-final class PickupPoint implements PickupPointInterface
+final class PickupPoint
 {
-    /**
-     * Should not contain self::TYPE_DELIMITER
-     *
-     * @var string
-     */
-    private $providerCode;
-
-    /** @var string */
+    /** @var PickupPointId */
     private $id;
 
     /** @var string */
@@ -35,20 +27,14 @@ final class PickupPoint implements PickupPointInterface
     /** @var string */
     private $country;
 
-    /** @var string */
+    /** @var string|null */
     private $latitude;
 
-    /** @var string */
+    /** @var string|null */
     private $longitude;
 
-    /**
-     * @throws StringsException
-     */
-    public function __construct(string $providerCode, string $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude, string $longitude)
+    public function __construct(PickupPointId $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude = null, string $longitude = null)
     {
-        Assert::notContains($providerCode, self::TYPE_DELIMITER, sprintf('The provider code "%s" should not contain the delimiter "%s"', $providerCode, self::TYPE_DELIMITER));
-
-        $this->providerCode = $providerCode;
         $this->id = $id;
         $this->name = $name;
         $this->address = $address;
@@ -59,27 +45,9 @@ final class PickupPoint implements PickupPointInterface
         $this->longitude = $longitude;
     }
 
-    public function getProviderCode(): string
-    {
-        return $this->providerCode;
-    }
-
-    public function getId(): string
+    public function getId(): PickupPointId
     {
         return $this->id;
-    }
-
-    /**
-     * @throws StringsException
-     */
-    public function getFullId(): string
-    {
-        return sprintf(
-            '%s%s%s',
-            $this->getProviderCode(),
-            self::TYPE_DELIMITER,
-            $this->getId()
-        );
     }
 
     public function getName(): string
@@ -90,10 +58,10 @@ final class PickupPoint implements PickupPointInterface
     /**
      * @throws StringsException
      */
-    public function getFullName(): string
+    public function getLocation(): string
     {
         return sprintf(
-            '%s, %s, %s, %s',
+            '%s, %s, %s %s',
             $this->getName(),
             $this->getAddress(),
             $this->getZipCode(),
@@ -121,12 +89,12 @@ final class PickupPoint implements PickupPointInterface
         return $this->country;
     }
 
-    public function getLatitude(): string
+    public function getLatitude(): ?string
     {
         return $this->latitude;
     }
 
-    public function getLongitude(): string
+    public function getLongitude(): ?string
     {
         return $this->longitude;
     }

@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Faker\Factory;
+use Faker\Generator;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class FakerProvider implements ProviderInterface
 {
-    /** @var \Faker\Generator */
+    /** @var Generator */
     private $faker;
 
     public function __construct()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
     }
 
     public function findPickupPoints(OrderInterface $order): array
     {
-        $pockupPoints = [];
+        $pickupPoints = [];
         for ($i = 0; $i < 10; ++$i) {
-            $pockupPoints[] = $this->createFakePickupPoint((string) $i);
+            $pickupPoints[] = $this->createFakePickupPoint((string) $i);
         }
 
-        return $pockupPoints;
+        return $pickupPoints;
     }
 
-    public function findPickupPoint(string $id): ?PickupPointInterface
+    public function findPickupPoint(PickupPointId $id): ?PickupPoint
     {
-        return $this->createFakePickupPoint($id);
+        return $this->createFakePickupPoint($id->getIdPart());
     }
 
     public function getCode(): string
@@ -43,11 +45,10 @@ final class FakerProvider implements ProviderInterface
         return 'Faker';
     }
 
-    private function createFakePickupPoint(string $index): PickupPointInterface
+    private function createFakePickupPoint(string $index): PickupPoint
     {
         return new PickupPoint(
-            $this->getCode(),
-            $index,
+            new PickupPointId($index, $this->getCode()),
             "Post office #$index",
             $this->faker->streetAddress,
             (string) $this->faker->numberBetween(11111, 99999),

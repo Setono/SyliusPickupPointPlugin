@@ -6,7 +6,8 @@ namespace spec\Setono\SyliusPickupPointPlugin\Provider;
 
 use PhpSpec\ObjectBehavior;
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Setono\SyliusPickupPointPlugin\Provider\DAOProvider;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -39,8 +40,8 @@ class DAOProviderSpec extends ObjectBehavior
             ],
         ]);
 
-        $pickupPoint = $this->findPickupPoint('1234');
-        $pickupPoint->shouldBeAnInstanceOf(PickupPointInterface::class);
+        $pickupPoint = $this->findPickupPoint(new PickupPointId('1234', 'dao'));
+        $pickupPoint->shouldBeAnInstanceOf(PickupPoint::class);
 
         $this->testPickupPoint($pickupPoint, '1234');
     }
@@ -79,7 +80,7 @@ class DAOProviderSpec extends ObjectBehavior
         return [
             'beArrayOfPickupPoints' => static function ($pickupPoints) {
                 foreach ($pickupPoints as $element) {
-                    if (!$element instanceof PickupPointInterface) {
+                    if (!$element instanceof PickupPoint) {
                         return false;
                     }
                 }
@@ -89,15 +90,20 @@ class DAOProviderSpec extends ObjectBehavior
         ];
     }
 
+    /**
+     * @param PickupPoint $pickupPoint
+     */
     private function testPickupPoint($pickupPoint, string $id): void
     {
-        $pickupPoint->getId()->shouldReturn($id);
+        $idObject = $pickupPoint->getId();
+        $idObject->shouldBeAnInstanceOf(PickupPointId::class);
+        $idObject->getIdPart()->shouldReturn($id);
+
         $pickupPoint->getName()->shouldReturn('Mediabox');
         $pickupPoint->getAddress()->shouldReturn('Bilka Vejle 20');
         $pickupPoint->getZipCode()->shouldReturn('7100');
         $pickupPoint->getCity()->shouldReturn('Vejle');
         $pickupPoint->getCountry()->shouldReturn('DK');
-        $pickupPoint->getProviderCode()->shouldReturn('dao');
         $pickupPoint->getLatitude()->shouldReturn('55.7119');
         $pickupPoint->getLongitude()->shouldReturn('9.539939');
     }

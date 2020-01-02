@@ -9,28 +9,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PickupPointIdChoiceType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'choice_name' => 'full_name',
-            'choice_value' => 'full_id',
+            'choice_name' => 'location',
+            'choice_value' => 'id',
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent(): string
     {
         return PickupPointChoiceType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix(): string
     {
         return 'setono_sylius_pickup_point_id_choice';
