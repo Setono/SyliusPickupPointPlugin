@@ -11,7 +11,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 class PostNordProviderMocker implements ProviderInterface
 {
-    const PICKUP_POINT_ID = '001';
+    public const PICKUP_POINT_ID = '001';
 
     public function getCode(): string
     {
@@ -26,7 +26,7 @@ class PostNordProviderMocker implements ProviderInterface
     public function findPickupPoints(OrderInterface $order): array
     {
         return [
-            $this->findOnePickupPointById('')
+            $this->findOnePickupPointById(''),
         ];
     }
 

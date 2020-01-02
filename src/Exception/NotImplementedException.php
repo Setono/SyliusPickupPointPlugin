@@ -9,7 +9,7 @@ use Throwable;
 
 final class NotImplementedException extends Exception implements PickupPointException
 {
-    public function __construct($message = 'Not implemented', $code = 0, Throwable $previous = null)
+    public function __construct(string $message = 'Not implemented', int $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

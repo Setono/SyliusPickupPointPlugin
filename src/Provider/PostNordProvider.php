@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Safe\Exceptions\StringsException;
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use function Safe\sprintf;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
@@ -26,6 +28,10 @@ final class PostNordProvider implements ProviderInterface
         $this->client = $client;
     }
 
+    /**
+     * @return PickupPointInterface[]
+     * @throws StringsException
+     */
     public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
@@ -57,6 +63,9 @@ final class PostNordProvider implements ProviderInterface
         return $pickupPoints;
     }
 
+    /**
+     * @throws StringsException
+     */
     public function findOnePickupPointById(string $id): ?PickupPointInterface
     {
         [$countryCode, $id] = $this->reverseTransformId($id);
@@ -88,6 +97,9 @@ final class PostNordProvider implements ProviderInterface
         return 'PostNord';
     }
 
+    /**
+     * @throws StringsException
+     */
     private function transform(array $servicePoint, string $countryCode): PickupPointInterface
     {
         return new PickupPoint(
@@ -103,6 +115,9 @@ final class PostNordProvider implements ProviderInterface
         );
     }
 
+    /**
+     * @throws StringsException
+     */
     private function transformId(string $countryCode, string $servicePointId): string
     {
         return sprintf(

@@ -20,7 +20,7 @@ final class RegisterProvidersPass implements CompilerPassInterface
         }
 
         $registry = $container->getDefinition('setono_sylius_pickup_point.registry.provider');
-        $cacheEnabled = $container->getParameter('setono_sylius_pickup_point.cache.enabled');
+        $cacheEnabled = $container->getParameter('setono_sylius_pickup_point.cache.enabled') === true;
 
         $typeToLabelMap = [];
         foreach ($container->findTaggedServiceIds('setono_sylius_pickup_point.provider') as $id => $tagged) {

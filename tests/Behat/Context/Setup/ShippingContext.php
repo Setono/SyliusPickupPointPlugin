@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup;
 
-use RuntimeException;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Setono\SyliusPickupPointPlugin\Model\ShippingMethodInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 

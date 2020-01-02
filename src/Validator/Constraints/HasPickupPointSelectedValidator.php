@@ -12,6 +12,9 @@ use Webmozart\Assert\Assert;
 
 final class HasPickupPointSelectedValidator extends ConstraintValidator
 {
+    /**
+     * @param mixed $shipment
+     */
     public function validate($shipment, Constraint $constraint): void
     {
         /** @var $constraint HasPickupPointSelected */
