@@ -25,6 +25,10 @@ jobs:
                 with:
                     php-version: ${{ matrix.php-versions }}
                     extension-csv: intl
+            -   name: Setup node
+                uses: actions/setup-node@v1
+                with:
+                    node-version: '10.x'
             -   name: Install Composer dependencies
                 run: composer update --no-progress --no-suggest --prefer-dist --no-interaction
             -   name: Validate composer
@@ -45,5 +49,43 @@ jobs:
                     (cd tests/Application && bin/console doctrine:schema:create -vvv)
                     (cd tests/Application && bin/console assets:install public -vvv)
                     (cd tests/Application && bin/console cache:warmup -vvv)
-            -   name: Run behat
-                run: vendor/bin/behat --strict -vvv --no-interaction || vendor/bin/behat --strict -vvv --no-interaction --rerun
+            -   name: Run behat without javascript
+                run: vendor/bin/behat --strict --stop-on-failure -vvv --no-interaction --tags="~@javascript && ~@todo && ~@cli"
+                  ###########################################################################
+                  # The steps below is used to run behat with javascript.                   #
+                  # If you don't have scenarios with javascript, you can remove these steps #
+                  ###########################################################################
+             -   name: Install and build Yarn dependencies
+                 run: |
+                     yarn install
+                     yarn build
+             -   name: Configure display
+                 run: |
+                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1680x1050x16
+             -   name: Download and run Chromedriver
+                 run: |
+                     curl http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip > chromedriver.zip
+                     unzip chromedriver.zip
+                     chmod +x chromedriver
+                     chromedriver > /dev/null 2>&1 &
+                 env:
+                     DISPLAY: ':99'
+             -   name: Download and run Selenium
+                 run: |
+                     curl http://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar > selenium.jar
+                     java -Dwebdriver.chrome.driver=chromedriver -jar selenium.jar > /dev/null 2>&1 &
+                 env:
+                     DISPLAY: ':99'
+             -   name: Run webserver
+                 run: bin/console server:run 127.0.0.1:8080 --quiet > /dev/null 2>&1 &
+                 env:
+                     DISPLAY: ':99'
+             -   name: Run behat with javascript
+                 run: vendor/bin/behat --strict --stop-on-failure -vvv --no-interaction --tags="@javascript && ~@todo && ~@cli" || vendor/bin/behat --strict --stop-on-failure -vvv --no-interaction --tags="@javascript && ~@todo && ~@cli" --rerun
+                 env:
+                     DISPLAY: ':99'
+             -   uses: actions/upload-artifact@v1
+                 if: failure()
+                 with:
+                     name: logs
+                     path: etc/build
