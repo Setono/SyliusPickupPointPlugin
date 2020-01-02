@@ -3,7 +3,7 @@
 [![Latest Version][ico-version]][link-packagist]
 [![Latest Unstable Version][ico-unstable-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
-[![Build Status][ico-travis]][link-travis]
+[![Build Status][ico-github-actions]][link-github-actions]
 [![Quality Score][ico-code-quality]][link-code-quality]
 
 Add a `<select>` that contains pickup points to your select shipping checkout step.
@@ -301,9 +301,9 @@ bin/console sylius:theme:assets:install
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-unstable-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/unstable
 [ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license
-[ico-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin.svg?branch=master
+[ico-github-actions]: https://github.com/Setono/SyliusPickupPointPlugin/workflows/build/badge.svg
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/Setono/SyliusPickupPointPlugin.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-pickup-point-plugin
-[link-travis]: https://travis-ci.com/Setono/SyliusPickupPointPlugin
+[link-github-actions]: https://github.com/Setono/SyliusPickupPointPlugin/actions
 [link-code-quality]: https://scrutinizer-ci.com/g/Setono/SyliusPickupPointPlugin
