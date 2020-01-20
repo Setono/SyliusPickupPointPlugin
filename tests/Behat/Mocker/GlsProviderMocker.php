@@ -26,19 +26,19 @@ class GlsProviderMocker extends Provider
     public function findPickupPoints(OrderInterface $order): iterable
     {
         return [
-            $this->findPickupPoint(new PickupPointCode('', '')),
+            $this->findPickupPoint(new PickupPointCode('', '', '')),
         ];
     }
 
     public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         return new PickupPoint(
-            new PickupPointCode(self::PICKUP_POINT_ID, $this->getCode()),
+            new PickupPointCode(self::PICKUP_POINT_ID, $this->getCode(), 'DK'),
             'Somewhere',
             '1 Rainbow str',
-            '12345',
-            'Kyiv',
-            'Ukraine',
+            '4499',
+            'Aalborg',
+            'DK',
             '23N',
             '180E'
         );
@@ -47,7 +47,7 @@ class GlsProviderMocker extends Provider
     public function findAllPickupPoints(): iterable
     {
         return [
-            $this->findPickupPoint(new PickupPointCode('', '')),
+            $this->findPickupPoint(new PickupPointCode('', '', '')),
         ];
     }
 }
