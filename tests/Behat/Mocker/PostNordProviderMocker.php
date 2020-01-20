@@ -50,6 +50,4 @@ class PostNordProviderMocker implements ProviderInterface
             $this->findPickupPoint(new PickupPointId('', '')),
         ];
     }
-
-
 }
