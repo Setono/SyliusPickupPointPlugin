@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Model;
 
 use InvalidArgumentException;
+use Symfony\Component\Intl\Countries;
 use Webmozart\Assert\Assert;
 
 final class PickupPointCode
@@ -31,6 +32,9 @@ final class PickupPointCode
     public function __construct($id, string $provider, string $country)
     {
         Assert::scalar($id);
+
+        $country = mb_strtoupper($country);
+        Assert::true(Countries::exists($country));
 
         $this->id = (string) $id;
         $this->provider = $provider;
