@@ -14,7 +14,7 @@ use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
-final class CachedProvider implements ProviderInterface
+final class CachedProvider extends Provider
 {
     /** @var CacheItemPoolInterface */
     private $cacheItemPool;

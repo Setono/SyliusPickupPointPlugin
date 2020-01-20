@@ -1,3 +1,6 @@
+imports:
+    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }
+
 framework:
     cache:
         pools:
