@@ -8,13 +8,9 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 
 interface PickupPointInterface extends ResourceInterface
 {
-    public function getProviderId(): ?string;
+    public function getCode(): ?PickupPointCode;
 
-    public function setProviderId(string $providerId): void;
-
-    public function getProvider(): ?string;
-
-    public function setProvider(string $provider): void;
+    public function setCode(PickupPointCode $code): void;
 
     public function getName(): ?string;
 

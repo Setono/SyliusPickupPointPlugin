@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class DAOProvider extends Provider
@@ -33,10 +33,10 @@ final class DAOProvider extends Provider
         ]);
     }
 
-    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         foreach ($this->_findPickupPoints([
-            'shopid' => $id->getIdPart(),
+            'shopid' => $code->getIdPart(),
         ]) as $pickupPoint) {
             return $pickupPoint;
         }

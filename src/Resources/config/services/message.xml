@@ -8,7 +8,6 @@
                  class="Setono\SyliusPickupPointPlugin\Message\Handler\LoadPickupPointsHandler">
             <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
             <argument type="service" id="setono_sylius_pickup_point.repository.pickup_point"/>
-            <argument type="service" id="setono_sylius_pickup_point.factory.pickup_point"/>
             <argument type="service" id="setono_sylius_pickup_point.manager.pickup_point"/>
 
             <tag name="messenger.message_handler"/>

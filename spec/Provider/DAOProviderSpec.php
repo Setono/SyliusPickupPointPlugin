@@ -6,8 +6,8 @@ namespace spec\Setono\SyliusPickupPointPlugin\Provider;
 
 use PhpSpec\ObjectBehavior;
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Provider\DAOProvider;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -79,7 +79,7 @@ class DAOProviderSpec extends ObjectBehavior
                         return false;
                     }
 
-                    if ($element->getId()->getIdPart() !== $ids[$idx]) {
+                    if ($element->getCode()->getIdPart() !== $ids[$idx]) {
                         return false;
                     }
                 }
@@ -94,9 +94,9 @@ class DAOProviderSpec extends ObjectBehavior
      */
     private function testPickupPoint($pickupPoint, string $id): void
     {
-        $idObject = $pickupPoint->getId();
-        $idObject->shouldBeAnInstanceOf(PickupPointCode::class);
-        $idObject->getIdPart()->shouldReturn($id);
+        $code = $pickupPoint->getCode();
+        $code->shouldBeAnInstanceOf(PickupPointCode::class);
+        $code->getIdPart()->shouldReturn($id);
 
         $pickupPoint->getName()->shouldReturn('Mediabox');
         $pickupPoint->getAddress()->shouldReturn('Bilka Vejle 20');
