@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 
-final class NonUniqueProviderCodeException extends InvalidArgumentException implements PickupPointException
+final class NonUniqueProviderCodeException extends InvalidArgumentException implements ExceptionInterface
 {
     public function __construct(ProviderInterface $provider)
     {

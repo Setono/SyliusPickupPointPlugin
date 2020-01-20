@@ -6,6 +6,6 @@ namespace Setono\SyliusPickupPointPlugin\Exception;
 
 use Throwable;
 
-interface PickupPointException extends Throwable
+interface ExceptionInterface extends Throwable
 {
 }
