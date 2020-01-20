@@ -20,7 +20,7 @@ final class FakerProvider implements ProviderInterface
         $this->faker = Factory::create();
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(OrderInterface $order): iterable
     {
         $pickupPoints = [];
         for ($i = 0; $i < 10; ++$i) {
@@ -33,6 +33,13 @@ final class FakerProvider implements ProviderInterface
     public function findPickupPoint(PickupPointId $id): ?PickupPoint
     {
         return $this->createFakePickupPoint($id->getIdPart());
+    }
+
+    public function findAllPickupPoints(): iterable
+    {
+        for ($i = 0; $i < 10; ++$i) {
+            yield $this->createFakePickupPoint((string) $i);
+        }
     }
 
     public function getCode(): string

@@ -23,7 +23,7 @@ class GlsProviderMocker implements ProviderInterface
         return 'GLS';
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(OrderInterface $order): iterable
     {
         return [
             $this->findPickupPoint(new PickupPointId('', '')),
@@ -42,5 +42,12 @@ class GlsProviderMocker implements ProviderInterface
             '23N',
             '180E'
         );
+    }
+
+    public function findAllPickupPoints(): iterable
+    {
+        return [
+            $this->findPickupPoint(new PickupPointId('', '')),
+        ];
     }
 }
