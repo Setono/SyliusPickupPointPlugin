@@ -6,6 +6,10 @@ namespace Setono\SyliusPickupPointPlugin\PickupPoint;
 
 use function Safe\sprintf;
 
+/**
+ * This is a value object returned when fetching data from external APIs
+ * See examples of usage in the Provider namespace
+ */
 final class PickupPoint
 {
     /** @var PickupPointId */
@@ -32,8 +36,16 @@ final class PickupPoint
     /** @var string|null */
     private $longitude;
 
-    public function __construct(PickupPointId $id, string $name, string $address, string $zipCode, string $city, string $country, string $latitude = null, string $longitude = null)
-    {
+    public function __construct(
+        PickupPointId $id,
+        string $name,
+        string $address,
+        string $zipCode,
+        string $city,
+        string $country,
+        string $latitude = null,
+        string $longitude = null
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->address = $address;

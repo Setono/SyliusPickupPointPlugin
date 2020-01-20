@@ -13,7 +13,7 @@ use Webmozart\Assert\Assert;
 /**
  * @see https://developer.postnord.com/api/docs/location
  */
-final class PostNordProvider implements ProviderInterface
+final class PostNordProvider extends Provider
 {
     /** @var ClientInterface */
     private $client;

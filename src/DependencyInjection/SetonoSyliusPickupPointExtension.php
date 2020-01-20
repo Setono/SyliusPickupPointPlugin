@@ -6,13 +6,13 @@ namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
 use Exception;
 use LogicException;
+use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class SetonoSyliusPickupPointExtension extends Extension
+final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
 {
     /**
      * {@inheritdoc}
@@ -24,6 +24,8 @@ final class SetonoSyliusPickupPointExtension extends Extension
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $this->registerResources('setono_sylius_pickup_point', $config['driver'], $config['resources'], $container);
 
         $loader->load('services.xml');
 

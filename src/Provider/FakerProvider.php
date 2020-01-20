@@ -10,7 +10,7 @@ use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\OrderInterface;
 
-final class FakerProvider implements ProviderInterface
+final class FakerProvider extends Provider
 {
     /** @var Generator */
     private $faker;
