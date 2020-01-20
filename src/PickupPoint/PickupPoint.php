@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\PickupPoint;
 
-use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
 
 final class PickupPoint
@@ -55,9 +54,6 @@ final class PickupPoint
         return $this->name;
     }
 
-    /**
-     * @throws StringsException
-     */
     public function getLocation(): string
     {
         return sprintf(

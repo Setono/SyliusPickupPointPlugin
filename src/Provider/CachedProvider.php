@@ -8,7 +8,6 @@ use Behat\Transliterator\Transliterator;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
-use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
@@ -33,7 +32,6 @@ final class CachedProvider implements ProviderInterface
 
     /**
      * @throws InvalidArgumentException
-     * @throws StringsException
      *
      * @return PickupPoint[]
      */
@@ -101,9 +99,6 @@ final class CachedProvider implements ProviderInterface
         return $this->provider->getName();
     }
 
-    /**
-     * @throws StringsException
-     */
     private function buildOrderCacheKey(OrderInterface $order): string
     {
         $shippingAddress = $order->getShippingAddress();

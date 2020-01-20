@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
-use Safe\Exceptions\StringsException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
@@ -25,8 +24,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
 
     /**
      * @param mixed|PickupPoint $value
-     *
-     * @throws StringsException
      */
     public function transform($value): ?PickupPointId
     {
@@ -41,8 +38,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
 
     /**
      * @param mixed $value
-     *
-     * @throws StringsException
      */
     public function reverseTransform($value): ?PickupPoint
     {
@@ -67,7 +62,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      * @param mixed $value
      *
      * @throws TransformationFailedException
-     * @throws StringsException
      */
     private function assertTransformationValueType($value, string $expectedType): void
     {
