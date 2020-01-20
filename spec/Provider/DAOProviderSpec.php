@@ -67,20 +67,19 @@ class DAOProviderSpec extends ObjectBehavior
         $order->getShippingAddress()->willReturn($address);
 
         $pickupPoints = $this->findPickupPoints($order);
-        $pickupPoints->shouldHaveCount(2);
-        $pickupPoints->shouldBeArrayOfPickupPoints();
-
-        for ($i = 0; $i < 2; ++$i) {
-            $this->testPickupPoint($pickupPoints[$i], (string) $i);
-        }
+        $pickupPoints->shouldBeArrayOfPickupPoints('0', '1'); // these are the ids to match
     }
 
     public function getMatchers(): array
     {
         return [
-            'beArrayOfPickupPoints' => static function ($pickupPoints) {
-                foreach ($pickupPoints as $element) {
+            'beArrayOfPickupPoints' => static function ($pickupPoints, ...$ids) {
+                foreach ($pickupPoints as $idx => $element) {
                     if (!$element instanceof PickupPoint) {
+                        return false;
+                    }
+
+                    if ($element->getId()->getIdPart() !== $ids[$idx]) {
                         return false;
                     }
                 }
