@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusPickupPointPlugin\PickupPoint;
+namespace Setono\SyliusPickupPointPlugin\Model;
 
 use InvalidArgumentException;
 use Webmozart\Assert\Assert;

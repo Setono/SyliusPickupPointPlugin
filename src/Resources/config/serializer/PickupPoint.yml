@@ -1,8 +1,9 @@
-Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint:
+Setono\SyliusPickupPointPlugin\Model\PickupPoint:
     exclusion_policy: ALL
     xml_root_name: setono_sylius_pickup_point
     virtual_properties:
-        getId:
+        getCode:
+            # todo should be renamed to code
             serialized_name: id
             type: string
             groups: [Detailed, Autocomplete]

@@ -1,15 +1,12 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
     <mapped-superclass name="Setono\SyliusPickupPointPlugin\Model\PickupPoint" table="setono_sylius_pickup_point__pickup_point">
-        <unique-constraints>
-            <unique-constraint columns="provider_id,provider,country"/>
-        </unique-constraints>
-
+        <!-- todo create unique constraint on the columns in the embedded 'code' -->
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="providerId" column="provider_id"/>
-        <field name="provider" column="provider"/>
+        <embedded name="code" class="Setono\SyliusPickupPointPlugin\Model\PickupPointCode"/>
+
         <field name="name"/>
         <field name="address"/>
         <field name="zipCode"/>
