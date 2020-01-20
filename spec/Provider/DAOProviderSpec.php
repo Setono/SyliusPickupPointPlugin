@@ -7,7 +7,7 @@ namespace spec\Setono\SyliusPickupPointPlugin\Provider;
 use PhpSpec\ObjectBehavior;
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Provider\DAOProvider;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -40,7 +40,7 @@ class DAOProviderSpec extends ObjectBehavior
             ],
         ]);
 
-        $pickupPoint = $this->findPickupPoint(new PickupPointId('1234', 'dao', 'DK'));
+        $pickupPoint = $this->findPickupPoint(new PickupPointCode('1234', 'dao', 'DK'));
         $pickupPoint->shouldBeAnInstanceOf(PickupPoint::class);
 
         $this->testPickupPoint($pickupPoint, '1234');
@@ -95,7 +95,7 @@ class DAOProviderSpec extends ObjectBehavior
     private function testPickupPoint($pickupPoint, string $id): void
     {
         $idObject = $pickupPoint->getId();
-        $idObject->shouldBeAnInstanceOf(PickupPointId::class);
+        $idObject->shouldBeAnInstanceOf(PickupPointCode::class);
         $idObject->getIdPart()->shouldReturn($id);
 
         $pickupPoint->getName()->shouldReturn('Mediabox');

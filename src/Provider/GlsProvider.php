@@ -8,7 +8,7 @@ use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider extends Provider
@@ -42,7 +42,7 @@ final class GlsProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointId $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
     {
         try {
             $parcelShop = $this->client->getOneParcelShop($id->getIdPart());
@@ -80,7 +80,7 @@ final class GlsProvider extends Provider
     private function transform(ParcelShop $parcelShop): PickupPoint
     {
         return new PickupPoint(
-            new PickupPointId($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()),
+            new PickupPointCode($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()),
             $parcelShop->getCompanyName(),
             $parcelShop->getStreetName(),
             $parcelShop->getZipCode(),

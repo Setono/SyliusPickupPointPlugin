@@ -10,7 +10,7 @@ use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
@@ -63,7 +63,7 @@ final class CachedProvider extends Provider
     /**
      * @throws InvalidArgumentException
      */
-    public function findPickupPoint(PickupPointId $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($id);
         if (!$this->cacheItemPool->hasItem($pickupPointCacheKey)) {
@@ -120,7 +120,7 @@ final class CachedProvider extends Provider
         );
     }
 
-    private function buildPickupPointIdCacheKey(PickupPointId $id): string
+    private function buildPickupPointIdCacheKey(PickupPointCode $id): string
     {
         return $id->getValue();
     }

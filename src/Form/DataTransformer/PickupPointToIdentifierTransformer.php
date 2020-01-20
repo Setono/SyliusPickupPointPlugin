@@ -6,7 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -25,7 +25,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     /**
      * @param mixed|PickupPoint $value
      */
-    public function transform($value): ?PickupPointId
+    public function transform($value): ?PickupPointCode
     {
         if (null === $value) {
             return null;
@@ -45,7 +45,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
             return null;
         }
 
-        $pickupPointId = PickupPointId::createFromString($value);
+        $pickupPointId = PickupPointCode::createFromString($value);
 
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($pickupPointId->getProviderPart());

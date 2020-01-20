@@ -6,7 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -52,7 +52,7 @@ final class PostNordProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointId $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
     {
         $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
             'countryCode' => $id->getCountryPart(),
@@ -93,7 +93,7 @@ final class PostNordProvider extends Provider
 
     private function transform(array $servicePoint): PickupPoint
     {
-        $id = new PickupPointId(
+        $id = new PickupPointCode(
             $servicePoint['servicePointId'],
             $this->getCode(),
             $servicePoint['visitingAddress']['countryCode']

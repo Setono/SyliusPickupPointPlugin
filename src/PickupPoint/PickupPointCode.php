@@ -7,7 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\PickupPoint;
 use InvalidArgumentException;
 use Webmozart\Assert\Assert;
 
-final class PickupPointId
+final class PickupPointCode
 {
     private const DELIMITER = '---';
 

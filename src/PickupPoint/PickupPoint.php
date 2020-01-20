@@ -12,7 +12,7 @@ use function Safe\sprintf;
  */
 final class PickupPoint
 {
-    /** @var PickupPointId */
+    /** @var PickupPointCode */
     private $id;
 
     /** @var string */
@@ -37,7 +37,7 @@ final class PickupPoint
     private $longitude;
 
     public function __construct(
-        PickupPointId $id,
+        PickupPointCode $id,
         string $name,
         string $address,
         string $zipCode,
@@ -56,7 +56,7 @@ final class PickupPoint
         $this->longitude = $longitude;
     }
 
-    public function getId(): PickupPointId
+    public function getId(): PickupPointCode
     {
         return $this->id;
     }

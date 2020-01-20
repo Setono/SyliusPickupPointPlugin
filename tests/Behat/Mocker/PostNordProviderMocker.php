@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
 
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Provider\Provider;
 use Sylius\Component\Core\Model\OrderInterface;
 
@@ -26,14 +26,14 @@ class PostNordProviderMocker extends Provider
     public function findPickupPoints(OrderInterface $order): iterable
     {
         return [
-            $this->findPickupPoint(new PickupPointId('', '')),
+            $this->findPickupPoint(new PickupPointCode('', '')),
         ];
     }
 
-    public function findPickupPoint(PickupPointId $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
     {
         return new PickupPoint(
-            new PickupPointId(self::PICKUP_POINT_ID, $this->getCode()),
+            new PickupPointCode(self::PICKUP_POINT_ID, $this->getCode()),
             'Somewhere',
             '1 Rainbow str',
             '12345',
@@ -47,7 +47,7 @@ class PostNordProviderMocker extends Provider
     public function findAllPickupPoints(): iterable
     {
         return [
-            $this->findPickupPoint(new PickupPointId('', '')),
+            $this->findPickupPoint(new PickupPointCode('', '')),
         ];
     }
 }

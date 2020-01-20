@@ -7,7 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Faker\Factory;
 use Faker\Generator;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
-use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
+use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class FakerProvider extends Provider
@@ -30,7 +30,7 @@ final class FakerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointId $id): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $id): ?PickupPoint
     {
         return $this->createFakePickupPoint($id->getIdPart());
     }
@@ -57,7 +57,7 @@ final class FakerProvider extends Provider
         $countryCode = $this->faker->countryCode;
 
         return new PickupPoint(
-            new PickupPointId($index, $this->getCode(), $countryCode),
+            new PickupPointCode($index, $this->getCode(), $countryCode),
             "Post office #$index",
             $this->faker->streetAddress,
             (string) $this->faker->numberBetween(11111, 99999),
