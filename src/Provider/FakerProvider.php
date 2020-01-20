@@ -54,13 +54,15 @@ final class FakerProvider extends Provider
 
     private function createFakePickupPoint(string $index): PickupPoint
     {
+        $countryCode = $this->faker->countryCode;
+
         return new PickupPoint(
-            new PickupPointId($index, $this->getCode()),
+            new PickupPointId($index, $this->getCode(), $countryCode),
             "Post office #$index",
             $this->faker->streetAddress,
             (string) $this->faker->numberBetween(11111, 99999),
             $this->faker->city,
-            $this->faker->countryCode,
+            $countryCode,
             (string) $this->faker->latitude,
             (string) $this->faker->longitude
         );

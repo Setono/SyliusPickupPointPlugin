@@ -80,7 +80,7 @@ final class GlsProvider extends Provider
     private function transform(ParcelShop $parcelShop): PickupPoint
     {
         return new PickupPoint(
-            new PickupPointId($parcelShop->getNumber(), $this->getCode()),
+            new PickupPointId($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()),
             $parcelShop->getCompanyName(),
             $parcelShop->getStreetName(),
             $parcelShop->getZipCode(),

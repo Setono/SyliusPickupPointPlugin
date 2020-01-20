@@ -8,7 +8,6 @@ use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\OrderInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
@@ -55,8 +54,6 @@ final class PostNordProvider extends Provider
 
     public function findPickupPoint(PickupPointId $id): ?PickupPoint
     {
-        Assert::notNull($id->getCountryPart());
-
         $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
             'countryCode' => $id->getCountryPart(),
             'servicePointId' => $id->getIdPart(),

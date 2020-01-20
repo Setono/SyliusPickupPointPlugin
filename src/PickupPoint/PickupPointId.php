@@ -19,16 +19,16 @@ final class PickupPointId
 
     /**
      * Some providers will only have unique ids per country
-     * hence we need the country to make it completely unique in thse cases
+     * hence we need the country to make it completely unique in these cases
      *
-     * @var string|null
+     * @var string
      */
     private $country;
 
     /**
      * @param mixed $id
      */
-    public function __construct($id, string $provider, string $country = null)
+    public function __construct($id, string $provider, string $country)
     {
         Assert::scalar($id);
 
@@ -49,7 +49,11 @@ final class PickupPointId
             throw new InvalidArgumentException('No id part provided');
         }
 
-        return new self($parts[1], $parts[0], $parts[2] ?? null);
+        if (!isset($parts[2])) {
+            throw new InvalidArgumentException('No country part provided');
+        }
+
+        return new self($parts[1], $parts[0], $parts[2]);
     }
 
     public function __toString(): string
@@ -59,12 +63,7 @@ final class PickupPointId
 
     public function getValue(): string
     {
-        $value = $this->provider . self::DELIMITER . $this->id;
-        if (null !== $this->country) {
-            $value .= self::DELIMITER . $this->country;
-        }
-
-        return $value;
+        return $this->provider . self::DELIMITER . $this->id . self::DELIMITER . $this->country;
     }
 
     public function getIdPart(): string
@@ -77,7 +76,7 @@ final class PickupPointId
         return $this->provider;
     }
 
-    public function getCountryPart(): ?string
+    public function getCountryPart(): string
     {
         return $this->country;
     }
