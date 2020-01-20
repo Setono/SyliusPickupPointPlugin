@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="setono_sylius_pickup_point.message.handler.load_pickup_points"
+                 class="Setono\SyliusPickupPointPlugin\Message\Handler\LoadPickupPointsHandler">
+            <argument type="service" id="setono_sylius_pickup_point.registry.provider"/>
+            <argument type="service" id="setono_sylius_pickup_point.repository.pickup_point"/>
+            <argument type="service" id="setono_sylius_pickup_point.factory.pickup_point"/>
+            <argument type="service" id="setono_sylius_pickup_point.manager.pickup_point"/>
+
+            <tag name="messenger.message_handler"/>
+        </service>
+    </services>
+</container>

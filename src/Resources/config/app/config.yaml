@@ -1,3 +1,8 @@
+framework:
+    messenger:
+        buses:
+            setono_sylius_pickup_point.command_bus: ~
+
 jms_serializer:
     metadata:
         directories:

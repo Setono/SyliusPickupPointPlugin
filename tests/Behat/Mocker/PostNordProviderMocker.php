@@ -6,10 +6,10 @@ namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
 
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
-use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
+use Setono\SyliusPickupPointPlugin\Provider\Provider;
 use Sylius\Component\Core\Model\OrderInterface;
 
-class PostNordProviderMocker implements ProviderInterface
+class PostNordProviderMocker extends Provider
 {
     public const PICKUP_POINT_ID = '001';
 

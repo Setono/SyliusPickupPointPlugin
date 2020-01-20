@@ -11,7 +11,7 @@ use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\OrderInterface;
 
-final class GlsProvider implements ProviderInterface
+final class GlsProvider extends Provider
 {
     /** @var ClientInterface */
     private $client;

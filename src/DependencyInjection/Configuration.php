@@ -7,6 +7,14 @@ namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 use Setono\DAOBundle\SetonoDAOBundle;
 use Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle;
 use Setono\PostNordBundle\SetonoPostNordBundle;
+use Setono\SyliusPickupPointPlugin\Doctrine\ORM\PickupPointRepository;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
+use Sylius\Bundle\ResourceBundle\Form\Type\DefaultResourceType;
+use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
+use Sylius\Component\Resource\Factory\Factory;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,6 +34,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('driver')->defaultValue(SyliusResourceBundle::DRIVER_DOCTRINE_ORM)->end()
                 ->arrayNode('cache')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -64,6 +73,38 @@ final class Configuration implements ConfigurationInterface
             ->end()
         ;
 
+        $this->addResourcesSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    private function addResourcesSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->arrayNode('resources')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('pickup_point')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(PickupPoint::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('interface')->defaultValue(PickupPointInterface::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(PickupPointRepository::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('form')->defaultValue(DefaultResourceType::class)->end()
+                                        ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

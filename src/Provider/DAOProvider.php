@@ -9,7 +9,7 @@ use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPoint;
 use Setono\SyliusPickupPointPlugin\PickupPoint\PickupPointId;
 use Sylius\Component\Core\Model\OrderInterface;
 
-final class DAOProvider implements ProviderInterface
+final class DAOProvider extends Provider
 {
     /** @var ClientInterface */
     private $client;

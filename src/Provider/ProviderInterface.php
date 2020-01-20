@@ -10,6 +10,8 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
 {
+    public function __toString(): string;
+
     /**
      * A unique code identifying this provider
      */
@@ -32,7 +34,7 @@ interface ProviderInterface
     /**
      * Returns all pickup points for this provider
      *
-     * @return iterable<PickupPoint>
+     * @return iterable<PickupPoint>|PickupPoint[]
      */
     public function findAllPickupPoints(): iterable;
 }
