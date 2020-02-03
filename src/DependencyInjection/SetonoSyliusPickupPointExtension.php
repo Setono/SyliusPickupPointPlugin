@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
 {
     /**
-     * {@inheritdoc}
-     *
      * @throws Exception
      * @throws LogicException
      */
@@ -24,6 +22,7 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $container->setParameter('setono_sylius_pickup_point.local', $config['local']);
 
         $this->registerResources('setono_sylius_pickup_point', $config['driver'], $config['resources'], $container);
 
