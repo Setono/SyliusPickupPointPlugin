@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
-use RuntimeException;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
+use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class LocalProvider extends Provider
@@ -15,9 +15,13 @@ final class LocalProvider extends Provider
     /** @var ProviderInterface */
     private $provider;
 
-    public function __construct(ProviderInterface $provider)
+    /** @var PickupPointRepositoryInterface */
+    private $pickupPointRepository;
+
+    public function __construct(ProviderInterface $provider, PickupPointRepositoryInterface $pickupPointRepository)
     {
         $this->provider = $provider;
+        $this->pickupPointRepository = $pickupPointRepository;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -25,18 +29,16 @@ final class LocalProvider extends Provider
         try {
             return $this->provider->findPickupPoints($order);
         } catch (TimeoutException $e) {
-            // todo find pickup points in local database
-            throw new RuntimeException('Not implemented');
+            return $this->pickupPointRepository->findByOrder($order, $this->provider->getCode());
         }
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         try {
             return $this->provider->findPickupPoint($code);
         } catch (TimeoutException $e) {
-            // todo find pickup point in local database
-            throw new RuntimeException('Not implemented');
+            return $this->pickupPointRepository->findOneByCode($code);
         }
     }
 

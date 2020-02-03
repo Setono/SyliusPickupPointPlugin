@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\PostNord\Client\ClientInterface;
+use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -32,12 +35,16 @@ final class PostNordProvider extends Provider
             return [];
         }
 
-        $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
-            'countryCode' => $shippingAddress->getCountryCode(),
-            'postalCode' => $shippingAddress->getPostcode(),
-            'streetName' => $shippingAddress->getStreet(),
-            'numberOfServicePoints' => 10,
-        ]);
+        try {
+            $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
+                'countryCode' => $shippingAddress->getCountryCode(),
+                'postalCode' => $shippingAddress->getPostcode(),
+                'streetName' => $shippingAddress->getStreet(),
+                'numberOfServicePoints' => 10,
+            ]);
+        } catch (NetworkExceptionInterface $e) {
+            throw new TimeoutException($e);
+        }
 
         $servicePoints = $result['servicePointInformationResponse']['servicePoints'] ?? [];
         if (!is_array($servicePoints)) {
@@ -52,12 +59,16 @@ final class PostNordProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
-        $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
-            'countryCode' => $code->getCountryPart(),
-            'servicePointId' => $code->getIdPart(),
-        ]);
+        try {
+            $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findByServicePointId.json', [
+                'countryCode' => $code->getCountryPart(),
+                'servicePointId' => $code->getIdPart(),
+            ]);
+        } catch (NetworkExceptionInterface $e) {
+            throw new TimeoutException($e);
+        }
 
         $servicePoints = $result['servicePointInformationResponse']['servicePoints'] ?? null;
         if (!is_array($servicePoints) || count($servicePoints) < 1) {
@@ -69,7 +80,11 @@ final class PostNordProvider extends Provider
 
     public function findAllPickupPoints(): iterable
     {
-        $result = $this->client->get('/rest/businesslocation/v1/servicepoint/getServicePointInformation.json');
+        try {
+            $result = $this->client->get('/rest/businesslocation/v1/servicepoint/getServicePointInformation.json');
+        } catch (NetworkExceptionInterface $e) {
+            throw new TimeoutException($e);
+        }
 
         $servicePoints = $result['servicePointInformationResponse']['servicePoints'] ?? [];
         if (!is_array($servicePoints)) {
@@ -77,6 +92,10 @@ final class PostNordProvider extends Provider
         }
 
         foreach ($servicePoints as $servicePoint) {
+            if (!self::isValidServicePoint($servicePoint)) {
+                continue;
+            }
+
             yield $this->transform($servicePoint);
         }
     }
@@ -99,15 +118,31 @@ final class PostNordProvider extends Provider
             $servicePoint['visitingAddress']['countryCode']
         );
 
+        $address = $servicePoint['visitingAddress']['streetName'];
+        if (isset($servicePoint['visitingAddress']['streetNumber'])) {
+            $address .= ' ' . $servicePoint['visitingAddress']['streetNumber'];
+        }
+
         return new PickupPoint(
             $id,
             $servicePoint['name'],
-            $servicePoint['visitingAddress']['streetName'] . ' ' . $servicePoint['visitingAddress']['streetNumber'],
+            $address,
             (string) $servicePoint['visitingAddress']['postalCode'],
             $servicePoint['visitingAddress']['city'],
             (string) $servicePoint['visitingAddress']['countryCode'],
             $servicePoint['coordinate']['northing'] ?? null,
             $servicePoint['coordinate']['easting'] ?? null
         );
+    }
+
+    private static function isValidServicePoint(array $servicePoint): bool
+    {
+        // some service points will not have a city because they are special internal service points
+        // we exclude these service points since they doesn't make any sense for the end user
+        if (!isset($servicePoint['visitingAddress']['city'])) {
+            return false;
+        }
+
+        return true;
     }
 }

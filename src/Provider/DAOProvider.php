@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\DAO\Client\ClientInterface;
+use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class DAOProvider extends Provider
@@ -33,7 +36,7 @@ final class DAOProvider extends Provider
         ]);
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         foreach ($this->_findPickupPoints([
             'shopid' => $code->getIdPart(),
@@ -57,7 +60,11 @@ final class DAOProvider extends Provider
      */
     private function _findPickupPoints(array $params): iterable
     {
-        $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
+        try {
+            $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
+        } catch (NetworkExceptionInterface $e) {
+            throw new TimeoutException($e);
+        }
 
         $pickupPoints = $result['resultat']['pakkeshops'] ?? [];
 

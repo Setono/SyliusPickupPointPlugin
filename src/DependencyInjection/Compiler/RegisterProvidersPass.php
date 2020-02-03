@@ -48,7 +48,10 @@ final class RegisterProvidersPass implements CompilerPassInterface
                 if ($localEnabled) {
                     $decoratedId = $id;
                     $id .= '.local'; // overwrite the id
-                    $cachedDefinition = new Definition(LocalProvider::class, [new Reference($id . '.inner')]);
+                    $cachedDefinition = new Definition(LocalProvider::class, [
+                        new Reference($id . '.inner'),
+                        new Reference('setono_sylius_pickup_point.repository.pickup_point'),
+                    ]);
                     $cachedDefinition->setDecoratedService($decoratedId, null, 512);
 
                     $container->setDefinition($id, $cachedDefinition);
