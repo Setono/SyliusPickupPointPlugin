@@ -7,6 +7,8 @@ build:
     environment:
         variables:
             COMPOSER_MEMORY_LIMIT: -1
+        php:
+            version: 7.4
 
 filter:
     excluded_paths: [tests/*, spec/*]
