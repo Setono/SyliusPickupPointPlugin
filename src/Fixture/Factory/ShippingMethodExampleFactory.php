@@ -11,14 +11,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactory
 {
+    use ShippingMethodExampleFactoryTrait;
+
     public function create(array $options = []): BaseShippingMethodInterface
     {
         /** @var ShippingMethodInterface $shippingMethod */
         $shippingMethod = parent::create($options);
 
-        if (array_key_exists('pickup_point_provider', $options)) {
-            $shippingMethod->setPickupPointProvider($options['pickup_point_provider']);
-        }
+        $this->setPickupPointOptions($shippingMethod, $options);
 
         return $shippingMethod;
     }
@@ -27,9 +27,6 @@ class ShippingMethodExampleFactory extends BaseShippingMethodExampleFactory
     {
         parent::configureOptions($resolver);
 
-        $resolver
-            ->setDefined('pickup_point_provider')
-            ->setAllowedTypes('pickup_point_provider', ['null', 'string'])
-        ;
+        $this->configurePickupPointOptions($resolver);
     }
 }
