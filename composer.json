@@ -31,6 +31,7 @@
         "lakion/mink-debug-extension": "^1.2.3",
         "nyholm/psr7": "^1.1",
         "phpspec/phpspec": "^5.1 || ^6.0",
+        "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-doctrine": "^0.12",
         "phpstan/phpstan-strict-rules": "^0.12",
