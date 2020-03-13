@@ -1,26 +1,7 @@
 sylius_fixtures:
     suites:
         default:
-            listeners:
-                orm_purger: ~
-                logger: ~
-
             fixtures:
-                locale: ~
-                currency:
-                    options:
-                        currencies: ['DKK']
-
-                geographical:
-                    options:
-                        countries:
-                            - "DK"
-                            - "US"
-                        zones:
-                            US:
-                                name: "Denmark"
-                                countries:
-                                    - "DK"
                 setono_sylius_pickup_point_shipping_method:
                     options:
                         custom:
@@ -28,6 +9,7 @@ sylius_fixtures:
                                 code: "dao_pickup_point"
                                 name: "DAO with pickup points"
                                 enabled: true
+                                zone: "WORLD"
                                 pickup_point_provider: dao
                                 channels:
                                     - "FASHION_WEB"
@@ -35,6 +17,7 @@ sylius_fixtures:
                                 code: "gls_pickup_point"
                                 name: "GLS with pickup points"
                                 enabled: true
+                                zone: "WORLD"
                                 pickup_point_provider: gls
                                 channels:
                                     - "FASHION_WEB"
@@ -42,12 +25,14 @@ sylius_fixtures:
                                 code: "gls_home"
                                 name: "GLS home delivery"
                                 enabled: true
+                                zone: "WORLD"
                                 channels:
                                     - "FASHION_WEB"
                             post_nord_pickup_point:
                                 code: "post_nord_pickup_point"
                                 name: "PostNord with pickup points"
                                 enabled: true
+                                zone: "WORLD"
                                 pickup_point_provider: post_nord
                                 channels:
                                     - "FASHION_WEB"
@@ -55,12 +40,14 @@ sylius_fixtures:
                                 code: "post_nord_home"
                                 name: "PostNord home delivery"
                                 enabled: true
+                                zone: "WORLD"
                                 channels:
                                     - "FASHION_WEB"
                             faker:
                                 code: "faker"
                                 name: "Fake delivery"
                                 enabled: true
+                                zone: "WORLD"
                                 pickup_point_provider: faker
                                 channels:
                                     - "FASHION_WEB"
