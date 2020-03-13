@@ -17,7 +17,7 @@ Feature: Selecting new pickup address during the checkout
         Given I have product "PHP T-Shirt" in the cart
         When I am at the checkout addressing step
         And I specify the email as "mail@mail.com"
-        And I specify the shipping address as "Fifth Avenue", "New York", "12342", "United States" for "John John"
+        And I specify the billing address as "Fifth Avenue", "New York", "12342", "United States" for "John John"
         And I complete the addressing step
         And I select "GLS" pickup point shipping method
         And I choose the first option
