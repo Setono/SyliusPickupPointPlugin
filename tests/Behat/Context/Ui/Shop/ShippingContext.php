@@ -66,6 +66,6 @@ final class ShippingContext implements Context
      */
     public function iSelectPickupPointShippingMethod(string $shippingMethod): void
     {
-        $this->selectShippingPage->selectShippingMethod($shippingMethod);
+        $this->selectShippingPage->selectPickupPointShippingMethod($shippingMethod);
     }
 }
