@@ -46,8 +46,9 @@ final class CachedProvider extends Provider
             $this->cacheItemPool->save($pickupPointsCacheItem);
 
             // Store separate PickupPoints to retrieve at findOnePickupPointById
+            /** @var PickupPoint $pickupPoint */
             foreach ($pickupPoints as $pickupPoint) {
-                $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($pickupPoint->getId());
+                $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($pickupPoint->getCode());
                 $pickupPointCacheItem = $this->cacheItemPool->getItem($pickupPointCacheKey);
                 $pickupPointCacheItem->set($pickupPoint);
                 $this->cacheItemPool->save($pickupPointCacheItem);
