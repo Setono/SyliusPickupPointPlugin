@@ -13,30 +13,30 @@ use Sylius\Component\Core\Model\OrderInterface;
 final class LocalProvider extends Provider
 {
     /** @var ProviderInterface */
-    private $provider;
+    private $decoratedProvider;
 
     /** @var PickupPointRepositoryInterface */
     private $pickupPointRepository;
 
-    public function __construct(ProviderInterface $provider, PickupPointRepositoryInterface $pickupPointRepository)
+    public function __construct(ProviderInterface $decoratedProvider, PickupPointRepositoryInterface $pickupPointRepository)
     {
-        $this->provider = $provider;
+        $this->decoratedProvider = $decoratedProvider;
         $this->pickupPointRepository = $pickupPointRepository;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
     {
         try {
-            return $this->provider->findPickupPoints($order);
+            return $this->decoratedProvider->findPickupPoints($order);
         } catch (TimeoutException $e) {
-            return $this->pickupPointRepository->findByOrder($order, $this->provider->getCode());
+            return $this->pickupPointRepository->findByOrder($order, $this->decoratedProvider->getCode());
         }
     }
 
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         try {
-            return $this->provider->findPickupPoint($code);
+            return $this->decoratedProvider->findPickupPoint($code);
         } catch (TimeoutException $e) {
             return $this->pickupPointRepository->findOneByCode($code);
         }
@@ -44,16 +44,16 @@ final class LocalProvider extends Provider
 
     public function findAllPickupPoints(): iterable
     {
-        yield from $this->provider->findAllPickupPoints();
+        yield from $this->decoratedProvider->findAllPickupPoints();
     }
 
     public function getCode(): string
     {
-        return $this->provider->getCode();
+        return $this->decoratedProvider->getCode();
     }
 
     public function getName(): string
     {
-        return $this->provider->getName();
+        return $this->decoratedProvider->getName();
     }
 }
