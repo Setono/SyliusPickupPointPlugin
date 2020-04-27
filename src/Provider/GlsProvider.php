@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\GLS\Webservice\Client\ClientInterface;
+use Setono\GLS\Webservice\Exception\ConnectionException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
+use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider extends Provider
@@ -27,12 +30,16 @@ final class GlsProvider extends Provider
             return [];
         }
 
-        $parcelShops = $this->client->searchNearestParcelShops(
-            $order->getShippingAddress()->getStreet(),
-            $order->getShippingAddress()->getPostcode(),
-            $order->getShippingAddress()->getCountryCode(),
-            10
-        );
+        try {
+            $parcelShops = $this->client->searchNearestParcelShops(
+                $order->getShippingAddress()->getStreet(),
+                $order->getShippingAddress()->getPostcode(),
+                $order->getShippingAddress()->getCountryCode(),
+                10
+            );
+        } catch (ConnectionException $e) {
+            throw new TimeoutException($e);
+        }
 
         $pickupPoints = [];
         foreach ($parcelShops as $item) {
@@ -42,7 +49,7 @@ final class GlsProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         try {
             $parcelShop = $this->client->getOneParcelShop($code->getIdPart());
@@ -50,6 +57,8 @@ final class GlsProvider extends Provider
             return $this->transform($parcelShop);
         } catch (ParcelShopNotFoundException $e) {
             return null;
+        } catch (ConnectionException $e) {
+            throw new TimeoutException($e);
         }
     }
 
@@ -58,12 +67,16 @@ final class GlsProvider extends Provider
         // todo these country codes should come from a config somewhere, probably on the shipping method
         $countryCodes = ['DK', 'SE'];
 
-        foreach ($countryCodes as $countryCode) {
-            $parcelShops = $this->client->getAllParcelShops($countryCode);
+        try {
+            foreach ($countryCodes as $countryCode) {
+                $parcelShops = $this->client->getAllParcelShops($countryCode);
 
-            foreach ($parcelShops as $item) {
-                yield $this->transform($item);
+                foreach ($parcelShops as $item) {
+                    yield $this->transform($item);
+                }
             }
+        } catch (ConnectionException $e) {
+            throw new TimeoutException($e);
         }
     }
 

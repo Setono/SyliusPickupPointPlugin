@@ -6,6 +6,7 @@ namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
 
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
+use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\Provider;
 use Sylius\Component\Core\Model\OrderInterface;
 
@@ -30,7 +31,7 @@ class GlsProviderMocker extends Provider
         ];
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         return new PickupPoint(
             new PickupPointCode(self::PICKUP_POINT_ID, $this->getCode(), 'DK'),
