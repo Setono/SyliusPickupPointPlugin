@@ -28,7 +28,7 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
 
         $loader->load('services.xml');
 
-        $bundles = $container->getParameter('kernel.bundles');
+        $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
 
         $cacheEnabled = $config['cache']['enabled'];
         if ($cacheEnabled) {

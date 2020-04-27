@@ -29,6 +29,7 @@
         "korbeil/phpstan-generic-rules": "^0.2.2",
         "kriswallsmith/buzz": "^1.0",
         "lakion/mink-debug-extension": "^1.2.3",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.1",
         "nyholm/psr7": "^1.1",
         "phpspec/phpspec": "^6.0",
         "phpstan/extension-installer": "^1.0",
