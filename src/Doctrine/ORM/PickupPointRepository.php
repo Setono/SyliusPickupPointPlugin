@@ -10,7 +10,6 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Core\Model\OrderInterface;
-use Webmozart\Assert\Assert;
 
 final class PickupPointRepository extends EntityRepository implements PickupPointRepositoryInterface
 {
@@ -36,10 +35,14 @@ final class PickupPointRepository extends EntityRepository implements PickupPoin
     public function findByOrder(OrderInterface $order, string $provider): array
     {
         $shippingAddress = $order->getShippingAddress();
-        Assert::notNull($shippingAddress);
+        if (null === $shippingAddress) {
+            return [];
+        }
 
         $countryCode = $shippingAddress->getCountryCode();
-        Assert::notNull($countryCode);
+        if (null === $countryCode) {
+            return [];
+        }
 
         return $this->createQueryBuilder('o')
             ->andWhere('o.code.provider = :provider')
