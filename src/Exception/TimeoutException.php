@@ -8,7 +8,7 @@ use RuntimeException;
 use Throwable;
 
 /**
- * This is a special exception only thrown when a timeout occours when trying to fetch pickup point(s) from external providers
+ * This is a special exception only thrown when a timeout occurs when trying to fetch pickup point(s) from external providers
  */
 final class TimeoutException extends RuntimeException implements ExceptionInterface
 {
