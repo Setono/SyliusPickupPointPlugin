@@ -1,27 +1,7 @@
 <script src="{{ asset('bundles/setonosyliuspickuppointplugin/js/setono-pickup-point.js') }}"></script>
 <script>
-    $(document).ready(() => {
-        $('.setono-sylius-pickup-point-label').setonoSyliusPickupPointLabel();
-
-        $('.setono-sylius-pickup-point-autocomplete').setonoSyliusPickupPointAutoComplete();
-
-        let initialProvider = $('input.input-shipping-method:checked').data('pickup-point-provider');
-        $('input.input-shipping-method').on('change', function(){
-            let selectedMethod = $('input.input-shipping-method:checked');
-            let provider = selectedMethod.data('pickup-point-provider');
-            let pickupPointContainer = $('.setono-sylius-pickup-point-autocomplete').closest('.field');
-
-            if (provider) {
-                pickupPointContainer.show();
-            } else {
-                pickupPointContainer.hide();
-            }
-
-            if (initialProvider !== provider) {
-                $('.setono-sylius-pickup-point-autocomplete').dropdown('clear');
-                initialProvider = provider;
-            }
-        });
-        $('input.input-shipping-method').change();
+    pickupPoints.init({
+        searchUrl: "{{ path('setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address') }}?providerCode={providerCode}&_csrf_token={_csrf_token}",
     });
+    pickupPoints.process();
 </script>
