@@ -32,8 +32,8 @@ let pickupPoints = {
     let content = ``;
 
     values.forEach(function (value) {
-      let radio = self.pickupPointsFieldChoicePrototype.replaceAll('{value}', value.id);
-      radio = radio.replaceAll('{label}', value.location);
+      let radio = self.pickupPointsFieldChoicePrototype.replace(/{value}/g, value.id);
+      radio = radio.replace(/{label}/g, value.location);
 
       content += radio;
     });
