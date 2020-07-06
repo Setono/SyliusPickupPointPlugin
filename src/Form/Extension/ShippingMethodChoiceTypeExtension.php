@@ -44,7 +44,7 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
     {
         $defaultAttr = ['class' => 'input-shipping-method'];
 
-        $resolver->setDefault('choice_attr', function (PickupPointProviderAwareInterface $choiceValue, $key, $value) use ($defaultAttr) {
+        $resolver->setDefault('choice_attr', function (PickupPointProviderAwareInterface $choiceValue, $key, $value) use ($defaultAttr): array {
             if (!$choiceValue->hasPickupPointProvider()) {
                 return $defaultAttr;
             }

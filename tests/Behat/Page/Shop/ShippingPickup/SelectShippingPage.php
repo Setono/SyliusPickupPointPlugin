@@ -27,29 +27,17 @@ final class SelectShippingPage extends BaseSelectShippingPage implements SelectS
         }), "Pickup point field expected to be visible, but it isn't");
     }
 
-    public function chooseFirstShippingPointFromDropdown(): void
+    public function chooseFirstShippingPointFromRadio(): void
     {
         $expectedFirstOptionValue = 'faker---0---US';
 
         Assert::true($this->hasElement('pickup_point_field'));
 
         Assert::true($this->getDocument()->waitFor(15, function () {
-            return $this->hasElement('pickup_point_dropdown');
-        }), 'Pickup point dropdown not visible');
+            return $this->hasElement('pickup_point_radio');
+        }), 'Pickup point radio not visible');
 
-        $this->getElement('pickup_point_dropdown')->click();
-
-        Assert::true($this->getDocument()->waitFor(15, function () {
-            return $this->hasElement('pickup_point_dropdown_active');
-        }), 'Pickup point dropdown not active / expanded');
-
-        Assert::true($this->getDocument()->waitFor(15, function () use ($expectedFirstOptionValue) {
-            return $this->hasElement('pickup_point_dropdown_item', [
-                '%value%' => $expectedFirstOptionValue,
-            ]);
-        }), sprintf('Item %s was not loaded to pickup point dropdown', $expectedFirstOptionValue));
-
-        $this->getElement('pickup_point_dropdown_item', [
+        $this->getElement('pickup_point_radio_item', [
             '%value%' => $expectedFirstOptionValue,
         ])->click();
     }
@@ -58,9 +46,8 @@ final class SelectShippingPage extends BaseSelectShippingPage implements SelectS
     {
         return array_merge(parent::getDefinedElements(), [
             'pickup_point_field' => '.setono-sylius-pickup-point-field:not([style*="display: none"])',
-            'pickup_point_dropdown' => '.setono-sylius-pickup-point-field:not([style*="display: none"]) .setono-sylius-pickup-point-autocomplete.dropdown',
-            'pickup_point_dropdown_active' => '.setono-sylius-pickup-point-field:not([style*="display: none"]) .setono-sylius-pickup-point-autocomplete.dropdown.active',
-            'pickup_point_dropdown_item' => '.setono-sylius-pickup-point-field:not([style*="display: none"]) .setono-sylius-pickup-point-autocomplete.dropdown.active .menu.visible .item[data-value="%value%"]',
+            'pickup_point_radio' => '.setono-sylius-pickup-point-field-choices:not([style*="display: none"])',
+            'pickup_point_radio_item' => '.setono-sylius-pickup-point-field-choice-field[value="%value%"]',
         ]);
     }
 }

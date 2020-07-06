@@ -44,7 +44,7 @@ final class ShippingContext implements Context
      */
     public function iChooseTheFirstOption(): void
     {
-        $this->selectShippingPage->chooseFirstShippingPointFromDropdown();
+        $this->selectShippingPage->chooseFirstShippingPointFromRadio();
     }
 
     /**

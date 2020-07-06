@@ -3,17 +3,24 @@
 {% block setono_sylius_pickup_point_choice_row %}
     <div class="setono-sylius-pickup-point-field {% if required %}required {% endif %}field{% if (not compound or force_error|default(false)) and not valid %} error{% endif %}">
         {{- form_label(form) -}}
-        <div
-                class="setono-sylius-pickup-point-autocomplete ui fluid search selection dropdown {% if multiple %}multiple{% endif %}"
-                data-url="{{ path('setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address') }}?providerCode={providerCode}&_csrf_token={_csrf_token}"
-                data-choice-name="{{ choice_name }}"
-                data-choice-value="{{ choice_value }}"
-        >
-            {{- form_widget(form, {'attr': {'class' : 'autocomplete'}}) -}}
-            <i class="dropdown icon"></i>
-            <div class="default text">{% if placeholder is defined %} {{ placeholder|trans }} {% endif %}</div>
-            <div class="menu"></div>
-        </div>
+        {{- form_widget(form, {'attr': {'class': 'setono-sylius-pickup-point-field-input'}}) -}}
         {{- form_errors(form) -}}
+        <div class="setono-sylius-pickup-point-field-choice-prototype" style="display: none;">
+            <div class="item">
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input id="{{ form.vars.id }}_{value}" class="setono-sylius-pickup-point-field-choice-field"
+                               type="radio" name="{{ form.vars.id }}[pickupPoint]" required value="{value}">
+                        <label></label>
+                    </div>
+                </div>
+                <div class="content">
+                    <a class="header">
+                        <label for="{{ form.vars.id }}_{value}" class="required">{label}</label>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="setono-sylius-pickup-point-field-choices ui items"></div>
     </div>
 {% endblock %}
