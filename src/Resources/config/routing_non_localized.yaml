@@ -1,0 +1,3 @@
+setono_sylius_pickup_point_shop_ajax_pickup_point:
+    resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routes/shop/ajax/pickup-point.yaml"
+    prefix: /ajax/pickup-points
