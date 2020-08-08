@@ -13,25 +13,25 @@ use function Safe\sprintf;
  */
 class PickupPoint implements PickupPointInterface
 {
-    /** @var int */
+    /** @var int|null */
     protected $id;
 
     /** @var PickupPointCode */
     protected $code;
 
-    /** @var string */
+    /** @var string|null */
     protected $name;
 
-    /** @var string */
+    /** @var string|null */
     protected $address;
 
-    /** @var string */
+    /** @var string|null */
     protected $zipCode;
 
-    /** @var string */
+    /** @var string|null */
     protected $city;
 
-    /** @var string */
+    /** @var string|null */
     protected $country;
 
     /** @var string|null */
@@ -75,52 +75,52 @@ class PickupPoint implements PickupPointInterface
         $this->code = $code;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
 
-    public function getAddress(): string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    public function setAddress(string $address): void
+    public function setAddress(?string $address): void
     {
         $this->address = $address;
     }
 
-    public function getZipCode(): string
+    public function getZipCode(): ?string
     {
         return $this->zipCode;
     }
 
-    public function setZipCode(string $zipCode): void
+    public function setZipCode(?string $zipCode): void
     {
         $this->zipCode = $zipCode;
     }
 
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function setCity(string $city): void
+    public function setCity(?string $city): void
     {
         $this->city = $city;
     }
 
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function setCountry(string $country): void
+    public function setCountry(?string $country): void
     {
         $this->country = $country;
     }
