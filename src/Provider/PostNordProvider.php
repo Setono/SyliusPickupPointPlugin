@@ -131,8 +131,8 @@ final class PostNordProvider extends Provider
             (string) $servicePoint['visitingAddress']['postalCode'],
             $servicePoint['visitingAddress']['city'],
             (string) $servicePoint['visitingAddress']['countryCode'],
-            $servicePoint['coordinate']['northing'] ?? null,
-            $servicePoint['coordinate']['easting'] ?? null
+            (string) $servicePoint['coordinate']['northing'] ?? null,
+            (string) $servicePoint['coordinate']['easting'] ?? null
         );
     }
 
