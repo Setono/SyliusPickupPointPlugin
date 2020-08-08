@@ -6,7 +6,6 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Behat\Transliterator\Transliterator;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -33,8 +32,6 @@ final class CachedProvider extends Provider
     }
 
     /**
-     * @throws InvalidArgumentException
-     *
      * @return PickupPoint[]
      */
     public function findPickupPoints(OrderInterface $order): iterable
@@ -63,9 +60,6 @@ final class CachedProvider extends Provider
         return $pickupPoints;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($code);

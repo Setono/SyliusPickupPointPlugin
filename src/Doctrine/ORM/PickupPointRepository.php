@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Doctrine\ORM;
 
-use Doctrine\ORM\NonUniqueResultException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
@@ -13,9 +12,6 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 final class PickupPointRepository extends EntityRepository implements PickupPointRepositoryInterface
 {
-    /**
-     * @throws NonUniqueResultException
-     */
     public function findOneByCode(PickupPointCode $code): ?PickupPointInterface
     {
         return $this->createQueryBuilder('o')
@@ -27,6 +23,7 @@ final class PickupPointRepository extends EntityRepository implements PickupPoin
                 'codeProvider' => $code->getProviderPart(),
                 'codeCountry' => $code->getCountryPart(),
             ])
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
         ;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
-use Exception;
 use LogicException;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -14,10 +13,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
 {
-    /**
-     * @throws Exception
-     * @throws LogicException
-     */
     public function load(array $config, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);

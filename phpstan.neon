@@ -8,4 +8,3 @@ parameters:
 
 	ignoreErrors:
 		- '/Parameter #1 \$configuration of method .+Extension::processConfiguration\(\) expects .+\ConfigurationInterface, .+\ConfigurationInterface\|null given\./'
-		- '/is not subtype of Throwable/'
