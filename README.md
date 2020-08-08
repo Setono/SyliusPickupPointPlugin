@@ -270,6 +270,36 @@ bin/console sylius:install:assets
 bin/console sylius:theme:assets:install
 ```
 
+## Play
+
+To see pickup points list, use next example address at checkout:
+
+  ```
+  Dannebrogsgade 1
+  9000 Aalborg
+  DK
+  ```
+
+  ```
+  Hämeentie 1
+  00350 Helsinki
+  FI
+  ```
+
+  ```
+  Vasterhaninge 1
+  137 94 Stockholm
+  SE
+  ```
+
+Note, that providers have their pickup points only at given countries:
+
+- **DAO**: DK
+- **PostNord**: DK, SE, FI
+- **GLS**: See https://gls-group.eu/EU/en/depot-parcelshop-search
+
+So, to play with all 3 providers at once - use `DK` address.
+
 ## Troubleshooting
 
 * At `/en_US/checkout/select-shipping` step you see `No results found` at `Pickup point id` field.
