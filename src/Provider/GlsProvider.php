@@ -19,9 +19,15 @@ final class GlsProvider extends Provider
     /** @var ClientInterface */
     private $client;
 
-    public function __construct(ClientInterface $client)
-    {
+    /** @var array */
+    private $countryCodes;
+
+    public function __construct(
+        ClientInterface $client,
+        array $countryCodes = ['DK', 'SE', 'FI']
+    ) {
         $this->client = $client;
+        $this->countryCodes = $countryCodes;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -64,11 +70,8 @@ final class GlsProvider extends Provider
 
     public function findAllPickupPoints(): iterable
     {
-        // todo these country codes should come from a config somewhere, probably on the shipping method
-        $countryCodes = ['DK', 'SE'];
-
         try {
-            foreach ($countryCodes as $countryCode) {
+            foreach ($this->countryCodes as $countryCode) {
                 $parcelShops = $this->client->getAllParcelShops($countryCode);
 
                 foreach ($parcelShops as $item) {
