@@ -5,6 +5,8 @@
         {{- form_label(form) -}}
         {{- form_widget(form, {'attr': {'class': 'setono-sylius-pickup-point-field-input'}}) -}}
         {{- form_errors(form) -}}
+
+        {# @todo Omit using prototype like this as it present at DOM and querySelector results #}
         <div class="setono-sylius-pickup-point-field-choice-prototype" style="display: none;">
             <div class="item">
                 <div class="field">
