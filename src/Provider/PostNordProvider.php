@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Psr\Http\Client\NetworkExceptionInterface;
+use function Safe\preg_replace;
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -38,7 +39,7 @@ final class PostNordProvider extends Provider
         try {
             $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
                 'countryCode' => $shippingAddress->getCountryCode(),
-                'postalCode' => $shippingAddress->getPostcode(),
+                'postalCode' => preg_replace('/\s+/', '', $shippingAddress->getPostcode()),
                 'streetName' => $shippingAddress->getStreet(),
                 'numberOfServicePoints' => 10,
             ]);
