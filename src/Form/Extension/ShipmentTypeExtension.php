@@ -15,7 +15,7 @@ final class ShipmentTypeExtension extends AbstractTypeExtension
     {
         $builder
             ->add('pickupPointId', PickupPointIdChoiceType::class, [
-                'label' => 'setono_sylius_pickup_point.form.shipment.pickup_point_id',
+                'label' => 'setono_sylius_pickup_point.form.shipment.pickup_point',
                 'placeholder' => 'setono_sylius_pickup_point.form.shipment.select_pickup_point',
                 'required' => true,
             ])
