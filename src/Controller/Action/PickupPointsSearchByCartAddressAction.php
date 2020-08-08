@@ -54,11 +54,15 @@ final class PickupPointsSearchByCartAddressAction
 
         $providerCode = $request->get('providerCode');
         if (!is_string($providerCode) || '' === $providerCode) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Empty provider code');
         }
 
         if (!$this->providerRegistry->has($providerCode)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(sprintf(
+                'Provider \'%s\' not recognized. Expecting one of: %s',
+                $providerCode,
+                implode(', ', array_keys($this->providerRegistry->all()))
+            ));
         }
 
         /** @var ProviderInterface $provider */
