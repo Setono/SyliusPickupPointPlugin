@@ -72,7 +72,7 @@ return [
 #### Import routing
  
 ````yaml
-# config/routes/setono_sylius_pickup_point_plugin.yaml
+# config/routes/setono_sylius_pickup_point.yaml
 setono_sylius_pickup_point_plugin:
     resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml"
 ````
@@ -80,7 +80,7 @@ setono_sylius_pickup_point_plugin:
 #### Import application config
 
 ````yaml
-# config/packages/_sylius.yaml
+# config/packages/setono_sylius_pickup_point.yaml
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }    
 ````
@@ -88,7 +88,7 @@ imports:
 #### (Optional) Import fixtures to play in your app
 
 ````yaml
-# config/packages/_sylius.yaml
+# config/packages/setono_sylius_pickup_point.yaml
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }    
 ````
