@@ -7,5 +7,5 @@ parameters:
 		- 'src/DependencyInjection/Configuration.php'
 
 	ignoreErrors:
-		- '/Parameter #1 $configuration of method Symfony\Component\DependencyInjection\Extension\Extension::processConfiguration() expects Symfony\Component\Config\Definition\ConfigurationInterface, Symfony\Component\Config\Definition\ConfigurationInterface|null given./'
+		- '/Parameter #1 \$configuration of method .+Extension::processConfiguration\(\) expects .+\ConfigurationInterface, .+\ConfigurationInterface\|null given\./'
 		- '/is not subtype of Throwable/'

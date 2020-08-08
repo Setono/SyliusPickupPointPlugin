@@ -32,15 +32,23 @@ final class GlsProvider extends Provider
 
     public function findPickupPoints(OrderInterface $order): iterable
     {
-        if (null === $order->getShippingAddress()) {
+        $shippingAddress = $order->getShippingAddress();
+        if (null === $shippingAddress) {
+            return [];
+        }
+
+        $street = $shippingAddress->getStreet();
+        $postCode = $shippingAddress->getPostcode();
+        $countryCode = $shippingAddress->getCountryCode();
+        if (null === $street || null === $postCode || null === $countryCode) {
             return [];
         }
 
         try {
             $parcelShops = $this->client->searchNearestParcelShops(
-                $order->getShippingAddress()->getStreet(),
-                $order->getShippingAddress()->getPostcode(),
-                $order->getShippingAddress()->getCountryCode(),
+                $street,
+                $postCode,
+                $countryCode,
                 10
             );
         } catch (ConnectionException $e) {

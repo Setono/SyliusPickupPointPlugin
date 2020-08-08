@@ -36,10 +36,15 @@ final class PostNordProvider extends Provider
             return [];
         }
 
+        $postCode = $shippingAddress->getPostcode();
+        if (null === $postCode) {
+            return [];
+        }
+
         try {
             $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
                 'countryCode' => $shippingAddress->getCountryCode(),
-                'postalCode' => preg_replace('/\s+/', '', $shippingAddress->getPostcode()),
+                'postalCode' => preg_replace('/\s+/', '', $postCode),
                 'streetName' => $shippingAddress->getStreet(),
                 'numberOfServicePoints' => 10,
             ]);

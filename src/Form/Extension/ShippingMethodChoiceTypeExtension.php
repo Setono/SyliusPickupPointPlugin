@@ -49,12 +49,14 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
                 return $defaultAttr;
             }
 
-            if (!$this->providerRegistry->has($choiceValue->getPickupPointProvider())) {
+            /** @var string $pickupPointProviderId */
+            $pickupPointProviderId = $choiceValue->getPickupPointProvider();
+            if (!$this->providerRegistry->has($pickupPointProviderId)) {
                 return $defaultAttr;
             }
 
             /** @var ProviderInterface $provider */
-            $provider = $this->providerRegistry->get($choiceValue->getPickupPointProvider());
+            $provider = $this->providerRegistry->get($pickupPointProviderId);
 
             return [
                 'data-pickup-point-provider' => $provider->getCode(),

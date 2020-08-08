@@ -14,6 +14,7 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Webmozart\Assert\Assert;
 
 final class CachedProvider extends Provider
 {
@@ -111,14 +112,23 @@ final class CachedProvider extends Provider
             ));
         }
 
+        $countryCode = $shippingAddress->getCountryCode();
+        Assert::notNull($countryCode);
+
+        $postCode = $shippingAddress->getPostcode();
+        Assert::notNull($postCode);
+
+        $street = $shippingAddress->getStreet();
+        Assert::notNull($street);
+
         // As far as DAO/Gls/PostNord using only these 3 fields to
         // search for pickup points, we should build cache key based on them only
         return sprintf(
             '%s-%s-%s-%s',
             $this->getCode(),
-            Transliterator::transliterate($shippingAddress->getCountryCode()),
-            Transliterator::transliterate($shippingAddress->getPostcode()),
-            Transliterator::transliterate($shippingAddress->getStreet())
+            Transliterator::transliterate($countryCode),
+            Transliterator::transliterate($postCode),
+            Transliterator::transliterate($street)
         );
     }
 

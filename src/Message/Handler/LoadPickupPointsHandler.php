@@ -10,6 +10,7 @@ use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Webmozart\Assert\Assert;
 
 final class LoadPickupPointsHandler implements MessageHandlerInterface
 {
@@ -42,7 +43,10 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
         $i = 1;
 
         foreach ($pickupPoints as $pickupPoint) {
-            $obj = $this->pickupPointRepository->findOneByCode($pickupPoint->getCode());
+            $pickupPointCode = $pickupPoint->getCode();
+            Assert::notNull($pickupPointCode);
+
+            $obj = $this->pickupPointRepository->findOneByCode($pickupPointCode);
 
             // if it's found, we will update the properties, else we will just persist this object
             if (null === $obj) {
