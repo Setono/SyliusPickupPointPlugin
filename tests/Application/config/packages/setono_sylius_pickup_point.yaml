@@ -12,6 +12,7 @@ setono_sylius_pickup_point:
     cache:
         enabled: true
         pool: setono_sylius_pickup_point.provider_cache_pool
+    local: true
     providers:
         faker: true
         gls: true
