@@ -6,6 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Generator;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -69,6 +70,10 @@ final class PickupPointsSearchByCartAddressAction
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
+
+        if ($pickupPoints instanceof Generator) {
+            $pickupPoints = iterator_to_array($pickupPoints);
+        }
 
         $view = View::create($pickupPoints);
         $view->getContext()->addGroup('Autocomplete');
