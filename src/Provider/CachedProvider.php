@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Behat\Transliterator\Transliterator;
+use Generator;
 use Psr\Cache\CacheItemPoolInterface;
 use RuntimeException;
 use function Safe\sprintf;
@@ -39,6 +40,10 @@ final class CachedProvider extends Provider
         $orderCacheKey = $this->buildOrderCacheKey($order);
         if (!$this->cacheItemPool->hasItem($orderCacheKey)) {
             $pickupPoints = $this->provider->findPickupPoints($order);
+
+            if ($pickupPoints instanceof Generator) {
+                $pickupPoints = iterator_to_array($pickupPoints);
+            }
 
             $pickupPointsCacheItem = $this->cacheItemPool->getItem($orderCacheKey);
             $pickupPointsCacheItem->set($pickupPoints);
