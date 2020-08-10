@@ -36,16 +36,18 @@ final class PostNordProvider extends Provider
             return [];
         }
 
+        $street = $shippingAddress->getStreet();
         $postCode = $shippingAddress->getPostcode();
-        if (null === $postCode) {
+        $countryCode = $shippingAddress->getCountryCode();
+        if (null === $street || null === $postCode || null === $countryCode) {
             return [];
         }
 
         try {
             $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
-                'countryCode' => $shippingAddress->getCountryCode(),
+                'countryCode' => $countryCode,
                 'postalCode' => preg_replace('/\s+/', '', $postCode),
-                'streetName' => $shippingAddress->getStreet(),
+                'streetName' => $street,
                 'numberOfServicePoints' => 10,
             ]);
         } catch (NetworkExceptionInterface $e) {

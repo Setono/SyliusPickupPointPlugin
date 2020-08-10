@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use function Safe\preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\GLS\Webservice\Exception\ConnectionException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
@@ -47,7 +48,7 @@ final class GlsProvider extends Provider
         try {
             $parcelShops = $this->client->searchNearestParcelShops(
                 $street,
-                $postCode,
+                preg_replace('/\s+/', '', $postCode),
                 $countryCode,
                 10
             );
