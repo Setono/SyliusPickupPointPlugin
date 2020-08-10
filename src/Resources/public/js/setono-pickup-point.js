@@ -59,7 +59,7 @@ let pickupPoints = {
     let currentShippingMethodCode = selectedElement.getAttribute('value');
 
     const values = self.pickupPointChoices[currentShippingMethodCode];
-    if (undefined === values || 0 === values.length) {
+    if (undefined === values || undefined === values.length || 0 === values.length) {
       self.pickupPointsField.style.display = 'none';
       self.pickupPointsFieldChoices.innerHTML = '';
       return;
