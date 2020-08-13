@@ -62,8 +62,6 @@ jobs:
                 run: |
                     (cd tests/Application && yarn install)
                     (cd tests/Application && yarn build)
-            -   name: Configure display
-                run: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1680x1050x16
             -   name: Download and run Chromedriver
                 run: |
                     curl http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip > chromedriver.zip
