@@ -23,7 +23,6 @@ final class PickupPointRepository extends EntityRepository implements PickupPoin
                 'codeProvider' => $code->getProviderPart(),
                 'codeCountry' => $code->getCountryPart(),
             ])
-            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
         ;
