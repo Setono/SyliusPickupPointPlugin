@@ -31,6 +31,7 @@ jobs:
                 with:
                     php-version: ${{ matrix.php-versions }}
                     extensions: intl
+                    tools: symfony
             -   name: Setup node
                 uses: actions/setup-node@v1
                 with:
@@ -78,7 +79,7 @@ jobs:
                 env:
                     DISPLAY: ':99'
             -   name: Run webserver
-                run: (cd tests/Application && bin/console server:run 127.0.0.1:8080 --quiet > /dev/null 2>&1 &)
+                run: (cd tests/Application && symfony server:start --port=8080 --daemon)
                 env:
                     DISPLAY: ':99'
             -   name: Run behat

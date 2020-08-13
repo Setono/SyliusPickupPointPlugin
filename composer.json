@@ -32,8 +32,7 @@
         "setono/sylius-behat-pack": "^0.1.0",
         "symfony/debug-bundle": "^4.4 || ^5.0",
         "symfony/dotenv": "^4.4 || ^5.0",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.0",
-        "symfony/web-server-bundle": "^4.4 || ^5.0"
+        "symfony/web-profiler-bundle": "^4.4 || ^5.0"
     },
     "suggest": {
         "setono/dao-bundle": "Install this bundle to use the DAO provider",
