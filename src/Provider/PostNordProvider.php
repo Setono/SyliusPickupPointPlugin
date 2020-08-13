@@ -126,9 +126,20 @@ final class PostNordProvider extends Provider
             $servicePoint['visitingAddress']['countryCode']
         );
 
-        $address = $servicePoint['visitingAddress']['streetName'];
+        $address = '';
+
+        if (isset($servicePoint['visitingAddress']['streetName'])) {
+            $address .= $servicePoint['visitingAddress']['streetName'];
+        }
+
         if (isset($servicePoint['visitingAddress']['streetNumber'])) {
-            $address .= ' ' . $servicePoint['visitingAddress']['streetNumber'];
+            $address .= (mb_strlen($address) > 0 ? ' ' : '') . $servicePoint['visitingAddress']['streetNumber'];
+        }
+
+        $latitude = $longitude = null;
+        if (isset($servicePoint['coordinate'])) {
+            $latitude = (string) $servicePoint['coordinate']['northing'];
+            $longitude = (string) $servicePoint['coordinate']['easting'];
         }
 
         return new PickupPoint(
@@ -138,8 +149,8 @@ final class PostNordProvider extends Provider
             (string) $servicePoint['visitingAddress']['postalCode'],
             $servicePoint['visitingAddress']['city'],
             (string) $servicePoint['visitingAddress']['countryCode'],
-            (string) $servicePoint['coordinate']['northing'] ?? null,
-            (string) $servicePoint['coordinate']['easting'] ?? null
+            $latitude,
+            $longitude
         );
     }
 
