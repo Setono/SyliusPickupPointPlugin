@@ -14,6 +14,9 @@
         "symfony/messenger": "^4.4 || ^5.0",
         "thecodingmachine/safe": "^1.0"
     },
+    "conflict": {
+        "setono/post-nord-php-sdk": "<1.1.3"
+    },
     "require-dev": {
         "behat/behat": "^3.6",
         "behat/mink": "^1.8",
