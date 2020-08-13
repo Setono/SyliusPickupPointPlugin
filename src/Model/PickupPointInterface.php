@@ -42,4 +42,6 @@ interface PickupPointInterface extends ResourceInterface
     public function getLongitude(): ?string;
 
     public function setLongitude(?string $longitude): void;
+
+    public function getFullAddress(): string;
 }

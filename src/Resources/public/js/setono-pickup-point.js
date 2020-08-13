@@ -90,8 +90,11 @@ let pickupPoints = {
 
     values.forEach(function (value) {
       let prototype = self.pickupPointsFieldChoicePrototype.innerHTML;
-      let radio = prototype.replace(/{value}/g, value.id);
-      radio = radio.replace(/{label}/g, value.location);
+      let radio = prototype.replace(/{code}/g, value.code);
+      radio = radio.replace(/{name}/g, value.name);
+      radio = radio.replace(/{full_address}/g, value.full_address);
+      radio = radio.replace(/{latitude}/g, value.latitude);
+      radio = radio.replace(/{longitude}/g, value.longitude);
 
       content += radio;
     });
