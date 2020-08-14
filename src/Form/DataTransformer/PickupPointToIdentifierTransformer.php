@@ -60,8 +60,6 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
 
     /**
      * @param mixed $value
-     *
-     * @throws TransformationFailedException
      */
     private function assertTransformationValueType($value, string $expectedType): void
     {

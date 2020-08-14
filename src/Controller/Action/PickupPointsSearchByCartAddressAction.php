@@ -6,6 +6,8 @@ namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Generator;
+use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
@@ -54,16 +56,24 @@ final class PickupPointsSearchByCartAddressAction
 
         $providerCode = $request->get('providerCode');
         if (!is_string($providerCode) || '' === $providerCode) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Empty provider code');
         }
 
         if (!$this->providerRegistry->has($providerCode)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(sprintf(
+                'Provider \'%s\' not recognized. Expecting one of: %s',
+                $providerCode,
+                implode(', ', array_keys($this->providerRegistry->all()))
+            ));
         }
 
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
+
+        if ($pickupPoints instanceof Generator) {
+            $pickupPoints = iterator_to_array($pickupPoints);
+        }
 
         $view = View::create($pickupPoints);
         $view->getContext()->addGroup('Autocomplete');

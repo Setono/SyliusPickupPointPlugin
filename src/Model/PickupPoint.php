@@ -13,7 +13,7 @@ use function Safe\sprintf;
  */
 class PickupPoint implements PickupPointInterface
 {
-    /** @var int */
+    /** @var int|null */
     protected $id;
 
     /** @var PickupPointCode */
@@ -145,11 +145,10 @@ class PickupPoint implements PickupPointInterface
         $this->longitude = $longitude;
     }
 
-    public function getLocation(): string
+    public function getFullAddress(): string
     {
         return sprintf(
-            '%s, %s, %s %s',
-            $this->getName(),
+            '%s, %s %s',
             $this->getAddress(),
             $this->getZipCode(),
             $this->getCity()

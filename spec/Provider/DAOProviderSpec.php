@@ -52,7 +52,7 @@ class DAOProviderSpec extends ObjectBehavior
         AddressInterface $address
     ): void {
         $client->get('/DAOPakkeshop/FindPakkeshop.php', [
-            'postnr' => 'AE 8000',
+            'postnr' => 'AE8000',
             'adresse' => 'Street 10',
             'antal' => 10,
         ])->willReturn([

@@ -72,7 +72,7 @@ return [
 #### Import routing
  
 ````yaml
-# config/routes/setono_sylius_pickup_point_plugin.yaml
+# config/routes/setono_sylius_pickup_point.yaml
 setono_sylius_pickup_point_plugin:
     resource: "@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml"
 ````
@@ -80,7 +80,7 @@ setono_sylius_pickup_point_plugin:
 #### Import application config
 
 ````yaml
-# config/packages/_sylius.yaml
+# config/packages/setono_sylius_pickup_point.yaml
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }    
 ````
@@ -88,7 +88,7 @@ imports:
 #### (Optional) Import fixtures to play in your app
 
 ````yaml
-# config/packages/_sylius.yaml
+# config/packages/setono_sylius_pickup_point.yaml
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }    
 ````
@@ -269,6 +269,36 @@ parameters:
 bin/console sylius:install:assets  
 bin/console sylius:theme:assets:install
 ```
+
+## Play
+
+To see pickup points list, use next example address at checkout:
+
+  ```
+  Dannebrogsgade 1
+  9000 Aalborg
+  DK
+  ```
+
+  ```
+  Hämeentie 1
+  00350 Helsinki
+  FI
+  ```
+
+  ```
+  Vasterhaninge 1
+  137 94 Stockholm
+  SE
+  ```
+
+Note, that providers have their pickup points only at given countries:
+
+- **DAO**: DK
+- **PostNord**: DK, SE, FI
+- **GLS**: See https://gls-group.eu/EU/en/depot-parcelshop-search
+
+So, to play with all 3 providers at once - use `DK` address.
 
 ## Troubleshooting
 

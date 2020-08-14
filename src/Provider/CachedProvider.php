@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Behat\Transliterator\Transliterator;
+use Generator;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use function Safe\sprintf;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -14,6 +14,7 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Webmozart\Assert\Assert;
 
 final class CachedProvider extends Provider
 {
@@ -32,8 +33,6 @@ final class CachedProvider extends Provider
     }
 
     /**
-     * @throws InvalidArgumentException
-     *
      * @return PickupPoint[]
      */
     public function findPickupPoints(OrderInterface $order): iterable
@@ -41,6 +40,10 @@ final class CachedProvider extends Provider
         $orderCacheKey = $this->buildOrderCacheKey($order);
         if (!$this->cacheItemPool->hasItem($orderCacheKey)) {
             $pickupPoints = $this->provider->findPickupPoints($order);
+
+            if ($pickupPoints instanceof Generator) {
+                $pickupPoints = iterator_to_array($pickupPoints);
+            }
 
             $pickupPointsCacheItem = $this->cacheItemPool->getItem($orderCacheKey);
             $pickupPointsCacheItem->set($pickupPoints);
@@ -62,9 +65,6 @@ final class CachedProvider extends Provider
         return $pickupPoints;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
         $pickupPointCacheKey = $this->buildPickupPointIdCacheKey($code);
@@ -111,14 +111,23 @@ final class CachedProvider extends Provider
             ));
         }
 
+        $countryCode = $shippingAddress->getCountryCode();
+        Assert::notNull($countryCode);
+
+        $postCode = $shippingAddress->getPostcode();
+        Assert::notNull($postCode);
+
+        $street = $shippingAddress->getStreet();
+        Assert::notNull($street);
+
         // As far as DAO/Gls/PostNord using only these 3 fields to
         // search for pickup points, we should build cache key based on them only
         return sprintf(
             '%s-%s-%s-%s',
             $this->getCode(),
-            Transliterator::transliterate($shippingAddress->getCountryCode()),
-            Transliterator::transliterate($shippingAddress->getPostcode()),
-            Transliterator::transliterate($shippingAddress->getStreet())
+            Transliterator::transliterate($countryCode),
+            Transliterator::transliterate($postCode),
+            Transliterator::transliterate($street)
         );
     }
 

@@ -1,5 +1,6 @@
 imports:
     - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }
+    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }
 
 framework:
     cache:
@@ -11,8 +12,9 @@ setono_sylius_pickup_point:
     cache:
         enabled: true
         pool: setono_sylius_pickup_point.provider_cache_pool
+    local: true
     providers:
         faker: true
         gls: true
-        post_nord: false
+        post_nord: true
         dao: true

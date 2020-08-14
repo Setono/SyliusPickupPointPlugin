@@ -27,6 +27,9 @@ default:
                             marionette: null # https://github.com/Behat/MinkExtension/pull/311
                             chrome:
                                 switches:
+                                    - "--headless"
+                                    - "--disable-gpu"
+                                    - "--window-size=1920,1080"
                                     - "start-fullscreen"
                                     - "start-maximized"
                                     - "no-sandbox"

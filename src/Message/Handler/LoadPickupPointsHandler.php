@@ -10,6 +10,7 @@ use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Webmozart\Assert\Assert;
 
 final class LoadPickupPointsHandler implements MessageHandlerInterface
 {
@@ -42,19 +43,22 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
         $i = 1;
 
         foreach ($pickupPoints as $pickupPoint) {
-            $obj = $this->pickupPointRepository->findOneByCode($pickupPoint->getCode());
+            $pickupPointCode = $pickupPoint->getCode();
+            Assert::notNull($pickupPointCode);
+
+            $localPickupPoint = $this->pickupPointRepository->findOneByCode($pickupPointCode);
 
             // if it's found, we will update the properties, else we will just persist this object
-            if (null === $obj) {
+            if (null === $localPickupPoint) {
                 $this->pickupPointManager->persist($pickupPoint);
             } else {
-                $obj->setName($pickupPoint->getName());
-                $obj->setAddress($pickupPoint->getAddress());
-                $obj->setZipCode($pickupPoint->getZipCode());
-                $obj->setCity($pickupPoint->getCity());
-                $obj->setCountry($pickupPoint->getCountry());
-                $obj->setLatitude($pickupPoint->getLatitude());
-                $obj->setLongitude($pickupPoint->getLongitude());
+                $localPickupPoint->setName($pickupPoint->getName());
+                $localPickupPoint->setAddress($pickupPoint->getAddress());
+                $localPickupPoint->setZipCode($pickupPoint->getZipCode());
+                $localPickupPoint->setCity($pickupPoint->getCity());
+                $localPickupPoint->setCountry($pickupPoint->getCountry());
+                $localPickupPoint->setLatitude($pickupPoint->getLatitude());
+                $localPickupPoint->setLongitude($pickupPoint->getLongitude());
             }
 
             if ($i % 50 === 0) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Psr\Http\Client\NetworkExceptionInterface;
+use function Safe\preg_replace;
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -29,9 +30,15 @@ final class DAOProvider extends Provider
             return [];
         }
 
+        $street = $shippingAddress->getStreet();
+        $postCode = $shippingAddress->getPostcode();
+        if (null === $street || null === $postCode) {
+            return [];
+        }
+
         yield from $this->_findPickupPoints([
-            'postnr' => $shippingAddress->getPostcode(),
-            'adresse' => $shippingAddress->getStreet(),
+            'postnr' => preg_replace('/\s+/', '', $postCode),
+            'adresse' => $street,
             'antal' => 10,
         ]);
     }

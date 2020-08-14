@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Psr\Http\Client\NetworkExceptionInterface;
+use function Safe\preg_replace;
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -35,11 +36,18 @@ final class PostNordProvider extends Provider
             return [];
         }
 
+        $street = $shippingAddress->getStreet();
+        $postCode = $shippingAddress->getPostcode();
+        $countryCode = $shippingAddress->getCountryCode();
+        if (null === $street || null === $postCode || null === $countryCode) {
+            return [];
+        }
+
         try {
             $result = $this->client->get('/rest/businesslocation/v1/servicepoint/findNearestByAddress.json', [
-                'countryCode' => $shippingAddress->getCountryCode(),
-                'postalCode' => $shippingAddress->getPostcode(),
-                'streetName' => $shippingAddress->getStreet(),
+                'countryCode' => $countryCode,
+                'postalCode' => preg_replace('/\s+/', '', $postCode),
+                'streetName' => $street,
                 'numberOfServicePoints' => 10,
             ]);
         } catch (NetworkExceptionInterface $e) {
@@ -118,9 +126,20 @@ final class PostNordProvider extends Provider
             $servicePoint['visitingAddress']['countryCode']
         );
 
-        $address = $servicePoint['visitingAddress']['streetName'];
+        $address = '';
+
+        if (isset($servicePoint['visitingAddress']['streetName'])) {
+            $address .= $servicePoint['visitingAddress']['streetName'];
+        }
+
         if (isset($servicePoint['visitingAddress']['streetNumber'])) {
-            $address .= ' ' . $servicePoint['visitingAddress']['streetNumber'];
+            $address .= (mb_strlen($address) > 0 ? ' ' : '') . $servicePoint['visitingAddress']['streetNumber'];
+        }
+
+        $latitude = $longitude = null;
+        if (isset($servicePoint['coordinate'])) {
+            $latitude = (string) $servicePoint['coordinate']['northing'];
+            $longitude = (string) $servicePoint['coordinate']['easting'];
         }
 
         return new PickupPoint(
@@ -130,8 +149,8 @@ final class PostNordProvider extends Provider
             (string) $servicePoint['visitingAddress']['postalCode'],
             $servicePoint['visitingAddress']['city'],
             (string) $servicePoint['visitingAddress']['countryCode'],
-            $servicePoint['coordinate']['northing'] ?? null,
-            $servicePoint['coordinate']['easting'] ?? null
+            $latitude,
+            $longitude
         );
     }
 

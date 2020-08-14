@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Form\Extension;
 
 use function Safe\array_flip;
-use Safe\Exceptions\ArrayException;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,9 +20,6 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
         $this->providers = $providers;
     }
 
-    /**
-     * @throws ArrayException
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointProvider', ChoiceType::class, [

@@ -2,6 +2,66 @@ sylius_fixtures:
     suites:
         default:
             fixtures:
+                geographical:
+                    options:
+                        countries:
+                            - 'DK'
+                            - 'SE'
+                            - 'FI'
+
+                            # @todo Remove all other countries once https://github.com/Sylius/Sylius/issues/11216 fixed
+                            - 'US'
+                            - 'FR'
+                            - 'DE'
+                            - 'AU'
+                            - 'CA'
+                            - 'MX'
+                            - 'NZ'
+                            - 'PT'
+                            - 'ES'
+                            - 'CN'
+                            - 'UK'
+                        zones:
+                            WORLD:
+                                name: 'World'
+                                countries:
+                                    - 'DK'
+                                    - 'SE'
+                                    - 'FI'
+                                    - 'US'
+                                    - 'FR'
+                                    - 'DE'
+                                    - 'AU'
+                                    - 'CA'
+                                    - 'MX'
+                                    - 'NZ'
+                                    - 'PT'
+                                    - 'ES'
+                                    - 'CN'
+                                    - 'UK'
+                            DAO_PP_COUNTRIES:
+                                name: 'Denmark'
+                                countries:
+                                    # Dao operates at DK only
+                                    - 'DK'
+                            POSTNORD_PP_COUNTRIES:
+                                name: 'PostNord countries'
+                                countries:
+                                    - 'DK'
+                                    - 'SE'
+                                    - 'FI'
+                            GLS_PP_COUNTRIES:
+                                name: 'GLS countries'
+                                countries:
+                                    - 'DK'
+                                    - 'SE'
+                                    - 'FI'
+                                    - 'FR'
+                                    - 'DE'
+                                    - 'PT'
+                                    - 'ES'
+                                    - 'UK'
+
                 setono_sylius_pickup_point_shipping_method:
                     options:
                         custom:
@@ -9,7 +69,7 @@ sylius_fixtures:
                                 code: "dao_pickup_point"
                                 name: "DAO with pickup points"
                                 enabled: true
-                                zone: "WORLD"
+                                zone: "DAO_PP_COUNTRIES"
                                 pickup_point_provider: dao
                                 channels:
                                     - "FASHION_WEB"
@@ -32,7 +92,7 @@ sylius_fixtures:
                                 code: "post_nord_pickup_point"
                                 name: "PostNord with pickup points"
                                 enabled: true
-                                zone: "WORLD"
+                                zone: "POSTNORD_PP_COUNTRIES"
                                 pickup_point_provider: post_nord
                                 channels:
                                     - "FASHION_WEB"

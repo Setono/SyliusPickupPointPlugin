@@ -12,5 +12,9 @@
             <tag name="kernel.event_listener" event="sonata.block.event.sylius.admin.layout.javascripts" method="onBlockEvent" />
         </service>
 
+        <service id="Setono\SyliusPickupPointPlugin\EventListener\AddIndicesSubscriber">
+            <tag name="doctrine.event_subscriber"/>
+        </service>
+
     </services>
 </container>

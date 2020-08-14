@@ -5,19 +5,23 @@
         {{- form_label(form) -}}
         {{- form_widget(form, {'attr': {'class': 'setono-sylius-pickup-point-field-input'}}) -}}
         {{- form_errors(form) -}}
+
+        {# @todo Omit using prototype like this as it present at DOM and querySelector results #}
         <div class="setono-sylius-pickup-point-field-choice-prototype" style="display: none;">
             <div class="item">
                 <div class="field">
                     <div class="ui radio checkbox">
-                        <input id="{{ form.vars.id }}_{value}" class="setono-sylius-pickup-point-field-choice-field"
-                               type="radio" name="{{ form.vars.id }}[pickupPoint]" required value="{value}">
-                        <label></label>
+                        <input id="{{ form.vars.id }}_{code}" class="setono-sylius-pickup-point-field-choice-field"
+                               type="radio" name="{{ form.vars.id }}[pickupPoint]" required value="{code}">
                     </div>
                 </div>
                 <div class="content">
-                    <a class="header">
-                        <label for="{{ form.vars.id }}_{value}" class="required">{label}</label>
-                    </a>
+                    <span class="header">
+                        <label for="{{ form.vars.id }}_{code}" class="required">
+                            {name}, {full_address}
+                            &middot; <a href="http://maps.google.com/maps?&z=16&q={latitude}+{longitude}" target="_blank">See on the map</a>
+                        </label>
+                    </span>
                 </div>
             </div>
         </div>
