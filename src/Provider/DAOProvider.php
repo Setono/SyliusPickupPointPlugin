@@ -96,7 +96,7 @@ final class DAOProvider extends Provider
 
     private function populatePickupPoint(array $servicePoint): PickupPoint
     {
-        $countryCode = 'DK';
+        $countryCode = 'DK'; // DAO only operates in Denmark
 
         return new PickupPoint(
             new PickupPointCode($servicePoint['shopId'], $this->getCode(), $countryCode),
@@ -104,7 +104,7 @@ final class DAOProvider extends Provider
             $servicePoint['adresse'],
             $servicePoint['postnr'],
             $servicePoint['bynavn'],
-            $countryCode, // DAO only operates in Denmark
+            $countryCode,
             $servicePoint['latitude'],
             $servicePoint['longitude']
         );
