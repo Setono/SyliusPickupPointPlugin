@@ -65,14 +65,14 @@
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse -c phpstan.neon -l max src/ tests/Application/Model",
         "behat": "php -d memory_limit=-1 vendor/bin/behat --no-interaction --format=progress",
-        "check-style": "vendor/bin/ecs check src/ spec/ tests/Behat tests/Application/Model",
+        "check-style": "vendor/bin/ecs check src/ spec/ tests/",
         "checks": [
             "composer validate --strict",
             "composer normalize --dry-run",
             "@check-style",
             "@analyse"
         ],
-        "fix-style": "vendor/bin/ecs check src/ spec/ tests/Behat tests/Application/Model --fix",
+        "fix-style": "vendor/bin/ecs check src/ spec/ tests/ --fix",
         "fixtures": "(cd tests/Application && bin/console sylius:fixtures:load --no-interaction -e ${SYMFONY_ENV:-'dev'})",
         "phpspec": "vendor/bin/phpspec run -vvv",
         "tests": [
