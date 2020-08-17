@@ -133,13 +133,13 @@ final class PostNordProvider extends Provider
         }
 
         if (isset($servicePoint['visitingAddress']['streetNumber'])) {
-            $address .= (mb_strlen($address) > 0 ? ' ' : '') . $servicePoint['visitingAddress']['streetNumber'];
+            $address .= ('' !== $address ? ' ' : '') . $servicePoint['visitingAddress']['streetNumber'];
         }
 
         $latitude = $longitude = null;
-        if (isset($servicePoint['coordinate'])) {
-            $latitude = (string) $servicePoint['coordinate']['northing'];
-            $longitude = (string) $servicePoint['coordinate']['easting'];
+        if (isset($servicePoint['coordinates'][0])) {
+            $latitude = (string) $servicePoint['coordinates'][0]['northing'];
+            $longitude = (string) $servicePoint['coordinates'][0]['easting'];
         }
 
         return new PickupPoint(
