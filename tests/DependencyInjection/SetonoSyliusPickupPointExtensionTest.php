@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Tests\Setono\SyliusPickupPointPlugin\DependencyInjection;
-
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Setono\SyliusPickupPointPlugin\DependencyInjection\SetonoSyliusPickupPointExtension;
@@ -21,14 +20,14 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
                 'dao' => false,
                 'gls' => false,
                 'post_nord' => false,
-            ]
+            ],
         ];
     }
 
     protected function getContainerExtensions(): array
     {
         return [
-            new SetonoSyliusPickupPointExtension()
+            new SetonoSyliusPickupPointExtension(),
         ];
     }
 
