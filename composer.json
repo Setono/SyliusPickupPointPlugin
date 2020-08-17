@@ -1,6 +1,6 @@
 {
     "name": "setono/sylius-pickup-point-plugin",
-    "type": "sylius-plugin",
+    "type": "symfony-bundle",
     "description": "Pickup point plugin for Sylius",
     "keywords": [
         "sylius",
@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "sylius/sylius": "^1.3",
         "symfony/intl": "^4.4 || ^5.0",
         "symfony/messenger": "^4.4 || ^5.0",
@@ -19,20 +19,20 @@
     },
     "require-dev": {
         "kalessil/production-dependencies-guard": "dev-master",
-        "kriswallsmith/buzz": "^1.0",
+        "kriswallsmith/buzz": "^1.1",
         "matthiasnoback/symfony-dependency-injection-test": "^4.1",
-        "nyholm/psr7": "^1.1",
-        "phpspec/phpspec": "^6.0",
+        "nyholm/psr7": "^1.3",
+        "phpspec/phpspec": "^6.2",
         "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
-        "setono/code-quality-pack": "^1.3",
+        "setono/code-quality-pack": "^1.4.1",
         "setono/dao-bundle": "^1.0",
         "setono/gls-webservice-bundle": "^1.0.1",
-        "setono/post-nord-bundle": "^1.0.1",
+        "setono/post-nord-bundle": "^1.1",
         "setono/sylius-behat-pack": "^0.1.0",
-        "symfony/debug-bundle": "^4.4 || ^5.0",
-        "symfony/dotenv": "^4.4 || ^5.0",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.0"
+        "symfony/debug-bundle": "^5.1",
+        "symfony/dotenv": "^5.1",
+        "symfony/web-profiler-bundle": "^5.0"
     },
     "suggest": {
         "setono/dao-bundle": "Install this bundle to use the DAO provider",
@@ -49,11 +49,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Setono\\SyliusPickupPointPlugin\\": "src/",
-            "Tests\\Setono\\SyliusPickupPointPlugin\\": "tests/"
+            "Setono\\SyliusPickupPointPlugin\\": "src/"
         }
     },
     "autoload-dev": {
+        "psr-4": {
+            "Tests\\Setono\\SyliusPickupPointPlugin\\": "tests/"
+        },
         "classmap": [
             "tests/Application/Kernel.php"
         ]
