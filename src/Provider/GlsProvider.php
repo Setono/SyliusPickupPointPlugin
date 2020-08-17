@@ -7,6 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use function Safe\preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\GLS\Webservice\Exception\ConnectionException;
+use Setono\GLS\Webservice\Exception\NoResultException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
@@ -25,7 +26,7 @@ final class GlsProvider extends Provider
 
     public function __construct(
         ClientInterface $client,
-        array $countryCodes = ['DK', 'SE', 'FI']
+        array $countryCodes = ['DK', 'SE']
     ) {
         $this->client = $client;
         $this->countryCodes = $countryCodes;
@@ -89,6 +90,8 @@ final class GlsProvider extends Provider
             }
         } catch (ConnectionException $e) {
             throw new TimeoutException($e);
+        } catch (NoResultException $e) {
+            return [];
         }
     }
 
