@@ -14,6 +14,6 @@ final class TimeoutException extends RuntimeException implements ExceptionInterf
 {
     public function __construct(Throwable $previous = null)
     {
-        parent::__construct('This is a special exception only thrown when a timeout occours when trying to fetch pickup point(s) from external providers', 0, $previous);
+        parent::__construct('This is a special exception only thrown when a timeout occurs when trying to fetch pickup point(s) from external providers', 0, $previous);
     }
 }
