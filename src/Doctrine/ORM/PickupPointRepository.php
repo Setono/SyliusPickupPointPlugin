@@ -40,12 +40,19 @@ final class PickupPointRepository extends EntityRepository implements PickupPoin
             return [];
         }
 
+        $postalCode = $shippingAddress->getPostcode();
+        if (null === $postalCode) {
+            return [];
+        }
+
         return $this->createQueryBuilder('o')
             ->andWhere('o.code.provider = :provider')
             ->andWhere('o.code.country = :country')
+            ->andWhere('o.zipCode = :postalCode')
             ->setParameters([
                 'provider' => $provider,
                 'country' => $countryCode,
+                'postalCode' => $postalCode,
             ])
             ->getQuery()
             ->getResult()
