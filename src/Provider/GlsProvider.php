@@ -25,7 +25,7 @@ final class GlsProvider extends Provider
 
     public function __construct(
         ClientInterface $client,
-        array $countryCodes = ['DK', 'SE', 'FI']
+        array $countryCodes = ['DK', 'SE']
     ) {
         $this->client = $client;
         $this->countryCodes = $countryCodes;
