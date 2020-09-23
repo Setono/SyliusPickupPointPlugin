@@ -1,4 +1,4 @@
 setono_pickup_point:
     shipment:
         pickup_point:
-            not_blank: Pickup point cannot be blank.
+            not_blank: Afhentningssted skal udfyldes.
