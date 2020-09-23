@@ -1,15 +1,15 @@
 setono_sylius_pickup_point:
     ui:
-        shipment_to: To pickup point
+        shipment_to: Til afhentningssted 
     form:
         shipment:
-            pickup_point: Pickup point
-            select_pickup_point: Select pickup point
+            pickup_point: afhentningssted
+            select_pickup_point: Vælg afhentningssted
         shipping_method:
-            pickup_point_provider: Pickup point provider
-            select_pickup_point_provider: Select pickup point provider
+            pickup_point_provider: Afhentningsudbyder
+            select_pickup_point_provider: Vælg afhentningsudbyder
     provider:
-        faker: Faker
+        faker: Svindler
         dao: DAO
         gls: GLS
         post_nord: PostNord
