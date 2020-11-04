@@ -137,7 +137,7 @@ final class PostNordProvider extends Provider
         }
 
         $latitude = $longitude = null;
-        if (isset($servicePoint['coordinates']) && isset($servicePoint['coordinates'][0])) {
+        if (isset($servicePoint['coordinates'], $servicePoint['coordinates'][0])) {
             $latitude = (string) $servicePoint['coordinates'][0]['northing'];
             $longitude = (string) $servicePoint['coordinates'][0]['easting'];
         }
