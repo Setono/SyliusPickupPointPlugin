@@ -8,7 +8,7 @@ let pickupPoints = {
   pickupPointChoices: {},
   lastChosenPickupPointId: null,
   init: function (args) {
-    self = this;
+    var self = this;
     self.searchUrl = args.searchUrl;
 
     if (0 === self.pickupPointShippingMethods.length) {
