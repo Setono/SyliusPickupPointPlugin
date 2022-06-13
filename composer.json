@@ -50,7 +50,7 @@
         "sylius/sylius": "~1.7.3",
         "symfony/debug-bundle": "^4.4 || ^5.4",
         "symfony/dotenv": "^4.4 || ^5.4",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.4",
+        "symfony/web-profiler-bundle": "^4.4 || ^5.4 || ^5.0",
         "weirdan/doctrine-psalm-plugin": "^1.2"
     },
     "suggest": {
