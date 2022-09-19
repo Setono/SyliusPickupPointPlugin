@@ -33,7 +33,7 @@
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
-        "api-platform/core": "^2.6",
+        "api-platform/core": "^2.7",
         "fakerphp/faker": "^1.19",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
         "kriswallsmith/buzz": "^1.2",
