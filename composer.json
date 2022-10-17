@@ -56,7 +56,7 @@
         "symfony/debug-bundle": "^5.4 || ^6.0",
         "symfony/dotenv": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "weirdan/doctrine-psalm-plugin": "^2.3"
+        "weirdan/doctrine-psalm-plugin": "^2.5"
     },
     "suggest": {
         "setono/dao-bundle": "Install this bundle to use the DAO provider",
