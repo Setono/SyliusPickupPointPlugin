@@ -13,7 +13,7 @@
         "behat/transliterator": "^1.5",
         "doctrine/event-manager": "^1.2",
         "doctrine/orm": "^2.7",
-        "friendsofsymfony/rest-bundle": "^2.8 || ^3.0",
+        "friendsofsymfony/rest-bundle": "^3.4.0",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/http-client": "^1.0",
         "sylius/resource-bundle": "^1.6",
