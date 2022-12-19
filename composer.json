@@ -34,7 +34,7 @@
     },
     "require-dev": {
         "api-platform/core": "^2.7",
-        "fakerphp/faker": "^1.20",
+        "fakerphp/faker": "^1.21",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
         "kriswallsmith/buzz": "^1.2",
         "lexik/jwt-authentication-bundle": "^2.16",
