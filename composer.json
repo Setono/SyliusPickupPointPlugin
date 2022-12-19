@@ -40,7 +40,7 @@
         "lexik/jwt-authentication-bundle": "^2.16",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",
         "nyholm/psr7": "^1.5",
-        "phpspec/phpspec": "^7.2",
+        "phpspec/phpspec": "^7.3",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.18",
