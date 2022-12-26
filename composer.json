@@ -12,7 +12,7 @@
         "ext-mbstring": "*",
         "behat/transliterator": "^1.5",
         "doctrine/event-manager": "^1.2",
-        "doctrine/orm": "^2.7",
+        "doctrine/orm": "^2.14",
         "friendsofsymfony/rest-bundle": "^2.8 || ^3.0",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/http-client": "^1.0",
