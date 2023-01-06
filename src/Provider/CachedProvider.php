@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
-use Behat\Transliterator\Transliterator;
 use Generator;
 use Psr\Cache\CacheItemPoolInterface;
 use RuntimeException;
@@ -13,6 +12,7 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use function sprintf;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Webmozart\Assert\Assert;
 
 final class CachedProvider extends Provider
@@ -112,14 +112,16 @@ final class CachedProvider extends Provider
         $street = $shippingAddress->getStreet();
         Assert::notNull($street);
 
+        $slugger = new AsciiSlugger();
+
         // As far as DAO/Gls/PostNord using only these 3 fields to
         // search for pickup points, we should build cache key based on them only
         return sprintf(
             '%s-%s-%s-%s',
             $this->getCode(),
-            Transliterator::transliterate($countryCode),
-            Transliterator::transliterate($postCode),
-            Transliterator::transliterate($street)
+            (string)$slugger->slug($countryCode),
+            (string)$slugger->slug($postCode),
+            (string)$slugger->slug($street)
         );
     }
 
