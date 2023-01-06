@@ -6,7 +6,6 @@ namespace Setono\SyliusPickupPointPlugin\DependencyInjection\Compiler;
 
 use InvalidArgumentException;
 use Setono\SyliusPickupPointPlugin\Provider\CachedProvider;
-use Setono\SyliusPickupPointPlugin\Provider\LocalProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -22,7 +21,6 @@ final class RegisterProvidersPass implements CompilerPassInterface
 
         $registry = $container->getDefinition('setono_sylius_pickup_point.registry.provider');
         $cacheEnabled = $container->getParameter('setono_sylius_pickup_point.cache.enabled') === true;
-        $localEnabled = $container->getParameter('setono_sylius_pickup_point.local') === true;
 
         $typeToLabelMap = [];
         foreach ($container->findTaggedServiceIds('setono_sylius_pickup_point.provider') as $id => $tagged) {
@@ -41,18 +39,6 @@ final class RegisterProvidersPass implements CompilerPassInterface
                         new Reference($id . '.inner'),
                     ]);
                     $cachedDefinition->setDecoratedService($decoratedId, null, 256);
-
-                    $container->setDefinition($id, $cachedDefinition);
-                }
-
-                if ($localEnabled) {
-                    $decoratedId = $id;
-                    $id .= '.local'; // overwrite the id
-                    $cachedDefinition = new Definition(LocalProvider::class, [
-                        new Reference($id . '.inner'),
-                        new Reference('setono_sylius_pickup_point.repository.pickup_point'),
-                    ]);
-                    $cachedDefinition->setDecoratedService($decoratedId, null, 512);
 
                     $container->setDefinition($id, $cachedDefinition);
                 }

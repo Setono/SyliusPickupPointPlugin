@@ -8,19 +8,18 @@ use function preg_replace;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Factory\PickupPointFactoryInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
 
 final class DAOProvider extends Provider
 {
     private ClientInterface $client;
 
-    private FactoryInterface $pickupPointFactory;
+    private PickupPointFactoryInterface $pickupPointFactory;
 
-    public function __construct(ClientInterface $client, FactoryInterface $pickupPointFactory)
+    public function __construct(ClientInterface $client, PickupPointFactoryInterface $pickupPointFactory)
     {
         $this->client = $client;
         $this->pickupPointFactory = $pickupPointFactory;
@@ -101,10 +100,7 @@ final class DAOProvider extends Provider
     {
         $countryCode = 'DK'; // DAO only operates in Denmark
 
-        /** @var PickupPointInterface|object $pickupPoint */
         $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
 
         $pickupPoint->setCode(new PickupPointCode($servicePoint['shopId'], $this->getCode(), $countryCode));
         $pickupPoint->setName($servicePoint['navn']);

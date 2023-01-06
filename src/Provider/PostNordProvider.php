@@ -8,11 +8,10 @@ use function preg_replace;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\PostNord\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Factory\PickupPointFactoryInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
@@ -21,9 +20,9 @@ final class PostNordProvider extends Provider
 {
     private ClientInterface $client;
 
-    private FactoryInterface $pickupPointFactory;
+    private PickupPointFactoryInterface $pickupPointFactory;
 
-    public function __construct(ClientInterface $client, FactoryInterface $pickupPointFactory)
+    public function __construct(ClientInterface $client, PickupPointFactoryInterface $pickupPointFactory)
     {
         $this->client = $client;
         $this->pickupPointFactory = $pickupPointFactory;
@@ -142,10 +141,7 @@ final class PostNordProvider extends Provider
             $longitude = (float) $servicePoint['coordinates'][0]['easting'];
         }
 
-        /** @var PickupPointInterface|object $pickupPoint */
         $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
 
         $pickupPoint->setCode($id);
         $pickupPoint->setName($servicePoint['name']);

@@ -19,9 +19,6 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
         /** @psalm-suppress PossiblyNullArgument */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $container->setParameter('setono_sylius_pickup_point.local', $config['local']);
-
-        $this->registerResources('setono_sylius_pickup_point', $config['driver'], $config['resources'], $container);
 
         $loader->load('services.xml');
 

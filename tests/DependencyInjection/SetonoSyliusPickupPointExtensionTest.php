@@ -38,7 +38,6 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
     {
         $this->load();
 
-        $this->assertContainerBuilderHasParameter('setono_sylius_pickup_point.local', true);
         $this->assertContainerBuilderHasParameter('setono_sylius_pickup_point.cache.enabled', false);
     }
 }

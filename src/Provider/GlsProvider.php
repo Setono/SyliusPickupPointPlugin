@@ -11,23 +11,22 @@ use Setono\GLS\Webservice\Exception\NoResultException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
 use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Factory\PickupPointFactoryInterface;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
 
 final class GlsProvider extends Provider
 {
     private ClientInterface $client;
 
-    private FactoryInterface $pickupPointFactory;
+    private PickupPointFactoryInterface $pickupPointFactory;
 
     private array $countryCodes;
 
     public function __construct(
         ClientInterface $client,
-        FactoryInterface $pickupPointFactory,
+        PickupPointFactoryInterface $pickupPointFactory,
         array $countryCodes = ['DK', 'SE']
     ) {
         $this->client = $client;
@@ -110,10 +109,7 @@ final class GlsProvider extends Provider
 
     private function transform(ParcelShop $parcelShop): PickupPointInterface
     {
-        /** @var PickupPointInterface|object $pickupPoint */
         $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
 
         $pickupPoint->setCode(new PickupPointCode($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()));
         $pickupPoint->setName($parcelShop->getCompanyName());
