@@ -12,9 +12,6 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
     protected function getMinimalConfiguration(): array
     {
         return [
-            'cache' => [
-                'enabled' => false,
-            ],
             'providers' => [
                 'faker' => false,
                 'dao' => false,
@@ -39,6 +36,5 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
         $this->load();
 
         $this->assertContainerBuilderHasParameter('setono_sylius_pickup_point.local', true);
-        $this->assertContainerBuilderHasParameter('setono_sylius_pickup_point.cache.enabled', false);
     }
 }

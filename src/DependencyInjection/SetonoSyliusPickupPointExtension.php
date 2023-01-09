@@ -6,7 +6,6 @@ namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
 use LogicException;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -27,21 +26,6 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
 
         $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
         Assert::isArray($bundles);
-
-        $cacheEnabled = $config['cache']['enabled'];
-        if ($cacheEnabled) {
-            if (!interface_exists(AdapterInterface::class)) {
-                throw new LogicException('Using cache is only supported when symfony/cache is installed.');
-            }
-
-            if (null === $config['cache']['pool']) {
-                throw new LogicException('You should specify pool in order to use cache for pickup point providers.');
-            }
-
-            $container->setAlias('setono_sylius_pickup_point.cache', $config['cache']['pool']);
-        }
-
-        $container->setParameter('setono_sylius_pickup_point.cache.enabled', $cacheEnabled);
 
         if ($config['providers']['faker']) {
             if ('prod' === $container->getParameter('kernel.environment')) {
