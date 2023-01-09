@@ -22,7 +22,7 @@ final class AddIndicesSubscriber implements EventSubscriber
     {
         $metadata = $event->getClassMetadata();
 
-        if (!is_subclass_of($metadata->name, PickupPointInterface::class, true)) {
+        if (!is_subclass_of($metadata->name, PickupPointInterface::class)) {
             return;
         }
 
@@ -38,6 +38,7 @@ final class AddIndicesSubscriber implements EventSubscriber
             ],
         ];
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $metadata->table = array_merge_recursive($tableConfig, $metadata->table);
     }
 }

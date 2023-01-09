@@ -31,5 +31,10 @@
     </forbiddenFunctions>
     <issueHandlers>
         <UnnecessaryVarAnnotation errorLevel="suppress"/>
+        <MissingTemplateParam>
+            <errorLevel type="suppress">
+                <directory name="src/Form"/>
+            </errorLevel>
+        </MissingTemplateParam>
     </issueHandlers>
 </psalm>

@@ -58,7 +58,11 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
     }
 
     /**
+     * @template ExpectedType of object
+     *
      * @param mixed $value
+     * @param class-string<ExpectedType> $expectedType
+     * @psalm-assert ExpectedType $value
      */
     private function assertTransformationValueType($value, string $expectedType): void
     {
