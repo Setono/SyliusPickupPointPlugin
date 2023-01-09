@@ -119,9 +119,9 @@ final class CachedProvider extends Provider
         return sprintf(
             '%s-%s-%s-%s',
             $this->getCode(),
-            (string)$slugger->slug($countryCode),
-            (string)$slugger->slug($postCode),
-            (string)$slugger->slug($street)
+            $slugger->slug($countryCode)->toString(),
+            $slugger->slug($postCode)->toString(),
+            $slugger->slug($street)->toString()
         );
     }
 
