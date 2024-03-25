@@ -43,7 +43,7 @@
         "phpspec/phpspec": "^7.3",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18",
+        "psalm/plugin-phpunit": "^0.19",
         "psalm/plugin-symfony": "^5.0",
         "roave/security-advisories": "dev-latest",
         "setono/budbee-bundle": "^1.0",
