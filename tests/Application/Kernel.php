@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 
 final class Kernel extends BaseKernel
 {
@@ -41,6 +42,15 @@ final class Kernel extends BaseKernel
         foreach ($this->getConfigurationDirectories() as $confDir) {
             $this->loadRoutesConfiguration($routes, $confDir);
         }
+    }
+
+    protected function getContainerBaseClass(): string
+    {
+        if (str_contains($this->environment, 'test')) {
+            return MockerContainer::class;
+        }
+
+        return parent::getContainerBaseClass();
     }
 
     private function loadRoutesConfiguration(RoutingConfigurator $routes, string $confDir): void

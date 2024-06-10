@@ -47,6 +47,7 @@
         "phpspec/phpspec": "^7.3",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.6.17",
+        "polishsymfonycommunity/symfony-mocker-container": "^1.0.7",
         "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0",
         "setono/budbee-bundle": "^1.0",
