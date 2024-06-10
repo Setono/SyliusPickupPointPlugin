@@ -122,7 +122,7 @@ class PickupPoint implements PickupPointInterface
             '%s, %s %s',
             $this->getAddress(),
             $this->getZipCode(),
-            $this->getCity()
+            $this->getCity(),
         );
     }
 }

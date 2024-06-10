@@ -34,7 +34,7 @@ interface ProviderInterface
     /**
      * Returns all pickup points for this provider
      *
-     * @return iterable<PickupPointInterface>|PickupPointInterface[]
+     * @return iterable<PickupPointInterface>
      */
     public function findAllPickupPoints(): iterable;
 }

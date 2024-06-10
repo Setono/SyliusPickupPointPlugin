@@ -24,6 +24,8 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('setono_sylius_pickup_point');
+
+        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         /** @psalm-suppress MixedMethodCall,PossiblyUndefinedMethod,PossiblyNullReference */
@@ -72,7 +74,7 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('post_nord')
                             ->info('Whether to enable the PostNord provider')
                             ->defaultValue(class_exists(SetonoPostNordBundle::class))
-            ;
+        ;
 
         $this->addResourcesSection($rootNode);
 

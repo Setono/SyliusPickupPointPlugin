@@ -28,7 +28,7 @@ final class GlsProvider extends Provider
     public function __construct(
         ClientInterface $client,
         FactoryInterface $pickupPointFactory,
-        array $countryCodes = ['DK', 'SE']
+        array $countryCodes = ['DK', 'SE'],
     ) {
         $this->client = $client;
         $this->pickupPointFactory = $pickupPointFactory;
@@ -54,7 +54,7 @@ final class GlsProvider extends Provider
                 $street,
                 preg_replace('/\s+/', '', $postCode),
                 $countryCode,
-                10
+                10,
             );
         } catch (ConnectionException $e) {
             throw new TimeoutException($e);

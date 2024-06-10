@@ -62,6 +62,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
      *
      * @param mixed $value
      * @param class-string<ExpectedType> $expectedType
+     *
      * @psalm-assert ExpectedType $value
      */
     private function assertTransformationValueType($value, string $expectedType): void
@@ -71,8 +72,8 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
                 sprintf(
                     'Expected "%s", but got "%s"',
                     $expectedType,
-                    is_object($value) ? get_class($value) : gettype($value)
-                )
+                    is_object($value) ? get_class($value) : gettype($value),
+                ),
             );
         }
     }

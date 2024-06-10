@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Setup;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Context\Setup;
 
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +20,7 @@ final class ShippingContext implements Context
 
     public function __construct(
         ServiceRegistryInterface $providerRegistry,
-        EntityManagerInterface $shippingMethodEntityManager
+        EntityManagerInterface $shippingMethodEntityManager,
     ) {
         $this->providerRegistry = $providerRegistry;
         $this->shippingMethodEntityManager = $shippingMethodEntityManager;
@@ -31,12 +31,12 @@ final class ShippingContext implements Context
      */
     public function theShippingMethodHasTheSelectedGlsPickupPointProvider(
         ShippingMethodInterface $shippingMethod,
-        string $pickupPointProviderCode
+        string $pickupPointProviderCode,
     ): void {
         if (!$this->providerRegistry->has($pickupPointProviderCode)) {
             throw new RuntimeException(sprintf(
                 'PickupPoint provider with code %s was not found in registry.',
-                $pickupPointProviderCode
+                $pickupPointProviderCode,
             ));
         }
         $shippingMethod->setPickupPointProvider($pickupPointProviderCode);

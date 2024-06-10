@@ -44,7 +44,7 @@ final class BudbeeProvider extends Provider
         try {
             $boxes = $this->client->boxes()->getAvailableLockers(
                 $countryCode,
-                $postCode
+                $postCode,
             );
         } catch (\Throwable $e) {
             throw new TimeoutException($e);
@@ -97,7 +97,7 @@ final class BudbeeProvider extends Provider
         $pickupPoint->setCode(new PickupPointCode(
             $box->id,
             $this->getCode(),
-            $box->address->country
+            $box->address->country,
         ));
         $pickupPoint->setName($box->name);
         $pickupPoint->setAddress($box->address->street);

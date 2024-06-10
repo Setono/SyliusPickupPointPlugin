@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Shop;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Context\Ui\Shop;
 
 use Behat\Behat\Context\Context;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareInterface;
+use Setono\SyliusPickupPointPlugin\Tests\Behat\Page\Shop\ShippingPickup\SelectShippingPageInterface;
 use Sylius\Behat\Page\Shop\Checkout\CompletePageInterface;
 use Sylius\Behat\Service\SharedStorageInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Shop\ShippingPickup\SelectShippingPageInterface;
 use Webmozart\Assert\Assert;
 
 final class ShippingContext implements Context
@@ -31,7 +31,7 @@ final class ShippingContext implements Context
         SelectShippingPageInterface $selectShippingPage,
         CompletePageInterface $completePage,
         SharedStorageInterface $sharedStorage,
-        RepositoryInterface $orderRepository
+        RepositoryInterface $orderRepository,
     ) {
         $this->selectShippingPage = $selectShippingPage;
         $this->completePage = $completePage;

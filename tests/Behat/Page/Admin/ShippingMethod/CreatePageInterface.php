@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Admin\ShippingMethod;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Page\Admin\ShippingMethod;
 
 use Sylius\Behat\Page\Admin\Crud\CreatePageInterface as BaseCreatePageInterface;
 

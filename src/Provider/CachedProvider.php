@@ -99,7 +99,7 @@ final class CachedProvider extends Provider
         if (!$shippingAddress instanceof AddressInterface) {
             throw new RuntimeException(sprintf(
                 'Shipping address was not found for order #%s',
-                $order->getNumber()
+                $order->getNumber(),
             ));
         }
 
@@ -119,7 +119,7 @@ final class CachedProvider extends Provider
             $this->getCode(),
             Transliterator::transliterate($countryCode),
             Transliterator::transliterate($postCode),
-            Transliterator::transliterate($street)
+            Transliterator::transliterate($street),
         );
     }
 
