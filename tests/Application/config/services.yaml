@@ -2,3 +2,4 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en_US
+    sylius.form.type.checkout_select_shipping.validation_groups: ['sylius', 'checkout_select_shipping']
