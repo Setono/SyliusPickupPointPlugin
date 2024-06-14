@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Tests\Application;
 
+use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 
 final class Kernel extends BaseKernel
 {
