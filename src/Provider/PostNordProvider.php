@@ -123,7 +123,7 @@ final class PostNordProvider extends Provider
         $id = new PickupPointCode(
             $servicePoint['servicePointId'],
             $this->getCode(),
-            $servicePoint['visitingAddress']['countryCode']
+            $servicePoint['visitingAddress']['countryCode'],
         );
 
         $address = '';

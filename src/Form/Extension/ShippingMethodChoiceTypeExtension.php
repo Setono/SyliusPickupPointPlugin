@@ -28,7 +28,7 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
         ServiceRegistryInterface $providerRegistry,
         RouterInterface $router,
         CartContextInterface $cartContext,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
     ) {
         $this->providerRegistry = $providerRegistry;
         $this->router = $router;

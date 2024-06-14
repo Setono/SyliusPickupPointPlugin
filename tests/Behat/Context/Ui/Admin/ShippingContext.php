@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Context\Ui\Admin;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Context\Ui\Admin;
 
 use Behat\Behat\Context\Context;
-use Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Admin\ShippingMethod\CreatePageInterface;
+use Setono\SyliusPickupPointPlugin\Tests\Behat\Page\Admin\ShippingMethod\CreatePageInterface;
 
 final class ShippingContext implements Context
 {

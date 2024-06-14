@@ -8,7 +8,7 @@
         "sylius-plugin"
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "ext-mbstring": "*",
         "behat/transliterator": "^1.5",
         "doctrine/event-manager": "^1.2",
@@ -33,35 +33,39 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "api-platform/core": "^2.7",
+        "api-platform/core": "^2.7.16",
+        "babdev/pagerfanta-bundle": "^3.8",
+        "behat/behat": "^3.14",
+        "doctrine/doctrine-bundle": "^2.11",
         "fakerphp/faker": "^1.21",
-        "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
+        "jms/serializer-bundle": "^4.2",
         "kriswallsmith/buzz": "^1.2",
-        "lexik/jwt-authentication-bundle": "^2.16",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.3",
+        "lexik/jwt-authentication-bundle": "^2.17",
+        "matthiasnoback/symfony-config-test": "^4.3 || ^5.1",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.3 || ^5.1",
         "nyholm/psr7": "^1.5",
         "phpspec/phpspec": "^7.3",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18",
+        "phpunit/phpunit": "^9.6.17",
+        "polishsymfonycommunity/symfony-mocker-container": "^1.0.7",
+        "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0",
-        "roave/security-advisories": "dev-latest",
         "setono/budbee-bundle": "^1.0",
-        "setono/code-quality-pack": "^2.4",
+        "setono/code-quality-pack": "^2.7",
         "setono/coolrunner-bundle": "^1.0",
         "setono/dao-bundle": "^1.1",
         "setono/gls-webservice-bundle": "^1.3",
-        "setono/post-nord-bundle": "^1.2",
+        "setono/post-nord-bundle": "^1.0",
         "setono/sylius-behat-pack": "^0.2",
-        "sylius/admin-api-bundle": "^1.11",
-        "sylius/sylius": "~1.10.14",
-        "symfony/debug-bundle": "^5.4 || ^6.0",
-        "symfony/dotenv": "^5.4 || ^6.0",
-        "symfony/property-info": "^5.4 || ^6.0",
-        "symfony/serializer": "^5.4 || ^6.0",
-        "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "symfony/webpack-encore-bundle": "^1.15",
-        "weirdan/doctrine-psalm-plugin": "^2.8"
+        "sylius/sylius": "~1.12.13",
+        "symfony/debug-bundle": "^5.4 || ^6.4",
+        "symfony/dotenv": "^5.4 || ^6.4",
+        "symfony/property-info": "^5.4 || ^6.4",
+        "symfony/serializer": "^5.4 || ^6.4",
+        "symfony/web-profiler-bundle": "^5.4 || ^6.4",
+        "symfony/webpack-encore-bundle": "^1.17.2",
+        "weirdan/doctrine-psalm-plugin": "^2.8",
+        "willdurand/negotiation": "^3.1"
     },
     "suggest": {
         "setono/coolrunner-bundle": "Install this bundle to use the CoolRunner provider",
@@ -77,7 +81,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Setono\\SyliusPickupPointPlugin\\": "tests/"
+            "Setono\\SyliusPickupPointPlugin\\Tests\\": "tests/"
         },
         "classmap": [
             "tests/Application/Kernel.php"
@@ -93,10 +97,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "analyse": [
-            "@ensure-test-container-exists",
-            "psalm"
-        ],
+        "analyse": "psalm",
         "behat": "php -d memory_limit=-1 vendor/bin/behat --no-interaction --format=progress",
         "check-style": "ecs check",
         "checks": [
@@ -105,7 +106,6 @@
             "@check-style",
             "@analyse"
         ],
-        "ensure-test-container-exists": "[[ -f tests/Application/var/cache/test/ApplicationTests_Setono_SyliusPickupPointPlugin_Application_KernelTestDebugContainer.xml ]] || tests/Application/bin/console cache:warmup --env=test",
         "fix-style": "ecs check --fix",
         "fixtures": "(cd tests/Application && bin/console sylius:fixtures:load --no-interaction -e ${SYMFONY_ENV:-'dev'})",
         "phpspec": "phpspec run",

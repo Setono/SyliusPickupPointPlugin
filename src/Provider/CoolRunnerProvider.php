@@ -50,7 +50,7 @@ final class CoolRunnerProvider extends Provider
                 $countryCode,
                 $street,
                 $postCode,
-                $city
+                $city,
             );
         } catch (\Throwable $e) {
             throw new TimeoutException($e);
@@ -103,7 +103,7 @@ final class CoolRunnerProvider extends Provider
         $pickupPoint->setCode(new PickupPointCode(
             $servicepoint->id,
             $this->getCode(),
-            $servicepoint->address->countryCode
+            $servicepoint->address->countryCode,
         ));
         $pickupPoint->setName($servicepoint->name);
         $pickupPoint->setAddress($servicepoint->address->street);

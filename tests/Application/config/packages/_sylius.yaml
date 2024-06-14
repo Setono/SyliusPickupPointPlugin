@@ -1,7 +1,6 @@
 imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
-    - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusApiBundle/Resources/config/app/config.yaml" }
 
@@ -19,7 +18,7 @@ sylius_shipping:
     resources:
         shipment:
             classes:
-                model: Tests\Setono\SyliusPickupPointPlugin\Application\Model\Shipment
+                model: Setono\SyliusPickupPointPlugin\Tests\Application\Model\Shipment
         shipping_method:
             classes:
-                model: Tests\Setono\SyliusPickupPointPlugin\Application\Model\ShippingMethod
+                model: Setono\SyliusPickupPointPlugin\Tests\Application\Model\ShippingMethod

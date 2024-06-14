@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\DependencyInjection;
+namespace Setono\SyliusPickupPointPlugin\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Setono\SyliusPickupPointPlugin\DependencyInjection\SetonoSyliusPickupPointExtension;

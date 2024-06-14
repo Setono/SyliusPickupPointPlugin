@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Application\Model;
+namespace Setono\SyliusPickupPointPlugin\Tests\Application\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointAwareTrait;
@@ -11,6 +11,7 @@ use Sylius\Component\Core\Model\Shipment as BaseShipment;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="sylius_shipment")
  */
 class Shipment extends BaseShipment implements ShipmentInterface

@@ -23,7 +23,7 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
     public function __construct(
         ServiceRegistryInterface $providerRegistry,
         PickupPointRepositoryInterface $pickupPointRepository,
-        EntityManagerInterface $pickupPointManager
+        EntityManagerInterface $pickupPointManager,
     ) {
         $this->providerRegistry = $providerRegistry;
         $this->pickupPointRepository = $pickupPointRepository;

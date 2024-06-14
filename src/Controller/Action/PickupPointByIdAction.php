@@ -20,7 +20,7 @@ final class PickupPointByIdAction
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        DataTransformerInterface $pickupPointToIdentifierTransformer
+        DataTransformerInterface $pickupPointToIdentifierTransformer,
     ) {
         $this->viewHandler = $viewHandler;
         $this->pickupPointToIdentifierTransformer = $pickupPointToIdentifierTransformer;

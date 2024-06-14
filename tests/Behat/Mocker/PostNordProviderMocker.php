@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Mocker;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Mocker;
 
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
@@ -31,7 +31,7 @@ class PostNordProviderMocker extends Provider
         ];
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): PickupPointInterface
     {
         $pickupPoint = new PickupPoint();
         $pickupPoint->setCode(new PickupPointCode(self::PICKUP_POINT_ID, $this->getCode(), 'DK'));

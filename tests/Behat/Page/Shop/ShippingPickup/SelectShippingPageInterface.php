@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusPickupPointPlugin\Behat\Page\Shop\ShippingPickup;
+namespace Setono\SyliusPickupPointPlugin\Tests\Behat\Page\Shop\ShippingPickup;
 
 use Sylius\Behat\Page\Shop\Checkout\SelectShippingPageInterface as BaseSelectShippingPageInterface;
 

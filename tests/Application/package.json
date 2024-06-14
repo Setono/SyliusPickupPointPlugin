@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "chart.js": "^2.9",
+        "chart.js": "^3.9",
         "jquery": "^3.6",
         "jquery.dirtyforms": "^2.0",
         "lightbox2": "^2.9",

@@ -33,7 +33,7 @@ final class PickupPointsSearchByCartAddressAction
         ViewHandlerInterface $viewHandler,
         CartContextInterface $cartContext,
         CsrfTokenManagerInterface $csrfTokenManager,
-        ServiceRegistryInterface $providerRegistry
+        ServiceRegistryInterface $providerRegistry,
     ) {
         $this->viewHandler = $viewHandler;
         $this->cartContext = $cartContext;
@@ -59,7 +59,7 @@ final class PickupPointsSearchByCartAddressAction
             throw new NotFoundHttpException(sprintf(
                 'Provider \'%s\' not recognized. Expecting one of: %s',
                 $providerCode,
-                implode(', ', array_keys($this->providerRegistry->all()))
+                implode(', ', array_keys($this->providerRegistry->all())),
             ));
         }
 
