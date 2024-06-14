@@ -76,7 +76,6 @@ jobs:
                     - "8.2"
 
                 dependencies:
-                    - "lowest"
                     - "highest"
                 
                 symfony:
