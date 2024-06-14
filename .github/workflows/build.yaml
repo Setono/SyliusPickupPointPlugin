@@ -228,7 +228,7 @@ jobs:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     php-version: "${{ matrix.php-version }}"
-                    tools: "flex"
+                    tools: "flex,symfony"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v3"
