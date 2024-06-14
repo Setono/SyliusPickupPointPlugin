@@ -17,6 +17,11 @@
         "Setono\\GLS\\Webservice\\Model\\ParcelShop",
         "Setono\\GlsWebserviceBundle\\SetonoGlsWebserviceBundle",
         "Setono\\PostNordBundle\\SetonoPostNordBundle",
-        "Setono\\PostNord\\Client\\ClientInterface"
+        "Setono\\PostNord\\Client\\ClientInterface",
+        "Setono\\PostNord\\Request\\Query\\ServicePoints\\ByIdsQuery",
+        "Setono\\PostNord\\Request\\Query\\ServicePoints\\NearestByAddressQuery",
+        "Setono\\PostNord\\Response\\ServicePoints\\ServicePoint",
+        "Symfony\\Component\\Security\\Csrf\\CsrfToken",
+        "Symfony\\Component\\Security\\Csrf\\CsrfTokenManagerInterface"
     ]
 }
