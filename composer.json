@@ -25,6 +25,7 @@
         "symfony/http-foundation": "^5.4 || ^6.0",
         "symfony/http-kernel": "^5.4 || ^6.0",
         "symfony/intl": "^5.4 || ^6.0",
+        "symfony/mailer": "^5.4 || ^6.0",
         "symfony/messenger": "^5.4 || ^6.0",
         "symfony/options-resolver": "^5.4 || ^6.0",
         "symfony/routing": "^5.4 || ^6.0",
@@ -55,7 +56,8 @@
         "setono/coolrunner-bundle": "^1.0",
         "setono/dao-bundle": "^1.1",
         "setono/gls-webservice-bundle": "^1.3",
-        "setono/post-nord-bundle": "^1.0",
+        "setono/post-nord-bundle": "^2.0@alpha",
+        "setono/post-nord-php-sdk": "^2.0@alpha",
         "setono/sylius-behat-pack": "^0.2",
         "sylius/sylius": "~1.12.13",
         "symfony/debug-bundle": "^5.4 || ^6.4",
@@ -89,10 +91,10 @@
     },
     "config": {
         "allow-plugins": {
-            "ergebnis/composer-normalize": true,
-            "symfony/thanks": false,
             "dealerdirect/phpcodesniffer-composer-installer": false,
-            "php-http/discovery": true
+            "ergebnis/composer-normalize": true,
+            "php-http/discovery": true,
+            "symfony/thanks": false
         },
         "sort-packages": true
     },
