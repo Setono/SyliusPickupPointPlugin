@@ -14,8 +14,6 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
         return [
             'providers' => [
                 'faker' => false,
-                'budbee' => false,
-                'coolrunner' => false,
                 'dao' => false,
                 'gls' => false,
                 'post_nord' => false,

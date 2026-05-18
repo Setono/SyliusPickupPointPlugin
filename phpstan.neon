@@ -9,8 +9,6 @@ parameters:
         - tests/Application/*
         # Carrier-specific providers reference classes from `suggest`-only bundles
         # that are not installed in this plugin's dev environment.
-        - src/Provider/BudbeeProvider.php
-        - src/Provider/CoolRunnerProvider.php
         - src/Provider/DAOProvider.php
         - src/Provider/GlsProvider.php
         - src/Provider/PostNordProvider.php

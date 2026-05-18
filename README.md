@@ -15,8 +15,6 @@ Add a `<select>` that contains pickup points to your shipping checkout step.
 - DAO
 - GLS
 - PostNord
-- Budbee
-- CoolRunner
 - Fake provider (for development/playing purposes — not enabled in `prod`)
 
 ## Compatibility
@@ -149,8 +147,6 @@ sylius_shipping:
 
 - `faker` will not work in the production environment
 - Each carrier provider requires its corresponding bundle to be installed:
-  - `budbee` → `setono/budbee-bundle`
-  - `coolrunner` → `setono/coolrunner-bundle`
   - `dao` → `setono/dao-bundle`
   - `gls` → `setono/gls-webservice-bundle`
   - `post_nord` → `setono/post-nord-bundle`
@@ -162,8 +158,6 @@ The carrier bundles are listed in this plugin's `suggest` section — install on
 setono_sylius_pickup_point:
     providers:
         faker: true
-        budbee: true
-        coolrunner: true
         gls: true
         post_nord: true
         dao: true

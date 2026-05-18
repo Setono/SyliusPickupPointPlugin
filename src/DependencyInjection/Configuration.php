@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
-use Setono\BudbeeBundle\SetonoBudbeeBundle;
-use Setono\CoolRunnerBundle\SetonoCoolRunnerBundle;
 use Setono\DAOBundle\SetonoDAOBundle;
 use Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle;
 use Setono\PostNordBundle\SetonoPostNordBundle;
@@ -31,14 +29,6 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('faker')
                             ->info('Whether to enable the Faker provider')
                             ->defaultValue(false)
-                        ->end()
-                        ->booleanNode('budbee')
-                            ->info('Whether to enable the Budbee provider')
-                            ->defaultValue(class_exists(SetonoBudbeeBundle::class))
-                        ->end()
-                        ->booleanNode('coolrunner')
-                            ->info('Whether to enable the CoolRunner provider')
-                            ->defaultValue(class_exists(SetonoCoolRunnerBundle::class))
                         ->end()
                         ->booleanNode('dao')
                             ->info('Whether to enable the DAO provider')

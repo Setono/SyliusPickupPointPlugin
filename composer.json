@@ -44,8 +44,6 @@
         "symfony/webpack-encore-bundle": "^2.2"
     },
     "suggest": {
-        "setono/budbee-bundle": "Install this bundle to use the Budbee provider",
-        "setono/coolrunner-bundle": "Install this bundle to use the CoolRunner provider",
         "setono/dao-bundle": "Install this bundle to use the DAO provider",
         "setono/gls-webservice-bundle": "Install this bundle to use the GLS provider",
         "setono/post-nord-bundle": "Install this bundle to use the PostNord provider"

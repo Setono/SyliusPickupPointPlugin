@@ -322,15 +322,33 @@ attributes.
 
 ## Carrier provider bundles
 
-The third-party carrier bundles (`setono/budbee-bundle`, `setono/coolrunner-bundle`,
-`setono/dao-bundle`, `setono/gls-webservice-bundle`, `setono/post-nord-bundle`)
-moved from `require-dev` to `suggest`. Each provider is enabled only when:
+The third-party carrier bundles (`setono/dao-bundle`,
+`setono/gls-webservice-bundle`, `setono/post-nord-bundle`) moved from
+`require-dev` to `suggest`. Each provider is enabled only when:
 
 1. The matching bundle is installed in your application.
 2. The provider is set to `true` in your plugin configuration.
 
 The plugin runtime continues to throw a configuration error if you enable a
 provider without the matching bundle.
+
+## Removed providers
+
+The Budbee (`Setono\SyliusPickupPointPlugin\Provider\BudbeeProvider`) and
+CoolRunner (`Setono\SyliusPickupPointPlugin\Provider\CoolRunnerProvider`)
+providers — along with their service definitions and configuration nodes
+— have been removed in 2.0. If you depended on either, switch to one of
+the remaining providers (DAO, GLS, PostNord, Faker) or implement your own
+`ProviderInterface` and tag it with `setono_sylius_pickup_point.provider`.
+Drop these keys from your application configuration:
+
+```yaml
+# Remove these — no longer supported
+setono_sylius_pickup_point:
+    providers:
+        budbee: true
+        coolrunner: true
+```
 
 ## Removed dev dependencies
 
