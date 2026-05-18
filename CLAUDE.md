@@ -54,6 +54,21 @@ When adding/changing a provider, the work happens in three places: the `Provider
 
 **Resource extension model (Sylius pattern).** Consumers extend `Sylius\Component\Core\Model\Shipment` with `PickupPointAwareTrait` (and implement `ShipmentInterface`) and similarly `ShippingMethod` with `PickupPointProviderAwareTrait`. The plugin's own `PickupPoint` resource is defined via `SyliusResourceBundle` (only ORM driver supported — see `SetonoSyliusPickupPointPlugin::getSupportedDrivers()`).
 
+## Working agreements
+
+- **Don't commit unless I say so.** Stage and run local checks freely, but
+  wait for an explicit instruction before running `git commit` (and before
+  `git push`).
+- **Verify UI changes with Playwright.** After any change that affects the
+  rendered admin/shop UI — twig hooks, form rendering, the shop JS, the
+  AJAX endpoints, checkout flow — drive the test app in a browser via the
+  `mcp__playwright__browser_*` tools (`browser_navigate`, `browser_snapshot`,
+  `browser_console_messages`, `browser_network_requests`, etc.) before
+  reporting the task done. Type checking and unit tests verify code
+  correctness, not feature correctness; the UI flow is the only check
+  that catches twig-hook misconfiguration, broken JSON shape, or missing
+  asset wiring.
+
 ## Constraints worth knowing
 
 - PHP `>=8.1`; CI matrix is PHP 8.1/8.2 × Symfony 5.4/6.4 × lowest/highest deps. Don't use 8.3+ syntax. (Coding-standards job pins 8.1 specifically to catch syntax that wouldn't parse on the lower bound.)
