@@ -75,7 +75,7 @@ automatically via `sylius_twig_hooks`. Consumers no longer need to:
 - include `@SetonoSyliusPickupPointPlugin/_javascripts.html.twig` manually in
   `layout.html.twig`; the plugin attaches it to `sylius_admin.base#javascripts`
   and `sylius_shop.base#javascripts`.
-- include `@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig`
+- include `@SetonoSyliusPickupPointPlugin/shop/label/shipment/pickupPoint.html.twig`
   in admin order-show templates; the plugin attaches it to
   `sylius_admin.order.show.content.sections.shipments.item`.
 

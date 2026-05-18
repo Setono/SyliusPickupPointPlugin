@@ -77,7 +77,7 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
     {
         $container->prependExtensionConfig('twig', [
             'form_themes' => [
-                '@SetonoSyliusPickupPointPlugin/Form/theme.html.twig',
+                '@SetonoSyliusPickupPointPlugin/form/theme.html.twig',
             ],
         ]);
 
@@ -97,25 +97,25 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
                 ],
                 'sylius_admin.order.show.content.sections.shipments.item' => [
                     'pickup_point' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig',
+                        'template' => '@SetonoSyliusPickupPointPlugin/shop/label/shipment/pickupPoint.html.twig',
                         'priority' => 150,
                     ],
                 ],
                 'sylius_admin.shipping_method.create.content.form.configuration' => [
                     'pickup_point_provider' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/Admin/ShippingMethod/Form/Configuration/pickupPointProvider.html.twig',
+                        'template' => '@SetonoSyliusPickupPointPlugin/admin/shipping_method/form/configuration/pickupPointProvider.html.twig',
                         'priority' => 50,
                     ],
                 ],
                 'sylius_admin.shipping_method.update.content.form.configuration' => [
                     'pickup_point_provider' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/Admin/ShippingMethod/Form/Configuration/pickupPointProvider.html.twig',
+                        'template' => '@SetonoSyliusPickupPointPlugin/admin/shipping_method/form/configuration/pickupPointProvider.html.twig',
                         'priority' => 50,
                     ],
                 ],
                 'sylius_shop.checkout.select_shipping.content.form.shipments.shipment' => [
                     'pickup_point' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/Shop/Checkout/SelectShipping/Shipment/pickupPoint.html.twig',
+                        'template' => '@SetonoSyliusPickupPointPlugin/shop/checkout/select_shipping/shipment/pickupPoint.html.twig',
                         'priority' => -100,
                     ],
                 ],
