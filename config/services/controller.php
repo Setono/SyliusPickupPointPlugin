@@ -13,11 +13,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(PickupPointsSearchByCartAddressAction::class)
         ->args([
-            service('serializer'),
-            service('sylius.context.cart.composite'),
+            service('sylius.context.cart'),
             service('setono_sylius_pickup_point.registry.provider'),
         ])
-        ->tag('controller.service_arguments')
+        ->public()
     ;
 
     $services->set(PickupPointByIdAction::class)
@@ -25,6 +24,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('serializer'),
             service(PickupPointToIdentifierTransformer::class),
         ])
-        ->tag('controller.service_arguments')
+        ->public()
     ;
 };

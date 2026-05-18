@@ -13,12 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class PickupPointsSearchByCartAddressAction
 {
     public function __construct(
-        private SerializerInterface $serializer,
         private CartContextInterface $cartContext,
         private ServiceRegistryInterface $providerRegistry,
     ) {
@@ -44,13 +42,7 @@ final readonly class PickupPointsSearchByCartAddressAction
 
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($providerCode);
-        $pickupPoints = $provider->findPickupPoints($order);
 
-        return new JsonResponse(
-            $this->serializer->serialize($pickupPoints, 'json'),
-            Response::HTTP_OK,
-            [],
-            true,
-        );
+        return new JsonResponse($provider->findPickupPoints($order));
     }
 }
