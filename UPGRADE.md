@@ -160,22 +160,37 @@ nothing in the plugin calls it anymore, it has been dropped from the interface
 and from every shipped provider implementation. Custom providers that still
 declare it should remove the method to match the interface.
 
-`Setono\SyliusPickupPointPlugin\Model\PickupPoint` and
-`Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` are removed.
-Their replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a
-plain DTO with public properties, populated from a carrier API response
-rather than from Doctrine. The data exposed by the AJAX endpoints
-(`Detailed` / `Autocomplete` groups) is unchanged. Consumers that hand-built
-or type-hinted `PickupPointInterface` should switch to the new DTO and
-replace setter calls with direct property assignment:
+`Setono\SyliusPickupPointPlugin\Model\PickupPoint`,
+`Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` and
+`Setono\SyliusPickupPointPlugin\Model\PickupPointCode` are removed. The
+replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a plain
+DTO with public properties, populated from a carrier API response rather
+than from Doctrine. The `PickupPointCode` value object has been inlined as
+three plain `provider`, `id` and `country` properties on the DTO, and the
+wire-format string (`provider---id---country`) is now produced by
+`PickupPoint::getCodeValue()`. Provider implementations now receive the id
+and country as separate string arguments:
+
+```php
+public function findPickupPoint(string $id, string $country): ?PickupPoint;
+```
+
+The data exposed by the AJAX endpoints (`Detailed` / `Autocomplete` groups)
+is unchanged. Consumers that hand-built or type-hinted
+`PickupPointInterface` should switch to the new DTO and replace setter
+calls with direct property assignment:
 
 ```php
 // 1.x / early 2.x
 $pickupPoint = new \Setono\SyliusPickupPointPlugin\Model\PickupPoint();
+$pickupPoint->setCode(new \Setono\SyliusPickupPointPlugin\Model\PickupPointCode('abc', 'gls', 'DK'));
 $pickupPoint->setName('Aalborg Centrum');
 
 // 2.x
 $pickupPoint = new \Setono\SyliusPickupPointPlugin\DTO\PickupPoint();
+$pickupPoint->provider = 'gls';
+$pickupPoint->id = 'abc';
+$pickupPoint->country = 'DK';
 $pickupPoint->name = 'Aalborg Centrum';
 ```
 

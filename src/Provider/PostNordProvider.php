@@ -9,7 +9,6 @@ use Setono\PostNord\Request\Query\ServicePoints\ByIdsQuery;
 use Setono\PostNord\Request\Query\ServicePoints\NearestByAddressQuery;
 use Setono\PostNord\Response\ServicePoints\ServicePoint;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -68,11 +67,11 @@ final class PostNordProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(string $id, string $country): ?PickupPoint
     {
         $result = $this->client->servicePoints()->getByIds(ByIdsQuery::create(
-            ids: [$code->getIdPart()],
-            countryCode: $code->getCountryPart(),
+            ids: [$id],
+            countryCode: $country,
         ));
 
         if ([] === $result->servicePoints) {
@@ -95,11 +94,8 @@ final class PostNordProvider extends Provider
     private function transform(ServicePoint $servicePoint): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->code = new PickupPointCode(
-            $servicePoint->servicePointId,
-            $this->getCode(),
-            $servicePoint->visitingAddress->countryCode,
-        );
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $servicePoint->servicePointId;
         $pickupPoint->name = $servicePoint->name;
         $pickupPoint->address = $servicePoint->visitingAddress->streetName . ' ' . $servicePoint->visitingAddress->streetNumber;
         $pickupPoint->zipCode = $servicePoint->visitingAddress->postalCode;

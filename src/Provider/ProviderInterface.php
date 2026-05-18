@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
@@ -29,5 +28,5 @@ interface ProviderInterface
      */
     public function findPickupPoints(OrderInterface $order): iterable;
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint;
+    public function findPickupPoint(string $id, string $country): ?PickupPoint;
 }

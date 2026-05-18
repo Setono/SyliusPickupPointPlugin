@@ -7,7 +7,6 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Setono\CoolRunner\Client\ClientInterface;
 use Setono\CoolRunner\DTO\Servicepoint;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class CoolRunnerProvider extends Provider
@@ -47,9 +46,9 @@ final class CoolRunnerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(string $id, string $country): ?PickupPoint
     {
-        $servicepoint = $this->client->servicepoints()->findById($this->carrier, $code->getIdPart());
+        $servicepoint = $this->client->servicepoints()->findById($this->carrier, $id);
         if (null === $servicepoint) {
             return null;
         }
@@ -70,11 +69,8 @@ final class CoolRunnerProvider extends Provider
     private function transform(Servicepoint $servicepoint): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->code = new PickupPointCode(
-            $servicepoint->id,
-            $this->getCode(),
-            $servicepoint->address->countryCode,
-        );
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $servicepoint->id;
         $pickupPoint->name = $servicepoint->name;
         $pickupPoint->address = $servicepoint->address->street;
         $pickupPoint->zipCode = $servicepoint->address->zipCode;

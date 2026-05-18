@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use function sprintf;
 use Sylius\Component\Registry\ServiceRegistryInterface;
@@ -21,7 +20,7 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
     /**
      * @param mixed|PickupPoint $value
      */
-    public function transform($value): ?PickupPointCode
+    public function transform($value): ?string
     {
         if (null === $value) {
             return null;
@@ -33,7 +32,7 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             );
         }
 
-        return $value->code;
+        return $value->getCodeValue();
     }
 
     /**
@@ -49,11 +48,16 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             throw new TransformationFailedException(sprintf('Expected string, got "%s"', get_debug_type($value)));
         }
 
-        $pickupPointId = PickupPointCode::createFromString($value);
+        $parts = explode('---', $value);
+        if (3 !== count($parts)) {
+            throw new TransformationFailedException(sprintf('Expected "provider---id---country", got "%s"', $value));
+        }
+
+        [$providerCode, $id, $country] = $parts;
 
         /** @var ProviderInterface $provider */
-        $provider = $this->providerRegistry->get($pickupPointId->getProviderPart());
+        $provider = $this->providerRegistry->get($providerCode);
 
-        return $provider->findPickupPoint($pickupPointId);
+        return $provider->findPickupPoint($id, $country);
     }
 }

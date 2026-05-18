@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\DTO;
 
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 final class PickupPoint
 {
-    public ?PickupPointCode $code = null;
+    public ?string $provider = null;
+
+    public ?string $id = null;
 
     #[Groups(['Detailed', 'Autocomplete'])]
     public ?string $name = null;
@@ -33,7 +34,11 @@ final class PickupPoint
     #[SerializedName('code')]
     public function getCodeValue(): ?string
     {
-        return $this->code?->getValue();
+        if (null === $this->provider || null === $this->id || null === $this->country) {
+            return null;
+        }
+
+        return sprintf('%s---%s---%s', $this->provider, $this->id, $this->country);
     }
 
     #[Groups(['Detailed', 'Autocomplete'])]

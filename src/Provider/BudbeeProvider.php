@@ -7,7 +7,6 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Setono\Budbee\Client\ClientInterface;
 use Setono\Budbee\DTO\Box;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class BudbeeProvider extends Provider
@@ -44,9 +43,9 @@ final class BudbeeProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(string $id, string $country): ?PickupPoint
     {
-        $box = $this->client->boxes()->getLockerByIdentifier($code->getIdPart());
+        $box = $this->client->boxes()->getLockerByIdentifier($id);
         if (null === $box) {
             return null;
         }
@@ -67,11 +66,8 @@ final class BudbeeProvider extends Provider
     private function transform(Box $box): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->code = new PickupPointCode(
-            $box->id,
-            $this->getCode(),
-            $box->address->country,
-        );
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $box->id;
         $pickupPoint->name = $box->name;
         $pickupPoint->address = $box->address->street;
         $pickupPoint->zipCode = $box->address->postalCode;

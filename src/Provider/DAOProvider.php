@@ -7,7 +7,6 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use function preg_replace;
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class DAOProvider extends Provider
@@ -36,10 +35,10 @@ final class DAOProvider extends Provider
         ]);
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
+    public function findPickupPoint(string $id, string $country): ?PickupPoint
     {
         foreach ($this->_findPickupPoints([
-            'shopid' => $code->getIdPart(),
+            'shopid' => $id,
         ]) as $pickupPoint) {
             return $pickupPoint;
         }
@@ -80,7 +79,8 @@ final class DAOProvider extends Provider
         $countryCode = 'DK'; // DAO only operates in Denmark
 
         $pickupPoint = new PickupPoint();
-        $pickupPoint->code = new PickupPointCode($servicePoint['shopId'], $this->getCode(), $countryCode);
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $servicePoint['shopId'];
         $pickupPoint->name = $servicePoint['navn'];
         $pickupPoint->address = $servicePoint['adresse'];
         $pickupPoint->zipCode = $servicePoint['postnr'];
