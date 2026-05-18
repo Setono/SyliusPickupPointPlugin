@@ -30,11 +30,4 @@ interface ProviderInterface
     public function findPickupPoints(OrderInterface $order): iterable;
 
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface;
-
-    /**
-     * Returns all pickup points for this provider
-     *
-     * @return iterable<PickupPointInterface>
-     */
-    public function findAllPickupPoints(): iterable;
 }

@@ -10,8 +10,6 @@ use Webmozart\Assert\Assert;
 
 class PickupPoint implements PickupPointInterface
 {
-    protected ?int $id = null;
-
     protected ?PickupPointCode $code = null;
 
     #[Groups(['Detailed', 'Autocomplete'])]
@@ -30,11 +28,6 @@ class PickupPoint implements PickupPointInterface
 
     #[Groups(['Detailed', 'Autocomplete'])]
     protected ?float $longitude = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getCode(): ?PickupPointCode
     {

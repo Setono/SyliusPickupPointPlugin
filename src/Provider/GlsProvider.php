@@ -6,7 +6,6 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use function preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
-use Setono\GLS\Webservice\Exception\NoResultException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
 use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
@@ -18,7 +17,6 @@ final class GlsProvider extends Provider
 {
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly array $countryCodes = ['DK', 'SE'],
     ) {
     }
 
@@ -60,21 +58,6 @@ final class GlsProvider extends Provider
         }
 
         return $this->transform($parcelShop);
-    }
-
-    public function findAllPickupPoints(): iterable
-    {
-        try {
-            foreach ($this->countryCodes as $countryCode) {
-                $parcelShops = $this->client->getAllParcelShops($countryCode);
-
-                foreach ($parcelShops as $item) {
-                    yield $this->transform($item);
-                }
-            }
-        } catch (NoResultException) {
-            return [];
-        }
     }
 
     public function getCode(): string

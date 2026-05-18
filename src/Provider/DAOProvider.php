@@ -48,14 +48,6 @@ final class DAOProvider extends Provider
         return null;
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        yield from $this->_findPickupPoints([
-            'postnr' => '9999', // Notice that this is a hack to get all pickup points
-            'antal' => 5000,
-        ]);
-    }
-
     /**
      * @return iterable<PickupPointInterface>
      */

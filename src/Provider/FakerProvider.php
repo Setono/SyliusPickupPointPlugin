@@ -42,13 +42,6 @@ final class FakerProvider extends Provider
         return $this->createFakePickupPoint($code->getIdPart(), $code->getCountryPart());
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        for ($i = 0; $i < 10; ++$i) {
-            yield $this->createFakePickupPoint((string) $i);
-        }
-    }
-
     public function getCode(): string
     {
         return 'faker';

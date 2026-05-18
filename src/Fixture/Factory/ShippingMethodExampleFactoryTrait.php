@@ -9,9 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 trait ShippingMethodExampleFactoryTrait
 {
-    /**
-     * @param array<string, mixed> $options
-     */
     protected function setPickupPointOptions(ShippingMethodInterface $shippingMethod, array $options): void
     {
         if (!array_key_exists('pickup_point_provider', $options)) {

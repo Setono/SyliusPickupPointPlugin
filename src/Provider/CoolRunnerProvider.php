@@ -58,11 +58,6 @@ final class CoolRunnerProvider extends Provider
         return $this->transform($servicepoint);
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        return [];
-    }
-
     public function getCode(): string
     {
         return sprintf('coolrunner_%s', $this->carrier);

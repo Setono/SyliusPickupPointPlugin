@@ -55,11 +55,6 @@ final class BudbeeProvider extends Provider
         return $this->transform($box);
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        return [];
-    }
-
     public function getCode(): string
     {
         return 'budbee';

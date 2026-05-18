@@ -151,9 +151,19 @@ setono_sylius_pickup_point:
 ```
 
 Generate a migration with `bin/console doctrine:migrations:diff` to drop the
-two plugin-owned tables. Each provider still implements `findPickupPoints()`,
-`findPickupPoint()` and `findAllPickupPoints()` directly against the carrier
-API.
+two plugin-owned tables. Each provider still implements `findPickupPoints()`
+and `findPickupPoint()` directly against the carrier API.
+
+`Setono\SyliusPickupPointPlugin\Provider\ProviderInterface::findAllPickupPoints()`
+was the entry point used by the now-removed `LoadPickupPointsHandler`. Since
+nothing in the plugin calls it anymore, it has been dropped from the interface
+and from every shipped provider implementation. Custom providers that still
+declare it should remove the method to match the interface.
+
+`Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` no longer extends
+`Sylius\Component\Resource\Model\ResourceInterface` — `PickupPoint` is now a
+plain DTO populated from a carrier API response, not a Doctrine entity.
+Consumers that relied on `$pickupPoint->getId()` should drop those calls.
 
 ## Doctrine mappings
 

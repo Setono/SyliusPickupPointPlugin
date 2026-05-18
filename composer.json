@@ -13,7 +13,6 @@
         "doctrine/dbal": "^3.0 || ^4.0",
         "doctrine/orm": "^3.0",
         "fakerphp/faker": "^1.21",
-        "psr/http-client": "^1.0",
         "sylius/core": "^2.0",
         "sylius/core-bundle": "^2.0",
         "sylius/order": "^2.0",

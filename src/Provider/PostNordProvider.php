@@ -83,12 +83,6 @@ final class PostNordProvider extends Provider
         return $this->transform($result->servicePoints[0]);
     }
 
-    public function findAllPickupPoints(): iterable
-    {
-        // todo implement this
-        return [];
-    }
-
     public function getCode(): string
     {
         return 'post_nord';

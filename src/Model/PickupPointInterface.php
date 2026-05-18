@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
-use Sylius\Component\Resource\Model\ResourceInterface;
-
-interface PickupPointInterface extends ResourceInterface
+interface PickupPointInterface
 {
     public function getCode(): ?PickupPointCode;
 
