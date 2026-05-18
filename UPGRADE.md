@@ -160,10 +160,24 @@ nothing in the plugin calls it anymore, it has been dropped from the interface
 and from every shipped provider implementation. Custom providers that still
 declare it should remove the method to match the interface.
 
-`Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` no longer extends
-`Sylius\Component\Resource\Model\ResourceInterface` — `PickupPoint` is now a
-plain DTO populated from a carrier API response, not a Doctrine entity.
-Consumers that relied on `$pickupPoint->getId()` should drop those calls.
+`Setono\SyliusPickupPointPlugin\Model\PickupPoint` and
+`Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` are removed.
+Their replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a
+plain DTO with public properties, populated from a carrier API response
+rather than from Doctrine. The data exposed by the AJAX endpoints
+(`Detailed` / `Autocomplete` groups) is unchanged. Consumers that hand-built
+or type-hinted `PickupPointInterface` should switch to the new DTO and
+replace setter calls with direct property assignment:
+
+```php
+// 1.x / early 2.x
+$pickupPoint = new \Setono\SyliusPickupPointPlugin\Model\PickupPoint();
+$pickupPoint->setName('Aalborg Centrum');
+
+// 2.x
+$pickupPoint = new \Setono\SyliusPickupPointPlugin\DTO\PickupPoint();
+$pickupPoint->name = 'Aalborg Centrum';
+```
 
 ## Doctrine mappings
 

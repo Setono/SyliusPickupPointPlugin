@@ -6,9 +6,8 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Faker\Factory;
 use Faker\Generator;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
@@ -37,7 +36,7 @@ final class FakerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): PickupPoint
     {
         return $this->createFakePickupPoint($code->getIdPart(), $code->getCountryPart());
     }
@@ -52,21 +51,21 @@ final class FakerProvider extends Provider
         return 'Faker';
     }
 
-    private function createFakePickupPoint(string $index, ?string $countryCode = null): PickupPointInterface
+    private function createFakePickupPoint(string $index, ?string $countryCode = null): PickupPoint
     {
         if (null === $countryCode) {
             $countryCode = $this->faker->countryCode;
         }
 
         $pickupPoint = new PickupPoint();
-        $pickupPoint->setCode(new PickupPointCode($index, $this->getCode(), $countryCode));
-        $pickupPoint->setName("Post office #$index");
-        $pickupPoint->setAddress($this->faker->streetAddress);
-        $pickupPoint->setZipCode((string) $this->faker->numberBetween(11111, 99999));
-        $pickupPoint->setCity($this->faker->city);
-        $pickupPoint->setCountry($countryCode);
-        $pickupPoint->setLatitude($this->faker->latitude);
-        $pickupPoint->setLongitude($this->faker->longitude);
+        $pickupPoint->code = new PickupPointCode($index, $this->getCode(), $countryCode);
+        $pickupPoint->name = "Post office #$index";
+        $pickupPoint->address = $this->faker->streetAddress;
+        $pickupPoint->zipCode = (string) $this->faker->numberBetween(11111, 99999);
+        $pickupPoint->city = $this->faker->city;
+        $pickupPoint->country = $countryCode;
+        $pickupPoint->latitude = $this->faker->latitude;
+        $pickupPoint->longitude = $this->faker->longitude;
 
         return $pickupPoint;
     }

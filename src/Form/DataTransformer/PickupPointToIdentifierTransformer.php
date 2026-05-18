@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use function sprintf;
 use Sylius\Component\Registry\ServiceRegistryInterface;
@@ -19,7 +19,7 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
     }
 
     /**
-     * @param mixed|PickupPointInterface $value
+     * @param mixed|PickupPoint $value
      */
     public function transform($value): ?PickupPointCode
     {
@@ -27,15 +27,19 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             return null;
         }
 
-        $this->assertTransformationValueType($value, PickupPointInterface::class);
+        if (!$value instanceof PickupPoint) {
+            throw new TransformationFailedException(
+                sprintf('Expected "%s", but got "%s"', PickupPoint::class, get_debug_type($value)),
+            );
+        }
 
-        return $value->getCode();
+        return $value->code;
     }
 
     /**
      * @param mixed $value
      */
-    public function reverseTransform($value): ?PickupPointInterface
+    public function reverseTransform($value): ?PickupPoint
     {
         if (null === $value) {
             return null;
@@ -50,32 +54,6 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
         /** @var ProviderInterface $provider */
         $provider = $this->providerRegistry->get($pickupPointId->getProviderPart());
 
-        /** @var PickupPointInterface $pickupPoint */
-        $pickupPoint = $provider->findPickupPoint($pickupPointId);
-
-        $this->assertTransformationValueType($pickupPoint, PickupPointInterface::class);
-
-        return $pickupPoint;
-    }
-
-    /**
-     * @template ExpectedType of object
-     *
-     * @param mixed $value
-     * @param class-string<ExpectedType> $expectedType
-     *
-     * @psalm-assert ExpectedType $value
-     */
-    private function assertTransformationValueType($value, string $expectedType): void
-    {
-        if (!$value instanceof $expectedType) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'Expected "%s", but got "%s"',
-                    $expectedType,
-                    get_debug_type($value),
-                ),
-            );
-        }
+        return $provider->findPickupPoint($pickupPointId);
     }
 }

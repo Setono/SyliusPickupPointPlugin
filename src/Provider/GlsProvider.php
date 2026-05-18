@@ -8,9 +8,8 @@ use function preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class GlsProvider extends Provider
@@ -49,7 +48,7 @@ final class GlsProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         try {
             $parcelShop = $this->client->getOneParcelShop($code->getIdPart());
@@ -70,17 +69,17 @@ final class GlsProvider extends Provider
         return 'GLS';
     }
 
-    private function transform(ParcelShop $parcelShop): PickupPointInterface
+    private function transform(ParcelShop $parcelShop): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->setCode(new PickupPointCode($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()));
-        $pickupPoint->setName($parcelShop->getCompanyName());
-        $pickupPoint->setAddress($parcelShop->getStreetName());
-        $pickupPoint->setZipCode($parcelShop->getZipCode());
-        $pickupPoint->setCity($parcelShop->getCity());
-        $pickupPoint->setCountry($parcelShop->getCountryCode());
-        $pickupPoint->setLatitude((float) $parcelShop->getLatitude());
-        $pickupPoint->setLongitude((float) $parcelShop->getLongitude());
+        $pickupPoint->code = new PickupPointCode($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode());
+        $pickupPoint->name = $parcelShop->getCompanyName();
+        $pickupPoint->address = $parcelShop->getStreetName();
+        $pickupPoint->zipCode = $parcelShop->getZipCode();
+        $pickupPoint->city = $parcelShop->getCity();
+        $pickupPoint->country = $parcelShop->getCountryCode();
+        $pickupPoint->latitude = (float) $parcelShop->getLatitude();
+        $pickupPoint->longitude = (float) $parcelShop->getLongitude();
 
         return $pickupPoint;
     }

@@ -6,9 +6,8 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\Budbee\Client\ClientInterface;
 use Setono\Budbee\DTO\Box;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class BudbeeProvider extends Provider
@@ -45,7 +44,7 @@ final class BudbeeProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         $box = $this->client->boxes()->getLockerByIdentifier($code->getIdPart());
         if (null === $box) {
@@ -65,21 +64,21 @@ final class BudbeeProvider extends Provider
         return 'Budbee';
     }
 
-    private function transform(Box $box): PickupPointInterface
+    private function transform(Box $box): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->setCode(new PickupPointCode(
+        $pickupPoint->code = new PickupPointCode(
             $box->id,
             $this->getCode(),
             $box->address->country,
-        ));
-        $pickupPoint->setName($box->name);
-        $pickupPoint->setAddress($box->address->street);
-        $pickupPoint->setZipCode($box->address->postalCode);
-        $pickupPoint->setCity($box->address->city);
-        $pickupPoint->setCountry($box->address->country);
-        $pickupPoint->setLatitude($box->address->coordinate->latitude);
-        $pickupPoint->setLongitude($box->address->coordinate->longitude);
+        );
+        $pickupPoint->name = $box->name;
+        $pickupPoint->address = $box->address->street;
+        $pickupPoint->zipCode = $box->address->postalCode;
+        $pickupPoint->city = $box->address->city;
+        $pickupPoint->country = $box->address->country;
+        $pickupPoint->latitude = $box->address->coordinate->latitude;
+        $pickupPoint->longitude = $box->address->coordinate->longitude;
 
         return $pickupPoint;
     }

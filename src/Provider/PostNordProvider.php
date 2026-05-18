@@ -8,9 +8,8 @@ use Setono\PostNord\Client\ClientInterface;
 use Setono\PostNord\Request\Query\ServicePoints\ByIdsQuery;
 use Setono\PostNord\Request\Query\ServicePoints\NearestByAddressQuery;
 use Setono\PostNord\Response\ServicePoints\ServicePoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -69,7 +68,7 @@ final class PostNordProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         $result = $this->client->servicePoints()->getByIds(ByIdsQuery::create(
             ids: [$code->getIdPart()],
@@ -93,19 +92,19 @@ final class PostNordProvider extends Provider
         return 'PostNord';
     }
 
-    private function transform(ServicePoint $servicePoint): PickupPointInterface
+    private function transform(ServicePoint $servicePoint): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->setCode(new PickupPointCode(
+        $pickupPoint->code = new PickupPointCode(
             $servicePoint->servicePointId,
             $this->getCode(),
             $servicePoint->visitingAddress->countryCode,
-        ));
-        $pickupPoint->setName($servicePoint->name);
-        $pickupPoint->setAddress($servicePoint->visitingAddress->streetName . ' ' . $servicePoint->visitingAddress->streetNumber);
-        $pickupPoint->setZipCode($servicePoint->visitingAddress->postalCode);
-        $pickupPoint->setCity($servicePoint->visitingAddress->city);
-        $pickupPoint->setCountry($servicePoint->visitingAddress->countryCode);
+        );
+        $pickupPoint->name = $servicePoint->name;
+        $pickupPoint->address = $servicePoint->visitingAddress->streetName . ' ' . $servicePoint->visitingAddress->streetNumber;
+        $pickupPoint->zipCode = $servicePoint->visitingAddress->postalCode;
+        $pickupPoint->city = $servicePoint->visitingAddress->city;
+        $pickupPoint->country = $servicePoint->visitingAddress->countryCode;
 
         return $pickupPoint;
     }

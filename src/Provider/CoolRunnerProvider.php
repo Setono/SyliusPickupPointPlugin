@@ -6,9 +6,8 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\CoolRunner\Client\ClientInterface;
 use Setono\CoolRunner\DTO\Servicepoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class CoolRunnerProvider extends Provider
@@ -48,7 +47,7 @@ final class CoolRunnerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint
     {
         $servicepoint = $this->client->servicepoints()->findById($this->carrier, $code->getIdPart());
         if (null === $servicepoint) {
@@ -68,21 +67,21 @@ final class CoolRunnerProvider extends Provider
         return sprintf('CoolRunner %s', ucfirst($this->carrier));
     }
 
-    private function transform(Servicepoint $servicepoint): PickupPointInterface
+    private function transform(Servicepoint $servicepoint): PickupPoint
     {
         $pickupPoint = new PickupPoint();
-        $pickupPoint->setCode(new PickupPointCode(
+        $pickupPoint->code = new PickupPointCode(
             $servicepoint->id,
             $this->getCode(),
             $servicepoint->address->countryCode,
-        ));
-        $pickupPoint->setName($servicepoint->name);
-        $pickupPoint->setAddress($servicepoint->address->street);
-        $pickupPoint->setZipCode($servicepoint->address->zipCode);
-        $pickupPoint->setCity($servicepoint->address->city);
-        $pickupPoint->setCountry($servicepoint->address->countryCode);
-        $pickupPoint->setLatitude($servicepoint->coordinates->latitude);
-        $pickupPoint->setLongitude($servicepoint->coordinates->longitude);
+        );
+        $pickupPoint->name = $servicepoint->name;
+        $pickupPoint->address = $servicepoint->address->street;
+        $pickupPoint->zipCode = $servicepoint->address->zipCode;
+        $pickupPoint->city = $servicepoint->address->city;
+        $pickupPoint->country = $servicepoint->address->countryCode;
+        $pickupPoint->latitude = $servicepoint->coordinates->latitude;
+        $pickupPoint->longitude = $servicepoint->coordinates->longitude;
 
         return $pickupPoint;
     }

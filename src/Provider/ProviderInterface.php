@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
@@ -25,9 +25,9 @@ interface ProviderInterface
     /**
      * Will return an array of pickup points
      *
-     * @return iterable<PickupPointInterface>
+     * @return iterable<PickupPoint>
      */
     public function findPickupPoints(OrderInterface $order): iterable;
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface;
+    public function findPickupPoint(PickupPointCode $code): ?PickupPoint;
 }
