@@ -79,6 +79,12 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
 
     public function prepend(ContainerBuilder $container): void
     {
+        $container->prependExtensionConfig('twig', [
+            'form_themes' => [
+                '@SetonoSyliusPickupPointPlugin/Form/theme.html.twig',
+            ],
+        ]);
+
         $container->prependExtensionConfig('sylius_twig_hooks', [
             'hooks' => [
                 'sylius_admin.base#javascripts' => [
@@ -97,6 +103,24 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
                     'pickup_point' => [
                         'template' => '@SetonoSyliusPickupPointPlugin/Shop/Label/Shipment/pickupPoint.html.twig',
                         'priority' => 150,
+                    ],
+                ],
+                'sylius_admin.shipping_method.create.content.form.configuration' => [
+                    'pickup_point_provider' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/Admin/ShippingMethod/Form/Configuration/pickupPointProvider.html.twig',
+                        'priority' => 50,
+                    ],
+                ],
+                'sylius_admin.shipping_method.update.content.form.configuration' => [
+                    'pickup_point_provider' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/Admin/ShippingMethod/Form/Configuration/pickupPointProvider.html.twig',
+                        'priority' => 50,
+                    ],
+                ],
+                'sylius_shop.checkout.select_shipping.content.form.shipments.shipment' => [
+                    'pickup_point' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/Shop/Checkout/SelectShipping/Shipment/pickupPoint.html.twig',
+                        'priority' => -100,
                     ],
                 ],
             ],
