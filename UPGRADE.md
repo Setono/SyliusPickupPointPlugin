@@ -22,9 +22,14 @@
 | `sylius/resource-bundle` | Removed (no plugin-owned resource anymore) |
 
 The plugin no longer depends on FOSRestBundle or JMS Serializer. The AJAX
-endpoints now return a `JsonResponse` produced by `Symfony\Component\Serializer\SerializerInterface`,
-and serialization groups (`Detailed`, `Autocomplete`) are declared via
-`#[Groups]` PHP attributes on `Setono\SyliusPickupPointPlugin\Model\PickupPoint`.
+endpoints now return a `JsonResponse` produced by
+`Symfony\Component\Serializer\SerializerInterface`, serializing all public
+properties of `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` (no
+serialization-group filter is applied). If you previously read
+`response.code` or `response.full_address` off the AJAX response, those
+fields are no longer emitted server-side — `code` is composed client-side
+from `provider---id---country` and `full_address` from
+`${address}, ${zipCode} ${city}` in `public/js/setono-pickup-point.js`.
 
 ## Plugin file layout
 
@@ -43,7 +48,7 @@ The plugin moved from `src/Resources/**` to repo-root locations
 | `src/Resources/config/routes/`               | `config/routes/`        |
 | `src/Resources/config/app/config.yaml`       | (removed — inlined via `Extension::prepend()`) |
 | `src/Resources/config/app/fixtures.yaml`     | (removed — example data, copy into your test app if needed) |
-| `src/Resources/config/serializer/PickupPoint.yml` | (removed — replaced by `#[Groups]` attributes on the model) |
+| `src/Resources/config/serializer/PickupPoint.yml` | (removed — the DTO has no serializer metadata, the endpoint emits every public property) |
 | `src/Resources/translations/`                | `translations/`         |
 | `src/Resources/views/`                       | `templates/`            |
 | `src/Resources/public/`                      | `public/`               |
@@ -163,22 +168,32 @@ declare it should remove the method to match the interface.
 `Setono\SyliusPickupPointPlugin\Model\PickupPoint`,
 `Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` and
 `Setono\SyliusPickupPointPlugin\Model\PickupPointCode` are removed. The
-replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a plain
-DTO with public properties, populated from a carrier API response rather
-than from Doctrine. The `PickupPointCode` value object has been inlined as
-three plain `provider`, `id` and `country` properties on the DTO, and the
-wire-format string (`provider---id---country`) is now produced by
-`PickupPoint::getCodeValue()`. Provider implementations now receive the id
-and country as separate string arguments:
+replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a final
+class with public scalar properties and nothing else (no methods, no
+`#[Groups]` / `#[SerializedName]` attributes). It's populated from the
+carrier API response by each provider, and the values are emitted directly
+by the AJAX endpoints.
+
+The `PickupPointCode` value object has been inlined as three plain
+`provider`, `id` and `country` properties on the DTO. The wire-format
+string (`provider---id---country`) is no longer produced by a DTO method —
+it lives in two places now:
+
+- `PickupPointToIdentifierTransformer::transform()` builds it from the DTO
+  before handing it back to the form as the hidden-input value.
+- The shop JS (`public/js/setono-pickup-point.js`) composes it client-side
+  when rendering the radio prototype.
+
+Provider implementations now receive the id and country as separate string
+arguments:
 
 ```php
 public function findPickupPoint(string $id, string $country): ?PickupPoint;
 ```
 
-The data exposed by the AJAX endpoints (`Detailed` / `Autocomplete` groups)
-is unchanged. Consumers that hand-built or type-hinted
-`PickupPointInterface` should switch to the new DTO and replace setter
-calls with direct property assignment:
+Consumers that hand-built or type-hinted `PickupPointInterface` should
+switch to the new DTO and replace setter calls with direct property
+assignment:
 
 ```php
 // 1.x / early 2.x
@@ -192,6 +207,109 @@ $pickupPoint->provider = 'gls';
 $pickupPoint->id = 'abc';
 $pickupPoint->country = 'DK';
 $pickupPoint->name = 'Aalborg Centrum';
+```
+
+## `PickupPointAwareInterface`: deprecated id getter, new DTO getter
+
+`PickupPointAwareInterface` (and `PickupPointAwareTrait`) gained a new
+`pickup_point` JSON column / `?PickupPoint $pickupPoint` accessor. The
+existing `pickupPointId` API stays for backwards compatibility but is now
+deprecated:
+
+| Deprecated (1.x / early 2.x)                  | 2.x replacement                                       |
+|-----------------------------------------------|-------------------------------------------------------|
+| `hasPickupPointId(): bool`                    | `hasPickupPoint(): bool`                              |
+| `setPickupPointId(?string $pickupPointId)`    | `setPickupPoint(?\Setono\SyliusPickupPointPlugin\DTO\PickupPoint $pickupPoint)` |
+| `getPickupPointId(): ?string`                 | `getPickupPoint(): ?\Setono\SyliusPickupPointPlugin\DTO\PickupPoint`            |
+| column `pickup_point_id` (`STRING`)           | column `pickup_point` (`JSON`)                        |
+
+The trait now ships **both** columns side-by-side; nothing in the plugin
+itself reads the new column yet, so existing data continues to be served
+out of `pickup_point_id`. Your application should be migrated in two
+moves: (1) backfill the JSON column from the legacy string, (2) when
+you're ready, drop the legacy column and stop using the deprecated
+methods.
+
+### Example data migration
+
+Doctrine migrations live in your application, not in this plugin. Below
+is a Doctrine Migrations class that handles step (1) — it adds the
+`pickup_point` JSON column (the trait expects it) and populates it from
+the legacy `pickup_point_id` strings, splitting on the `---` delimiter.
+
+The table name follows whatever entity uses `PickupPointAwareTrait` — by
+convention `sylius_shipment` for a Shipment customisation. Adjust both
+the table name and the SQL dialect to match your setup.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+final class Version20260520000000BackfillPickupPointJson extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Backfill pickup_point JSON column from legacy pickup_point_id strings';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // 1. Add the new JSON column (skip this statement if a schema diff
+        //    already created it via PickupPointAwareTrait's #[ORM\Column]).
+        $this->addSql('ALTER TABLE sylius_shipment ADD pickup_point JSON DEFAULT NULL');
+
+        // 2. Split "<provider>---<id>---<country>" into a JSON object.
+        //    MySQL / MariaDB:
+        $this->addSql(<<<'SQL'
+            UPDATE sylius_shipment
+            SET pickup_point = JSON_OBJECT(
+                'provider', SUBSTRING_INDEX(pickup_point_id, '---', 1),
+                'id',       SUBSTRING_INDEX(SUBSTRING_INDEX(pickup_point_id, '---', 2), '---', -1),
+                'country',  SUBSTRING_INDEX(pickup_point_id, '---', -1)
+            )
+            WHERE pickup_point_id IS NOT NULL
+              AND pickup_point IS NULL
+        SQL);
+
+        // PostgreSQL equivalent (use one or the other, not both):
+        //
+        // $this->addSql(<<<'SQL'
+        //     UPDATE sylius_shipment
+        //     SET pickup_point = jsonb_build_object(
+        //         'provider', split_part(pickup_point_id, '---', 1),
+        //         'id',       split_part(pickup_point_id, '---', 2),
+        //         'country',  split_part(pickup_point_id, '---', 3)
+        //     )
+        //     WHERE pickup_point_id IS NOT NULL
+        //       AND pickup_point IS NULL
+        // SQL);
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE sylius_shipment DROP pickup_point');
+    }
+}
+```
+
+The backfill only fills in `provider`, `id` and `country` — the only data
+present in the legacy string. The remaining DTO fields (`name`,
+`address`, `zipCode`, `city`, `latitude`, `longitude`) stay `null` until
+the next time a fresh pickup point is selected. If you need them
+populated for historical orders, run an additional pass that fetches each
+shipment through the provider registry and re-stores the full DTO.
+
+Once your reads are switched to `getPickupPoint()`, a follow-up migration
+can drop the legacy column:
+
+```php
+$this->addSql('ALTER TABLE sylius_shipment DROP pickup_point_id');
 ```
 
 ## Doctrine mappings
