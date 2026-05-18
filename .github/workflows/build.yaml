@@ -6,17 +6,6 @@ on:
     workflow_dispatch: ~
 
 jobs:
-    backwards-compatibility:
-        runs-on: "ubuntu-latest"
-        if: "github.event_name == 'pull_request'"
-        # Major version bump (Sylius 1.x → 2.x): every API change is intentional.
-        # The BC check tool cannot install 1.x's composer.json on a modern composer
-        # (api-platform/core ^2.7 is blocked by security advisories), so the job
-        # is informational only until 2.0 ships.
-        continue-on-error: true
-        steps:
-            -   uses: "setono/sylius-plugin/backwards-compatibility@v2"
-
     coding-standards:
         runs-on: "ubuntu-latest"
         steps:
