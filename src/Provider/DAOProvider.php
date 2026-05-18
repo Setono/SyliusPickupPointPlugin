@@ -15,7 +15,7 @@ final class DAOProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {
@@ -28,7 +28,7 @@ final class DAOProvider extends Provider
             return [];
         }
 
-        yield from $this->_findPickupPoints([
+        return $this->_findPickupPoints([
             'postnr' => preg_replace('/\s+/', '', $postCode),
             'adresse' => $street,
             'antal' => 10,
@@ -37,19 +37,15 @@ final class DAOProvider extends Provider
 
     public function findPickupPoint(string $id, string $country): ?PickupPoint
     {
-        foreach ($this->_findPickupPoints([
+        return $this->_findPickupPoints([
             'shopid' => $id,
-        ]) as $pickupPoint) {
-            return $pickupPoint;
-        }
-
-        return null;
+        ])[0] ?? null;
     }
 
     /**
-     * @return iterable<PickupPoint>
+     * @return list<PickupPoint>
      */
-    private function _findPickupPoints(array $params): iterable
+    private function _findPickupPoints(array $params): array
     {
         $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
 
@@ -59,9 +55,12 @@ final class DAOProvider extends Provider
             return [];
         }
 
+        $list = [];
         foreach ($pickupPoints as $pickupPoint) {
-            yield $this->populatePickupPoint($pickupPoint);
+            $list[] = $this->populatePickupPoint($pickupPoint);
         }
+
+        return $list;
     }
 
     public function getCode(): string
@@ -86,8 +85,8 @@ final class DAOProvider extends Provider
         $pickupPoint->zipCode = $servicePoint['postnr'];
         $pickupPoint->city = $servicePoint['bynavn'];
         $pickupPoint->country = $countryCode;
-        $pickupPoint->latitude = (float) $servicePoint['latitude'];
-        $pickupPoint->longitude = (float) $servicePoint['longitude'];
+        $pickupPoint->latitude = (string) $servicePoint['latitude'];
+        $pickupPoint->longitude = (string) $servicePoint['longitude'];
 
         return $pickupPoint;
     }

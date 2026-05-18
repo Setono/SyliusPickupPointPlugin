@@ -18,7 +18,7 @@ final class GlsProvider extends Provider
     ) {
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {
@@ -78,8 +78,8 @@ final class GlsProvider extends Provider
         $pickupPoint->zipCode = $parcelShop->getZipCode();
         $pickupPoint->city = $parcelShop->getCity();
         $pickupPoint->country = $parcelShop->getCountryCode();
-        $pickupPoint->latitude = (float) $parcelShop->getLatitude();
-        $pickupPoint->longitude = (float) $parcelShop->getLongitude();
+        $pickupPoint->latitude = (string) $parcelShop->getLatitude();
+        $pickupPoint->longitude = (string) $parcelShop->getLongitude();
 
         return $pickupPoint;
     }

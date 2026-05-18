@@ -20,7 +20,7 @@ final class PostNordProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {

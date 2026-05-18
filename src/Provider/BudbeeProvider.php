@@ -15,7 +15,7 @@ final class BudbeeProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {
@@ -73,8 +73,8 @@ final class BudbeeProvider extends Provider
         $pickupPoint->zipCode = $box->address->postalCode;
         $pickupPoint->city = $box->address->city;
         $pickupPoint->country = $box->address->country;
-        $pickupPoint->latitude = $box->address->coordinate->latitude;
-        $pickupPoint->longitude = $box->address->coordinate->longitude;
+        $pickupPoint->latitude = (string) $box->address->coordinate->latitude;
+        $pickupPoint->longitude = (string) $box->address->coordinate->longitude;
 
         return $pickupPoint;
     }

@@ -19,7 +19,7 @@ final class FakerProvider extends Provider
         $this->faker = Factory::create();
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $address = $order->getShippingAddress();
         Assert::notNull($address);
@@ -64,8 +64,8 @@ final class FakerProvider extends Provider
         $pickupPoint->zipCode = (string) $this->faker->numberBetween(11111, 99999);
         $pickupPoint->city = $this->faker->city;
         $pickupPoint->country = $countryCode;
-        $pickupPoint->latitude = $this->faker->latitude;
-        $pickupPoint->longitude = $this->faker->longitude;
+        $pickupPoint->latitude = (string) $this->faker->latitude;
+        $pickupPoint->longitude = (string) $this->faker->longitude;
 
         return $pickupPoint;
     }

@@ -15,7 +15,7 @@ final class CoolRunnerProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(OrderInterface $order): array
     {
         $shippingAddress = $order->getShippingAddress();
         if (null === $shippingAddress) {
@@ -76,8 +76,8 @@ final class CoolRunnerProvider extends Provider
         $pickupPoint->zipCode = $servicepoint->address->zipCode;
         $pickupPoint->city = $servicepoint->address->city;
         $pickupPoint->country = $servicepoint->address->countryCode;
-        $pickupPoint->latitude = $servicepoint->coordinates->latitude;
-        $pickupPoint->longitude = $servicepoint->coordinates->longitude;
+        $pickupPoint->latitude = (string) $servicepoint->coordinates->latitude;
+        $pickupPoint->longitude = (string) $servicepoint->coordinates->longitude;
 
         return $pickupPoint;
     }
