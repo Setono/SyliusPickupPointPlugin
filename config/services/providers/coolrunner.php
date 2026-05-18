@@ -35,7 +35,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         $services->set('setono_sylius_pickup_point.provider.' . $code, CoolRunnerProvider::class)
             ->args([
                 service('setono_coolrunner.client.default'),
-                service('setono_sylius_pickup_point.factory.pickup_point'),
                 $carrier,
             ])
             ->tag('setono_sylius_pickup_point.provider', [

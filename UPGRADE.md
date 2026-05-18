@@ -15,7 +15,11 @@
 |---------|-------------|
 | `friendsofsymfony/rest-bundle` | `symfony/serializer` (Symfony Serializer + `JsonResponse`) |
 | `doctrine/event-manager` | Pulled transitively by Doctrine ORM 3 |
-| `behat/transliterator` | `symfony/string` (`AsciiSlugger`) |
+| `behat/transliterator` | Removed along with `CachedProvider` |
+| `psr/cache`, `symfony/cache` | Removed along with `CachedProvider` |
+| `symfony/messenger` | Removed along with `LoadPickupPointsHandler` |
+| `symfony/console` | Removed along with `LoadPickupPointsCommand` |
+| `sylius/resource-bundle` | Removed (no plugin-owned resource anymore) |
 
 The plugin no longer depends on FOSRestBundle or JMS Serializer. The AJAX
 endpoints now return a `JsonResponse` produced by `Symfony\Component\Serializer\SerializerInterface`,
@@ -34,7 +38,7 @@ The plugin moved from `src/Resources/**` to repo-root locations
 | `src/Resources/config/services/providers/*.xml` | `config/services/providers/*.php` |
 | `src/Resources/config/routing.yaml`          | `config/routes/shop.yaml` |
 | `src/Resources/config/routing_non_localized.yaml` | `config/routes/shop_non_localized.yaml` |
-| `src/Resources/config/doctrine/`             | `config/doctrine/`      |
+| `src/Resources/config/doctrine/`             | (removed — no plugin-owned doctrine resource) |
 | `src/Resources/config/validation/`           | `config/validation/`    |
 | `src/Resources/config/routes/`               | `config/routes/`        |
 | `src/Resources/config/app/config.yaml`       | (removed — inlined via `Extension::prepend()`) |
@@ -80,41 +84,76 @@ Examples:
 
 | 1.x ID                                                              | 2.0 ID                                                                       |
 |---------------------------------------------------------------------|------------------------------------------------------------------------------|
-| `setono_sylius_pickup_point.command.load_pickup_points`             | `Setono\SyliusPickupPointPlugin\Command\LoadPickupPointsCommand`             |
+| `setono_sylius_pickup_point.command.load_pickup_points`             | (removed — see "Removed: local snapshot and message bus")                    |
 | `setono_sylius_pickup_point.controller.action.pickup_point_by_id`   | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction`     |
 | `setono_sylius_pickup_point.controller.action.pickup_points_search_by_cart_address` | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction` |
-| `setono_sylius_pickup_point.message.handler.load_pickup_points`     | `Setono\SyliusPickupPointPlugin\Message\Handler\LoadPickupPointsHandler`     |
+| `setono_sylius_pickup_point.message.handler.load_pickup_points`     | (removed — see "Removed: local snapshot and message bus")                    |
 | `setono_sylius_pickup_point.validator.has_pickup_point_selected`    | `Setono\SyliusPickupPointPlugin\Validator\Constraints\HasPickupPointSelectedValidator` |
 | `setono_sylius_pickup_point.fixture.shipping_method`                | `Setono\SyliusPickupPointPlugin\Fixture\ShippingMethodFixture`               |
 | `setono_sylius_pickup_point.fixture.example_factory.shipping_method`| `Setono\SyliusPickupPointPlugin\Fixture\Factory\ShippingMethodExampleFactory`|
 | `setono_sylius_pickup_point.shipping.order_shipping_method_selection_requirement_checker` | `Setono\SyliusPickupPointPlugin\Shipping\OrderShippingMethodSelectionRequirementChecker` |
 | `setono_sylius_pickup_point.block_event_listener.javascript`        | (removed — JS layout snippet now wired through `sylius_twig_hooks`)         |
+| `setono_sylius_pickup_point.repository.pickup_point`                | (removed — see "Removed: local snapshot and message bus")                    |
 
 These IDs are still kept (compiler pass and bundle config reference them):
 
 - `setono_sylius_pickup_point.registry.provider`
-- `setono_sylius_pickup_point.cache` (alias)
 - `setono_sylius_pickup_point.provider.*` (per-provider services tagged `setono_sylius_pickup_point.provider`)
-- Resource-bundle-managed IDs (`setono_sylius_pickup_point.repository.pickup_point`, `factory.*`, `manager.*`)
 
-## `LoadPickupPointsHandler` signature change
+## Removed: provider cache
 
-The handler now takes a `Doctrine\Persistence\ManagerRegistry` plus the
-pickup-point model class-string, replacing the previously injected
-`EntityManagerInterface`. It uses `Setono\Doctrine\ORMTrait` to resolve the
-manager lazily and supports multi-manager setups.
+The opt-in PSR-cache decorator (`Setono\SyliusPickupPointPlugin\Provider\CachedProvider`)
+has been removed in 2.0 along with the `setono_sylius_pickup_point.cache` configuration
+key and the `psr/cache` / `symfony/cache` runtime dependencies. Pickup-point lookups
+are now served directly by each provider. Drop the following from your application
+configuration:
 
-```php
-public function __construct(
-    ServiceRegistryInterface $providerRegistry,
-    PickupPointRepositoryInterface $pickupPointRepository,
-    ManagerRegistry $managerRegistry,
-    string $pickupPointClass,
-)
+```yaml
+# Remove this — no longer supported
+setono_sylius_pickup_point:
+    cache:
+        enabled: true
+        pool: setono_sylius_pickup_point.provider_cache_pool
+
+framework:
+    cache:
+        pools:
+            setono_sylius_pickup_point.provider_cache_pool: ~
 ```
 
-Plus the handler is now marked with `#[AsMessageHandler]` and no longer
-implements `MessageHandlerInterface`.
+## Removed: local snapshot and message bus
+
+The `LocalProvider` decorator (which fell back to a local DB snapshot of pickup
+points when a third-party API timed out) has been removed in 2.0 along with the
+infrastructure that populated that snapshot. Specifically the following have all
+been removed:
+
+- `Setono\SyliusPickupPointPlugin\Provider\LocalProvider`
+- `Setono\SyliusPickupPointPlugin\Command\LoadPickupPointsCommand`
+  and the `setono-sylius-pickup-point:load-pickup-points` console command
+- `Setono\SyliusPickupPointPlugin\Message\Command\LoadPickupPoints` /
+  `Setono\SyliusPickupPointPlugin\Message\Handler\LoadPickupPointsHandler`
+  and the `setono_sylius_pickup_point.command_bus` messenger bus
+- `Setono\SyliusPickupPointPlugin\Doctrine\ORM\PickupPointRepository` and
+  `Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface`
+- `Setono\SyliusPickupPointPlugin\EventListener\AddIndicesSubscriber`
+- `Setono\SyliusPickupPointPlugin\Exception\TimeoutException`
+- The plugin-owned `PickupPoint` Doctrine resource and its tables
+  (`setono_sylius_pickup_point__pickup_point` / `..._pickup_point_code`)
+- The `setono_sylius_pickup_point.local` config key
+
+Drop the following from your application configuration:
+
+```yaml
+# Remove this — no longer supported
+setono_sylius_pickup_point:
+    local: true
+```
+
+Generate a migration with `bin/console doctrine:migrations:diff` to drop the
+two plugin-owned tables. Each provider still implements `findPickupPoints()`,
+`findPickupPoint()` and `findAllPickupPoints()` directly against the carrier
+API.
 
 ## Doctrine mappings
 

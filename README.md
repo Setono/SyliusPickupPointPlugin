@@ -26,7 +26,7 @@ Add a `<select>` that contains pickup points to your shipping checkout step.
 | 2.x    | `^2.0`        | `>=8.2`| `^6.4 \|\| ^7.4`   |
 | 1.x    | `^1.0`        | `>=8.1`| `^5.4 \|\| ^6.0`   |
 
-Migrating from 1.x to 2.x: see [UPGRADE-2.0.md](UPGRADE-2.0.md).
+Migrating from 1.x to 2.x: see [UPGRADE.md](UPGRADE.md).
 
 ## Screenshots
 
@@ -169,22 +169,6 @@ setono_sylius_pickup_point:
         dao: true
 ```
 
-**Enable cache (optional)**
-
-```yaml
-# config/packages/setono_sylius_pickup_point.yaml
-framework:
-    cache:
-        pools:
-            setono_sylius_pickup_point.provider_cache_pool:
-                adapter: cache.app
-
-setono_sylius_pickup_point:
-    cache:
-        enabled: true
-        pool: setono_sylius_pickup_point.provider_cache_pool
-```
-
 ### Step 5: Database
 
 ```bash
@@ -248,15 +232,6 @@ Providers have pickup points in the following countries:
 - **GLS**: See https://gls-group.eu/EU/en/depot-parcelshop-search
 
 So, to play with all 3 providers at once — use a `DK` address.
-
-## Loading pickup points locally
-
-The plugin can fall back to a local database snapshot of pickup points when a
-third-party API times out. Populate the snapshot periodically:
-
-```bash
-bin/console setono-sylius-pickup-point:load-pickup-points [provider]
-```
 
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license

@@ -6,21 +6,15 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\CoolRunner\Client\ClientInterface;
 use Setono\CoolRunner\DTO\Servicepoint;
-use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Throwable;
-use Webmozart\Assert\Assert;
 
 final class CoolRunnerProvider extends Provider
 {
-    private readonly ClientInterface $client;
-
-    public function __construct(ClientInterface $client, private readonly FactoryInterface $pickupPointFactory, private readonly string $carrier)
+    public function __construct(private readonly ClientInterface $client, private readonly string $carrier)
     {
-        $this->client = $client;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -38,17 +32,13 @@ final class CoolRunnerProvider extends Provider
             return [];
         }
 
-        try {
-            $servicepoints = $this->client->servicepoints()->find(
-                $this->carrier,
-                $countryCode,
-                $street,
-                $postCode,
-                $city,
-            );
-        } catch (\Throwable $e) {
-            throw new TimeoutException($e);
-        }
+        $servicepoints = $this->client->servicepoints()->find(
+            $this->carrier,
+            $countryCode,
+            $street,
+            $postCode,
+            $city,
+        );
 
         $pickupPoints = [];
         foreach ($servicepoints as $item) {
@@ -60,16 +50,12 @@ final class CoolRunnerProvider extends Provider
 
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
-        try {
-            $servicepoint = $this->client->servicepoints()->findById($this->carrier, $code->getIdPart());
-            if (null === $servicepoint) {
-                return null;
-            }
-
-            return $this->transform($servicepoint);
-        } catch (Throwable $e) {
-            throw new TimeoutException($e);
+        $servicepoint = $this->client->servicepoints()->findById($this->carrier, $code->getIdPart());
+        if (null === $servicepoint) {
+            return null;
         }
+
+        return $this->transform($servicepoint);
     }
 
     public function findAllPickupPoints(): iterable
@@ -89,11 +75,7 @@ final class CoolRunnerProvider extends Provider
 
     private function transform(Servicepoint $servicepoint): PickupPointInterface
     {
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
+        $pickupPoint = new PickupPoint();
         $pickupPoint->setCode(new PickupPointCode(
             $servicepoint->id,
             $this->getCode(),

@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use function preg_replace;
-use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
 
 final class DAOProvider extends Provider
 {
-    private readonly ClientInterface $client;
-
-    public function __construct(ClientInterface $client, private readonly FactoryInterface $pickupPointFactory)
+    public function __construct(private readonly ClientInterface $client)
     {
-        $this->client = $client;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -67,11 +61,7 @@ final class DAOProvider extends Provider
      */
     private function _findPickupPoints(array $params): iterable
     {
-        try {
-            $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
-        } catch (NetworkExceptionInterface $e) {
-            throw new TimeoutException($e);
-        }
+        $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
 
         $pickupPoints = $result['resultat']['pakkeshops'] ?? [];
 
@@ -98,11 +88,7 @@ final class DAOProvider extends Provider
     {
         $countryCode = 'DK'; // DAO only operates in Denmark
 
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
+        $pickupPoint = new PickupPoint();
         $pickupPoint->setCode(new PickupPointCode($servicePoint['shopId'], $this->getCode(), $countryCode));
         $pickupPoint->setName($servicePoint['navn']);
         $pickupPoint->setAddress($servicePoint['adresse']);

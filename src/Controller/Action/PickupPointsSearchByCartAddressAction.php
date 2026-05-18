@@ -33,7 +33,8 @@ final readonly class PickupPointsSearchByCartAddressAction
         /** @var OrderInterface $order */
         $order = $this->cartContext->getCart();
 
-        if (!$this->isCsrfTokenValid((string) $order->getId(), $request->get('_csrf_token'))) {
+        $csrfToken = $request->get('_csrf_token');
+        if (!is_string($csrfToken) || !$this->isCsrfTokenValid((string) $order->getId(), $csrfToken)) {
             throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
         }
 
@@ -66,7 +67,7 @@ final readonly class PickupPointsSearchByCartAddressAction
         );
     }
 
-    private function isCsrfTokenValid(string $id, ?string $token): bool
+    private function isCsrfTokenValid(string $id, string $token): bool
     {
         return $this->csrfTokenManager->isTokenValid(new CsrfToken($id, $token));
     }

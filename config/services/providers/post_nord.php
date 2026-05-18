@@ -12,7 +12,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set('setono_sylius_pickup_point.provider.post_nord', PostNordProvider::class)
         ->args([
             service('setono_post_nord.client'),
-            service('setono_sylius_pickup_point.factory.pickup_point'),
         ])
         ->tag('setono_sylius_pickup_point.provider', [
             'code' => 'post_nord',

@@ -6,17 +6,17 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Faker\Factory;
 use Faker\Generator;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Webmozart\Assert\Assert;
 
 final class FakerProvider extends Provider
 {
     private readonly Generator $faker;
 
-    public function __construct(private readonly FactoryInterface $pickupPointFactory)
+    public function __construct()
     {
         $this->faker = Factory::create();
     }
@@ -65,10 +65,7 @@ final class FakerProvider extends Provider
             $countryCode = $this->faker->countryCode;
         }
 
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
+        $pickupPoint = new PickupPoint();
         $pickupPoint->setCode(new PickupPointCode($index, $this->getCode(), $countryCode));
         $pickupPoint->setName("Post office #$index");
         $pickupPoint->setAddress($this->faker->streetAddress);

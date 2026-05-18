@@ -6,21 +6,15 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Setono\Budbee\Client\ClientInterface;
 use Setono\Budbee\DTO\Box;
-use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
+use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Throwable;
-use Webmozart\Assert\Assert;
 
 final class BudbeeProvider extends Provider
 {
-    private readonly ClientInterface $client;
-
-    public function __construct(ClientInterface $client, private readonly FactoryInterface $pickupPointFactory)
+    public function __construct(private readonly ClientInterface $client)
     {
-        $this->client = $client;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -38,14 +32,10 @@ final class BudbeeProvider extends Provider
             return [];
         }
 
-        try {
-            $boxes = $this->client->boxes()->getAvailableLockers(
-                $countryCode,
-                $postCode,
-            );
-        } catch (\Throwable $e) {
-            throw new TimeoutException($e);
-        }
+        $boxes = $this->client->boxes()->getAvailableLockers(
+            $countryCode,
+            $postCode,
+        );
 
         $pickupPoints = [];
         foreach ($boxes as $item) {
@@ -57,16 +47,12 @@ final class BudbeeProvider extends Provider
 
     public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
     {
-        try {
-            $box = $this->client->boxes()->getLockerByIdentifier($code->getIdPart());
-            if (null === $box) {
-                return null;
-            }
-
-            return $this->transform($box);
-        } catch (Throwable $e) {
-            throw new TimeoutException($e);
+        $box = $this->client->boxes()->getLockerByIdentifier($code->getIdPart());
+        if (null === $box) {
+            return null;
         }
+
+        return $this->transform($box);
     }
 
     public function findAllPickupPoints(): iterable
@@ -86,11 +72,7 @@ final class BudbeeProvider extends Provider
 
     private function transform(Box $box): PickupPointInterface
     {
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
+        $pickupPoint = new PickupPoint();
         $pickupPoint->setCode(new PickupPointCode(
             $box->id,
             $this->getCode(),

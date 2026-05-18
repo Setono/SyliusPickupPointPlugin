@@ -41,6 +41,10 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             return null;
         }
 
+        if (!is_string($value)) {
+            throw new TransformationFailedException(sprintf('Expected string, got "%s"', get_debug_type($value)));
+        }
+
         $pickupPointId = PickupPointCode::createFromString($value);
 
         /** @var ProviderInterface $provider */
