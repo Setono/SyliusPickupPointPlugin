@@ -9,7 +9,6 @@
     ],
     "require": {
         "php": ">=8.2",
-        "ext-mbstring": "*",
         "doctrine/dbal": "^3.0 || ^4.0",
         "doctrine/orm": "^3.0",
         "fakerphp/faker": "^1.21",
@@ -24,7 +23,6 @@
         "symfony/form": "^6.4 || ^7.4",
         "symfony/http-foundation": "^6.4 || ^7.4",
         "symfony/http-kernel": "^6.4 || ^7.4",
-        "symfony/intl": "^6.4 || ^7.4",
         "symfony/options-resolver": "^6.4 || ^7.4",
         "symfony/security-csrf": "^6.4 || ^7.4",
         "symfony/serializer": "^6.4 || ^7.4",
