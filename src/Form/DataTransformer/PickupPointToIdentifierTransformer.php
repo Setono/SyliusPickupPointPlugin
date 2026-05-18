@@ -32,7 +32,11 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             );
         }
 
-        return $value->getCodeValue();
+        if (null === $value->provider || null === $value->id || null === $value->country) {
+            return null;
+        }
+
+        return sprintf('%s---%s---%s', $value->provider, $value->id, $value->country);
     }
 
     /**
