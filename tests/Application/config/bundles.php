@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-return [
+$bundles = [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
@@ -61,3 +61,12 @@ return [
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
 ];
+
+// Filter out bundles whose class is missing — needed for the `static-code-analysis`
+// CI matrix which removes `sylius/sylius` (and with it many transitively-installed
+// bundles) before booting the kernel.
+return array_filter(
+    $bundles,
+    static fn (string $class): bool => class_exists($class),
+    \ARRAY_FILTER_USE_KEY,
+);

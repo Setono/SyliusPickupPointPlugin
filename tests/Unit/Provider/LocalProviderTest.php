@@ -15,7 +15,7 @@ use Setono\SyliusPickupPointPlugin\Provider\LocalProvider;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 
 final class LocalProviderTest extends TestCase
 {
@@ -67,9 +67,10 @@ final class LocalProviderTest extends TestCase
 
     private function getProvider(bool $timeout = false, ?PickupPointRepositoryInterface $pickupPointRepository = null): LocalProvider
     {
-        $pickupPointFactory = new Factory(PickupPoint::class);
+        $factory = $this->prophesize(FactoryInterface::class);
+        $factory->createNew()->will(static fn (): PickupPoint => new PickupPoint());
 
-        $provider = new FakerProvider($pickupPointFactory);
+        $provider = new FakerProvider($factory->reveal());
         if ($timeout) {
             $provider = new class() implements ProviderInterface {
                 public function __toString(): string
