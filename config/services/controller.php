@@ -15,7 +15,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('serializer'),
             service('sylius.context.cart.composite'),
-            service('security.csrf.token_manager'),
             service('setono_sylius_pickup_point.registry.provider'),
         ])
         ->tag('controller.service_arguments')

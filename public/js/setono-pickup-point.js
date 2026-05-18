@@ -36,8 +36,7 @@ let pickupPoints = {
 
     let pickupPointChoices = this.pickupPointChoices;
     let inputSearchUrl = this.searchUrl;
-    inputSearchUrl = inputSearchUrl.replace('{providerCode}', input.getAttribute('data-pickup-point-provider'));
-    inputSearchUrl = inputSearchUrl.replace('{_csrf_token}', input.getAttribute('data-csrf-token'));
+    inputSearchUrl = inputSearchUrl.replace('{provider}', input.getAttribute('data-pickup-point-provider'));
 
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {

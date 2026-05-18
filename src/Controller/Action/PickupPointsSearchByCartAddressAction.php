@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
-use Generator;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
@@ -12,10 +11,8 @@ use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class PickupPointsSearchByCartAddressAction
@@ -23,7 +20,6 @@ final readonly class PickupPointsSearchByCartAddressAction
     public function __construct(
         private SerializerInterface $serializer,
         private CartContextInterface $cartContext,
-        private CsrfTokenManagerInterface $csrfTokenManager,
         private ServiceRegistryInterface $providerRegistry,
     ) {
     }
@@ -33,14 +29,9 @@ final readonly class PickupPointsSearchByCartAddressAction
         /** @var OrderInterface $order */
         $order = $this->cartContext->getCart();
 
-        $csrfToken = $request->get('_csrf_token');
-        if (!is_string($csrfToken) || !$this->isCsrfTokenValid((string) $order->getId(), $csrfToken)) {
-            throw new HttpException(Response::HTTP_FORBIDDEN, 'Invalid CSRF token.');
-        }
-
-        $providerCode = $request->get('providerCode');
+        $providerCode = $request->query->get('provider');
         if (!is_string($providerCode) || '' === $providerCode) {
-            throw new NotFoundHttpException('Empty provider code');
+            throw new BadRequestHttpException('Empty provider code');
         }
 
         if (!$this->providerRegistry->has($providerCode)) {
@@ -55,20 +46,11 @@ final readonly class PickupPointsSearchByCartAddressAction
         $provider = $this->providerRegistry->get($providerCode);
         $pickupPoints = $provider->findPickupPoints($order);
 
-        if ($pickupPoints instanceof Generator) {
-            $pickupPoints = iterator_to_array($pickupPoints);
-        }
-
         return new JsonResponse(
             $this->serializer->serialize($pickupPoints, 'json'),
             Response::HTTP_OK,
             [],
             true,
         );
-    }
-
-    private function isCsrfTokenValid(string $id, string $token): bool
-    {
-        return $this->csrfTokenManager->isTokenValid(new CsrfToken($id, $token));
     }
 }

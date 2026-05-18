@@ -7,18 +7,14 @@ namespace Setono\SyliusPickupPointPlugin\Form\Extension;
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareInterface;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType;
-use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
 {
     public function __construct(
         private readonly ServiceRegistryInterface $providerRegistry,
-        private readonly CartContextInterface $cartContext,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 
@@ -42,7 +38,6 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
 
             return [
                 'data-pickup-point-provider' => $provider->getCode(),
-                'data-csrf-token' => $this->csrfTokenManager->getToken((string) $this->cartContext->getCart()->getId()),
             ] + $defaultAttr;
         });
     }

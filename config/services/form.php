@@ -34,8 +34,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(ShippingMethodChoiceTypeExtension::class)
         ->args([
             service('setono_sylius_pickup_point.registry.provider'),
-            service('sylius.context.cart.composite'),
-            service('security.csrf.token_manager'),
         ])
         ->tag('form.type_extension', ['extended_type' => ShippingMethodChoiceType::class])
     ;
