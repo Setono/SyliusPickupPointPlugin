@@ -8,12 +8,14 @@ use Setono\PostNord\Client\ClientInterface;
 use Setono\PostNord\Request\Query\ServicePoints\ByIdsQuery;
 use Setono\PostNord\Request\Query\ServicePoints\NearestByAddressQuery;
 use Setono\PostNord\Response\ServicePoints\ServicePoint;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
  */
+#[AsProvider(code: 'post_nord', name: 'setono_sylius_pickup_point.provider.post_nord')]
 final class PostNordProvider extends Provider
 {
     public function __construct(private readonly ClientInterface $client)
@@ -79,16 +81,6 @@ final class PostNordProvider extends Provider
         }
 
         return $this->transform($result->servicePoints[0]);
-    }
-
-    public function getCode(): string
-    {
-        return 'post_nord';
-    }
-
-    public function getName(): string
-    {
-        return 'PostNord';
     }
 
     private function transform(ServicePoint $servicePoint): PickupPoint

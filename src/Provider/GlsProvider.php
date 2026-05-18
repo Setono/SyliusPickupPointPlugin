@@ -8,9 +8,11 @@ use function preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
+#[AsProvider(code: 'gls', name: 'setono_sylius_pickup_point.provider.gls')]
 final class GlsProvider extends Provider
 {
     public function __construct(
@@ -56,16 +58,6 @@ final class GlsProvider extends Provider
         }
 
         return $this->transform($parcelShop);
-    }
-
-    public function getCode(): string
-    {
-        return 'gls';
-    }
-
-    public function getName(): string
-    {
-        return 'GLS';
     }
 
     private function transform(ParcelShop $parcelShop): PickupPoint

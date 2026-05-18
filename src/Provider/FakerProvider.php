@@ -6,10 +6,12 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Faker\Factory;
 use Faker\Generator;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
+#[AsProvider(code: 'faker', name: 'setono_sylius_pickup_point.provider.faker')]
 final class FakerProvider extends Provider
 {
     private readonly Generator $faker;
@@ -38,16 +40,6 @@ final class FakerProvider extends Provider
     public function findPickupPoint(string $id, string $country): PickupPoint
     {
         return $this->createFakePickupPoint($id, $country);
-    }
-
-    public function getCode(): string
-    {
-        return 'faker';
-    }
-
-    public function getName(): string
-    {
-        return 'Faker';
     }
 
     private function createFakePickupPoint(string $index, ?string $countryCode = null): PickupPoint

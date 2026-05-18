@@ -13,9 +13,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('setono_dao.client'),
         ])
-        ->tag('setono_sylius_pickup_point.provider', [
-            'code' => 'dao',
-            'label' => 'setono_sylius_pickup_point.provider.dao',
-        ])
+        ->tag('setono_sylius_pickup_point.provider')
     ;
 };

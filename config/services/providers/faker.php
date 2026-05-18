@@ -10,9 +10,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
     $services->set('setono_sylius_pickup_point.provider.faker', FakerProvider::class)
-        ->tag('setono_sylius_pickup_point.provider', [
-            'code' => 'faker',
-            'label' => 'setono_sylius_pickup_point.provider.faker',
-        ])
+        ->tag('setono_sylius_pickup_point.provider')
     ;
 };

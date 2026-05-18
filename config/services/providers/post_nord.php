@@ -13,9 +13,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('setono_post_nord.client'),
         ])
-        ->tag('setono_sylius_pickup_point.provider', [
-            'code' => 'post_nord',
-            'label' => 'setono_sylius_pickup_point.provider.post_nord',
-        ])
+        ->tag('setono_sylius_pickup_point.provider')
     ;
 };

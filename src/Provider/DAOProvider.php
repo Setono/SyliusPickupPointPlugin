@@ -6,9 +6,11 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use function preg_replace;
 use Setono\DAO\Client\ClientInterface;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
+#[AsProvider(code: 'dao', name: 'setono_sylius_pickup_point.provider.dao')]
 final class DAOProvider extends Provider
 {
     public function __construct(private readonly ClientInterface $client)
@@ -61,16 +63,6 @@ final class DAOProvider extends Provider
         }
 
         return $list;
-    }
-
-    public function getCode(): string
-    {
-        return 'dao';
-    }
-
-    public function getName(): string
-    {
-        return 'DAO';
     }
 
     private function populatePickupPoint(array $servicePoint): PickupPoint

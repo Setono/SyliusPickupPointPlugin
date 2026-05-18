@@ -13,9 +13,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('setono_gls_webservice.client'),
         ])
-        ->tag('setono_sylius_pickup_point.provider', [
-            'code' => 'gls',
-            'label' => 'setono_sylius_pickup_point.provider.gls',
-        ])
+        ->tag('setono_sylius_pickup_point.provider')
     ;
 };

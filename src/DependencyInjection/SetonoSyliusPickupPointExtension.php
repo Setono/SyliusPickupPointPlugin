@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
 use LogicException;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -17,13 +19,23 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
     public function load(array $configs, ContainerBuilder $container): void
     {
         /** @var array{
-         *     providers: array{faker: bool, budbee: bool, coolrunner: bool, dao: bool, gls: bool, post_nord: bool}
+         *     providers: array{faker: bool, dao: bool, gls: bool, post_nord: bool}
          * } $config
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
 
         $loader->load('services.php');
+
+        $container->registerAttributeForAutoconfiguration(
+            AsProvider::class,
+            static function (ChildDefinition $definition, AsProvider $attribute): void {
+                $definition->addTag('setono_sylius_pickup_point.provider', [
+                    'code' => $attribute->code,
+                    'name' => $attribute->name,
+                ]);
+            },
+        );
 
         $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
         Assert::isArray($bundles);
@@ -34,22 +46,6 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
             }
 
             $loader->load('services/providers/faker.php');
-        }
-
-        if ($config['providers']['budbee']) {
-            if (!isset($bundles['SetonoBudbeeBundle'])) {
-                throw new LogicException('You should use SetonoBudbeeBundle or disable budbee provider.');
-            }
-
-            $loader->load('services/providers/budbee.php');
-        }
-
-        if ($config['providers']['coolrunner']) {
-            if (!isset($bundles['SetonoCoolRunnerBundle'])) {
-                throw new LogicException('You should use SetonoCoolRunnerBundle or disable coolrunner provider.');
-            }
-
-            $loader->load('services/providers/coolrunner.php');
         }
 
         if ($config['providers']['dao']) {
