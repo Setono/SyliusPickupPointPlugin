@@ -35,13 +35,10 @@
         "symfony/intl": "^6.4 || ^7.4",
         "symfony/messenger": "^6.4 || ^7.4",
         "symfony/options-resolver": "^6.4 || ^7.4",
-        "symfony/routing": "^6.4 || ^7.4",
-        "symfony/security-bundle": "^6.4 || ^7.4",
         "symfony/security-csrf": "^6.4 || ^7.4",
         "symfony/serializer": "^6.4 || ^7.4",
         "symfony/string": "^6.4 || ^7.4",
         "symfony/validator": "^6.4 || ^7.4",
-        "twig/twig": "^3.0",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
