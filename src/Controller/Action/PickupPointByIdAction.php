@@ -33,7 +33,7 @@ final readonly class PickupPointByIdAction
         }
 
         return new JsonResponse(
-            $this->serializer->serialize($pickupPoint, 'json', ['groups' => ['Detailed']]),
+            $this->serializer->serialize($pickupPoint, 'json'),
             Response::HTTP_OK,
             [],
             true,

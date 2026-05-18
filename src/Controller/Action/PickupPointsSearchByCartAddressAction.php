@@ -60,7 +60,7 @@ final readonly class PickupPointsSearchByCartAddressAction
         }
 
         return new JsonResponse(
-            $this->serializer->serialize($pickupPoints, 'json', ['groups' => ['Autocomplete']]),
+            $this->serializer->serialize($pickupPoints, 'json'),
             Response::HTTP_OK,
             [],
             true,

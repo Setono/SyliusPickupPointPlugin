@@ -89,9 +89,9 @@ let pickupPoints = {
 
     values.forEach((value) => {
       let prototype = this.pickupPointsFieldChoicePrototype.innerHTML;
-      let radio = prototype.replace(/{code}/g, value.code);
+      let radio = prototype.replace(/{code}/g, `${value.provider}---${value.id}---${value.country}`);
       radio = radio.replace(/{name}/g, value.name);
-      radio = radio.replace(/{full_address}/g, value.full_address);
+      radio = radio.replace(/{full_address}/g, `${value.address}, ${value.zipCode} ${value.city}`);
       radio = radio.replace(/{latitude}/g, value.latitude);
       radio = radio.replace(/{longitude}/g, value.longitude);
 
