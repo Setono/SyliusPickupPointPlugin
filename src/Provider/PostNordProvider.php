@@ -15,7 +15,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 /**
  * @see https://developer.postnord.com/api/docs/location
  */
-#[AsProvider(code: 'post_nord', name: 'setono_sylius_pickup_point.provider.post_nord')]
+#[AsProvider(code: 'post_nord', name: 'PostNord')]
 final class PostNordProvider extends Provider
 {
     public function __construct(private readonly ClientInterface $client)

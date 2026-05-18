@@ -10,7 +10,7 @@ use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
-#[AsProvider(code: 'dao', name: 'setono_sylius_pickup_point.provider.dao')]
+#[AsProvider(code: 'dao', name: 'DAO')]
 final class DAOProvider extends Provider
 {
     public function __construct(private readonly ClientInterface $client)

@@ -11,7 +11,7 @@ use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
-#[AsProvider(code: 'faker', name: 'setono_sylius_pickup_point.provider.faker')]
+#[AsProvider(code: 'faker', name: 'Faker')]
 final class FakerProvider extends Provider
 {
     private readonly Generator $faker;

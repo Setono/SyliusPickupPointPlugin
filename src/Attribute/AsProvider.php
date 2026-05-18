@@ -17,11 +17,10 @@ final readonly class AsProvider
         public string $code,
 
         /**
-         * The label shown to merchants in the admin shipping-method form when
-         * picking the provider for a shipping method. Translated through the
-         * standard Symfony translator, so this is typically a translation key
-         * (e.g. `"setono_sylius_pickup_point.provider.faker"`) rather than a
-         * literal user-facing string.
+         * The human-readable company name of the provider as it appears to
+         * merchants in the admin shipping-method form when they pick the
+         * provider for a shipping method — e.g. `"GLS"`, `"PostNord"`,
+         * `"DAO"`. This is the carrier's brand name, not a translation key.
          */
         public string $name,
     ) {

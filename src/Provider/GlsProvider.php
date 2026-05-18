@@ -12,7 +12,7 @@ use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Sylius\Component\Core\Model\OrderInterface;
 
-#[AsProvider(code: 'gls', name: 'setono_sylius_pickup_point.provider.gls')]
+#[AsProvider(code: 'gls', name: 'GLS')]
 final class GlsProvider extends Provider
 {
     public function __construct(
