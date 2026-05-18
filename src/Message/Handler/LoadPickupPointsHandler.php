@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Message\Handler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Setono\Doctrine\ORMTrait;
 use Setono\SyliusPickupPointPlugin\Message\Command\LoadPickupPoints;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
 use Setono\SyliusPickupPointPlugin\Repository\PickupPointRepositoryInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Webmozart\Assert\Assert;
 
-final class LoadPickupPointsHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class LoadPickupPointsHandler
 {
-    private ServiceRegistryInterface $providerRegistry;
+    use ORMTrait;
 
-    private PickupPointRepositoryInterface $pickupPointRepository;
-
-    private EntityManagerInterface $pickupPointManager;
-
+    /**
+     * @param class-string $pickupPointClass
+     */
     public function __construct(
-        ServiceRegistryInterface $providerRegistry,
-        PickupPointRepositoryInterface $pickupPointRepository,
-        EntityManagerInterface $pickupPointManager,
+        private readonly ServiceRegistryInterface $providerRegistry,
+        private readonly PickupPointRepositoryInterface $pickupPointRepository,
+        ManagerRegistry $managerRegistry,
+        private readonly string $pickupPointClass,
     ) {
-        $this->providerRegistry = $providerRegistry;
-        $this->pickupPointRepository = $pickupPointRepository;
-        $this->pickupPointManager = $pickupPointManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function __invoke(LoadPickupPoints $message): void
@@ -36,6 +36,8 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
         $provider = $this->providerRegistry->get($message->getProvider());
 
         $pickupPoints = $provider->findAllPickupPoints();
+
+        $manager = $this->getManager($this->pickupPointClass);
 
         $i = 1;
 
@@ -47,7 +49,7 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
 
             // if it's found, we will update the properties, else we will just persist this object
             if (null === $localPickupPoint) {
-                $this->pickupPointManager->persist($pickupPoint);
+                $manager->persist($pickupPoint);
             } else {
                 $localPickupPoint->setName($pickupPoint->getName());
                 $localPickupPoint->setAddress($pickupPoint->getAddress());
@@ -59,18 +61,15 @@ final class LoadPickupPointsHandler implements MessageHandlerInterface
             }
 
             if ($i % 50 === 0) {
-                $this->flush();
+                $manager->flush();
+                $manager->clear();
+                $manager = $this->getManager($this->pickupPointClass);
             }
 
             ++$i;
         }
 
-        $this->flush();
-    }
-
-    private function flush(): void
-    {
-        $this->pickupPointManager->flush();
-        $this->pickupPointManager->clear();
+        $manager->flush();
+        $manager->clear();
     }
 }

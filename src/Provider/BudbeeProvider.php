@@ -16,14 +16,11 @@ use Webmozart\Assert\Assert;
 
 final class BudbeeProvider extends Provider
 {
-    private ClientInterface $client;
+    private readonly ClientInterface $client;
 
-    private FactoryInterface $pickupPointFactory;
-
-    public function __construct(ClientInterface $client, FactoryInterface $pickupPointFactory)
+    public function __construct(ClientInterface $client, private readonly FactoryInterface $pickupPointFactory)
     {
         $this->client = $client;
-        $this->pickupPointFactory = $pickupPointFactory;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable

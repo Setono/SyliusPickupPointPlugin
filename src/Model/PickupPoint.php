@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Model;
 
-use function sprintf;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Webmozart\Assert\Assert;
 
 class PickupPoint implements PickupPointInterface
 {
-    protected ?int $id;
+    protected ?int $id = null;
 
     protected ?PickupPointCode $code = null;
 
+    #[Groups(['Detailed', 'Autocomplete'])]
     protected ?string $name = null;
 
     protected ?string $address = null;
@@ -23,8 +25,10 @@ class PickupPoint implements PickupPointInterface
 
     protected ?string $country = null;
 
+    #[Groups(['Detailed', 'Autocomplete'])]
     protected ?float $latitude = null;
 
+    #[Groups(['Detailed', 'Autocomplete'])]
     protected ?float $longitude = null;
 
     public function getId(): ?int
@@ -40,6 +44,13 @@ class PickupPoint implements PickupPointInterface
     public function setCode(PickupPointCode $code): void
     {
         $this->code = $code;
+    }
+
+    #[Groups(['Detailed', 'Autocomplete'])]
+    #[SerializedName('code')]
+    public function getCodeValue(): ?string
+    {
+        return null === $this->code ? null : $this->code->getValue();
     }
 
     public function getName(): ?string
@@ -116,6 +127,8 @@ class PickupPoint implements PickupPointInterface
         $this->longitude = $longitude;
     }
 
+    #[Groups(['Detailed', 'Autocomplete'])]
+    #[SerializedName('full_address')]
     public function getFullAddress(): string
     {
         return sprintf(

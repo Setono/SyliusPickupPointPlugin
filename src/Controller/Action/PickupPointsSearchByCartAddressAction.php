@@ -4,41 +4,28 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandlerInterface;
 use Generator;
 use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
-use function sprintf;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-final class PickupPointsSearchByCartAddressAction
+final readonly class PickupPointsSearchByCartAddressAction
 {
-    private ViewHandlerInterface $viewHandler;
-
-    private CartContextInterface $cartContext;
-
-    private CsrfTokenManagerInterface $csrfTokenManager;
-
-    private ServiceRegistryInterface $providerRegistry;
-
     public function __construct(
-        ViewHandlerInterface $viewHandler,
-        CartContextInterface $cartContext,
-        CsrfTokenManagerInterface $csrfTokenManager,
-        ServiceRegistryInterface $providerRegistry,
+        private SerializerInterface $serializer,
+        private CartContextInterface $cartContext,
+        private CsrfTokenManagerInterface $csrfTokenManager,
+        private ServiceRegistryInterface $providerRegistry,
     ) {
-        $this->viewHandler = $viewHandler;
-        $this->cartContext = $cartContext;
-        $this->csrfTokenManager = $csrfTokenManager;
-        $this->providerRegistry = $providerRegistry;
     }
 
     public function __invoke(Request $request): Response
@@ -71,10 +58,12 @@ final class PickupPointsSearchByCartAddressAction
             $pickupPoints = iterator_to_array($pickupPoints);
         }
 
-        $view = View::create($pickupPoints);
-        $view->getContext()->addGroup('Autocomplete');
-
-        return $this->viewHandler->handle($view);
+        return new JsonResponse(
+            $this->serializer->serialize($pickupPoints, 'json', ['groups' => ['Autocomplete']]),
+            Response::HTTP_OK,
+            [],
+            true,
+        );
     }
 
     private function isCsrfTokenValid(string $id, ?string $token): bool

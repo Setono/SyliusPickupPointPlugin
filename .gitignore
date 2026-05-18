@@ -8,10 +8,13 @@
 
 /tests/Application/yarn.lock
 
-/behat.yml
-/phpspec.yml
 /.phpunit.result.cache
+/.phpunit.cache/
 
 # Symfony CLI https://symfony.com/doc/current/setup/symfony_server.html#different-php-settings-per-project
 /.php-version
 /php.ini
+
+# Claude Code local config
+/.claude/
+/.mcp.json

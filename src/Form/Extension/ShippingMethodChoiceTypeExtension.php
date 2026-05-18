@@ -11,29 +11,15 @@ use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
 {
-    private ServiceRegistryInterface $providerRegistry;
-
-    private RouterInterface $router;
-
-    private CartContextInterface $cartContext;
-
-    private CsrfTokenManagerInterface $csrfTokenManager;
-
     public function __construct(
-        ServiceRegistryInterface $providerRegistry,
-        RouterInterface $router,
-        CartContextInterface $cartContext,
-        CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly ServiceRegistryInterface $providerRegistry,
+        private readonly CartContextInterface $cartContext,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
-        $this->providerRegistry = $providerRegistry;
-        $this->router = $router;
-        $this->cartContext = $cartContext;
-        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

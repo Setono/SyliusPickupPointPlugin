@@ -12,21 +12,15 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 final class LocalProvider extends Provider
 {
-    private ProviderInterface $decoratedProvider;
-
-    private PickupPointRepositoryInterface $pickupPointRepository;
-
-    public function __construct(ProviderInterface $decoratedProvider, PickupPointRepositoryInterface $pickupPointRepository)
+    public function __construct(private readonly ProviderInterface $decoratedProvider, private readonly PickupPointRepositoryInterface $pickupPointRepository)
     {
-        $this->decoratedProvider = $decoratedProvider;
-        $this->pickupPointRepository = $pickupPointRepository;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
     {
         try {
             return $this->decoratedProvider->findPickupPoints($order);
-        } catch (TimeoutException $e) {
+        } catch (TimeoutException) {
             return $this->pickupPointRepository->findByOrder($order, $this->decoratedProvider->getCode());
         }
     }
@@ -35,7 +29,7 @@ final class LocalProvider extends Provider
     {
         try {
             return $this->decoratedProvider->findPickupPoint($code);
-        } catch (TimeoutException $e) {
+        } catch (TimeoutException) {
             return $this->pickupPointRepository->findOneByCode($code);
         }
     }

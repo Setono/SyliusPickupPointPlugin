@@ -8,13 +8,11 @@ use InvalidArgumentException;
 use Symfony\Component\Intl\Countries;
 use Webmozart\Assert\Assert;
 
-final class PickupPointCode
+final class PickupPointCode implements \Stringable
 {
     private const DELIMITER = '---';
 
-    private string $id;
-
-    private string $provider;
+    private readonly string $id;
 
     /**
      * Some providers will only have unique ids per country
@@ -27,7 +25,7 @@ final class PickupPointCode
     /**
      * @param mixed $id
      */
-    public function __construct($id, string $provider, string $country)
+    public function __construct($id, private readonly string $provider, string $country)
     {
         Assert::scalar($id);
 
@@ -35,7 +33,6 @@ final class PickupPointCode
         Assert::true(Countries::exists($country));
 
         $this->id = (string) $id;
-        $this->provider = $provider;
         $this->country = $country;
     }
 

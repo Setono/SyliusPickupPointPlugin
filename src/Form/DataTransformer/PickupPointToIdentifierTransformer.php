@@ -12,13 +12,10 @@ use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
-final class PickupPointToIdentifierTransformer implements DataTransformerInterface
+final readonly class PickupPointToIdentifierTransformer implements DataTransformerInterface
 {
-    private ServiceRegistryInterface $providerRegistry;
-
-    public function __construct(ServiceRegistryInterface $providerRegistry)
+    public function __construct(private ServiceRegistryInterface $providerRegistry)
     {
-        $this->providerRegistry = $providerRegistry;
     }
 
     /**
@@ -72,7 +69,7 @@ final class PickupPointToIdentifierTransformer implements DataTransformerInterfa
                 sprintf(
                     'Expected "%s", but got "%s"',
                     $expectedType,
-                    is_object($value) ? get_class($value) : gettype($value),
+                    get_debug_type($value),
                 ),
             );
         }

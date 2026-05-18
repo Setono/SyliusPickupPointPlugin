@@ -21,10 +21,29 @@ final class SetonoSyliusPickupPointPlugin extends AbstractResourceBundle
         $container->addCompilerPass(new RegisterProvidersPass());
     }
 
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
+
     public function getSupportedDrivers(): array
     {
         return [
             SyliusResourceBundle::DRIVER_DOCTRINE_ORM,
         ];
+    }
+
+    protected function getModelNamespace(): string
+    {
+        return 'Setono\SyliusPickupPointPlugin\Model';
+    }
+
+    protected function getConfigFilesPath(): string
+    {
+        return sprintf(
+            '%s/config/doctrine/%s',
+            $this->getPath(),
+            strtolower($this->getDoctrineMappingDirectory()),
+        );
     }
 }

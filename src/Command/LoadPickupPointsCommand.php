@@ -7,6 +7,7 @@ namespace Setono\SyliusPickupPointPlugin\Command;
 use Setono\SyliusPickupPointPlugin\Message\Command\LoadPickupPoints;
 use function sprintf;
 use Sylius\Component\Registry\ServiceRegistryInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,21 +16,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\MessageBusInterface;
 
+#[AsCommand(name: 'setono-sylius-pickup-point:load-pickup-points')]
 final class LoadPickupPointsCommand extends Command
 {
-    protected static $defaultName = 'setono-sylius-pickup-point:load-pickup-points';
-
     private SymfonyStyle $io;
 
-    private ServiceRegistryInterface $providerRegistry;
-
-    private MessageBusInterface $messageBus;
-
-    public function __construct(ServiceRegistryInterface $providerRegistry, MessageBusInterface $messageBus)
+    public function __construct(private readonly ServiceRegistryInterface $providerRegistry, private readonly MessageBusInterface $messageBus)
     {
-        $this->providerRegistry = $providerRegistry;
-        $this->messageBus = $messageBus;
-
         parent::__construct();
     }
 

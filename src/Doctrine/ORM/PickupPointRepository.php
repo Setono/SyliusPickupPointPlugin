@@ -19,11 +19,9 @@ class PickupPointRepository extends EntityRepository implements PickupPointRepos
             ->andWhere('o.code.id = :codeId')
             ->andWhere('o.code.provider = :codeProvider')
             ->andWhere('o.code.country = :codeCountry')
-            ->setParameters([
-                'codeId' => $code->getIdPart(),
-                'codeProvider' => $code->getProviderPart(),
-                'codeCountry' => $code->getCountryPart(),
-            ])
+            ->setParameter('codeId', $code->getIdPart())
+            ->setParameter('codeProvider', $code->getProviderPart())
+            ->setParameter('codeCountry', $code->getCountryPart())
             ->getQuery()
             ->getOneOrNullResult()
         ;
@@ -50,11 +48,9 @@ class PickupPointRepository extends EntityRepository implements PickupPointRepos
             ->andWhere('o.code.provider = :provider')
             ->andWhere('o.code.country = :country')
             ->andWhere('o.zipCode = :postalCode')
-            ->setParameters([
-                'provider' => $provider,
-                'country' => $countryCode,
-                'postalCode' => $postalCode,
-            ])
+            ->setParameter('provider', $provider)
+            ->setParameter('country', $countryCode)
+            ->setParameter('postalCode', $postalCode)
             ->getQuery()
             ->getResult();
 

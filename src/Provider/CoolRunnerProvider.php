@@ -16,17 +16,11 @@ use Webmozart\Assert\Assert;
 
 final class CoolRunnerProvider extends Provider
 {
-    private ClientInterface $client;
+    private readonly ClientInterface $client;
 
-    private FactoryInterface $pickupPointFactory;
-
-    private string $carrier;
-
-    public function __construct(ClientInterface $client, FactoryInterface $pickupPointFactory, string $carrier)
+    public function __construct(ClientInterface $client, private readonly FactoryInterface $pickupPointFactory, private readonly string $carrier)
     {
         $this->client = $client;
-        $this->pickupPointFactory = $pickupPointFactory;
-        $this->carrier = $carrier;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable

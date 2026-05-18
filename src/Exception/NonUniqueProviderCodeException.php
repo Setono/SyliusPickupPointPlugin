@@ -12,6 +12,6 @@ final class NonUniqueProviderCodeException extends InvalidArgumentException impl
 {
     public function __construct(ProviderInterface $provider)
     {
-        parent::__construct(sprintf('The code %s is not unique. Found in %s', $provider->getCode(), get_class($provider)));
+        parent::__construct(sprintf('The code %s is not unique. Found in %s', $provider->getCode(), $provider::class));
     }
 }

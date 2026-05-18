@@ -19,20 +19,14 @@ use Webmozart\Assert\Assert;
 
 final class GlsProvider extends Provider
 {
-    private ClientInterface $client;
-
-    private FactoryInterface $pickupPointFactory;
-
-    private array $countryCodes;
+    private readonly ClientInterface $client;
 
     public function __construct(
         ClientInterface $client,
-        FactoryInterface $pickupPointFactory,
-        array $countryCodes = ['DK', 'SE'],
+        private readonly FactoryInterface $pickupPointFactory,
+        private readonly array $countryCodes = ['DK', 'SE'],
     ) {
         $this->client = $client;
-        $this->pickupPointFactory = $pickupPointFactory;
-        $this->countryCodes = $countryCodes;
     }
 
     public function findPickupPoints(OrderInterface $order): iterable
@@ -74,7 +68,7 @@ final class GlsProvider extends Provider
             $parcelShop = $this->client->getOneParcelShop($code->getIdPart());
 
             return $this->transform($parcelShop);
-        } catch (ParcelShopNotFoundException $e) {
+        } catch (ParcelShopNotFoundException) {
             return null;
         } catch (ConnectionException $e) {
             throw new TimeoutException($e);
@@ -93,7 +87,7 @@ final class GlsProvider extends Provider
             }
         } catch (ConnectionException $e) {
             throw new TimeoutException($e);
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             return [];
         }
     }

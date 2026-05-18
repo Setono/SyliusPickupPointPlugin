@@ -9,11 +9,8 @@ use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareTrait;
 use Setono\SyliusPickupPointPlugin\Model\ShippingMethodInterface;
 use Sylius\Component\Core\Model\ShippingMethod as BaseShippingMethod;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="sylius_shipping_method")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'sylius_shipping_method')]
 class ShippingMethod extends BaseShippingMethod implements ShippingMethodInterface
 {
     use PickupPointProviderAwareTrait;
