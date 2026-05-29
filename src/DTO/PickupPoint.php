@@ -30,15 +30,15 @@ final class PickupPoint implements \JsonSerializable
     public static function fromArray(array $data): self
     {
         $pickupPoint = new self();
-        $pickupPoint->provider = self::stringOrNull($data['provider'] ?? null);
-        $pickupPoint->id = self::scalarStringOrNull($data['id'] ?? null);
-        $pickupPoint->name = self::stringOrNull($data['name'] ?? null);
-        $pickupPoint->address = self::stringOrNull($data['address'] ?? null);
-        $pickupPoint->zipCode = self::stringOrNull($data['zipCode'] ?? null);
-        $pickupPoint->city = self::stringOrNull($data['city'] ?? null);
-        $pickupPoint->country = self::stringOrNull($data['country'] ?? null);
-        $pickupPoint->latitude = self::scalarStringOrNull($data['latitude'] ?? null);
-        $pickupPoint->longitude = self::scalarStringOrNull($data['longitude'] ?? null);
+        $pickupPoint->provider = self::scalarOrNull($data['provider'] ?? null);
+        $pickupPoint->id = self::scalarOrNull($data['id'] ?? null);
+        $pickupPoint->name = self::scalarOrNull($data['name'] ?? null);
+        $pickupPoint->address = self::scalarOrNull($data['address'] ?? null);
+        $pickupPoint->zipCode = self::scalarOrNull($data['zipCode'] ?? null);
+        $pickupPoint->city = self::scalarOrNull($data['city'] ?? null);
+        $pickupPoint->country = self::scalarOrNull($data['country'] ?? null);
+        $pickupPoint->latitude = self::scalarOrNull($data['latitude'] ?? null);
+        $pickupPoint->longitude = self::scalarOrNull($data['longitude'] ?? null);
 
         return $pickupPoint;
     }
@@ -61,21 +61,16 @@ final class PickupPoint implements \JsonSerializable
         ];
     }
 
-    private static function stringOrNull(mixed $value): ?string
-    {
-        return is_string($value) ? $value : null;
-    }
-
     /**
-     * Like {@see stringOrNull()} but also accepts int/float and stringifies them.
+     * Returns the value as a string, accepting strings as-is and stringifying int/float.
      *
-     * The id and the coordinates can legitimately be numeric: when the DTO is rehydrated
-     * from the Doctrine JSON column (see {@see \Setono\SyliusPickupPointPlugin\Model\PickupPointAwareTrait}),
+     * Some fields (id, zip code, coordinates) can legitimately be numeric: when the DTO is
+     * rehydrated from the Doctrine JSON column (see {@see \Setono\SyliusPickupPointPlugin\Model\PickupPointAwareTrait}),
      * JSON numbers decode as int/float, so coercing them here prevents the value from being
      * silently dropped. Booleans are intentionally not accepted — `(string) false` is '' and
-     * a bool is never a valid id or coordinate.
+     * a bool is never a valid field value.
      */
-    private static function scalarStringOrNull(mixed $value): ?string
+    private static function scalarOrNull(mixed $value): ?string
     {
         if (is_string($value)) {
             return $value;
