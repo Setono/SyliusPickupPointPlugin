@@ -13,7 +13,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 final class ShippingMethodTypeExtension extends AbstractTypeExtension
 {
     /**
-     * @param array<string, string> $providers
+     * @param array<string, string> $providers a map of provider code => human-readable name
+     *                                          (e.g. ['gls' => 'GLS']), injected from the
+     *                                          `setono_sylius_pickup_point.providers` container
+     *                                          parameter built by RegisterProvidersPass. Flipped
+     *                                          to name => code for the provider choice field.
      */
     public function __construct(private readonly array $providers)
     {
