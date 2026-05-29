@@ -1,3 +1,13 @@
-setono_sylius_pickup_point_shop_ajax_pickup_point:
-    resource: "@SetonoSyliusPickupPointPlugin/config/routes/shop/ajax/pickup-point.yaml"
-    prefix: /{_locale}/ajax/pickup-points
+setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address:
+    path: /ajax/pickup-points/search
+    methods: [GET]
+    defaults:
+        _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction
+        _format: json
+
+setono_sylius_pickup_point_shop_ajax_pickup_point_by_id:
+    path: /ajax/pickup-points/{pickupPointId}
+    methods: [GET]
+    defaults:
+        _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction
+        _format: json

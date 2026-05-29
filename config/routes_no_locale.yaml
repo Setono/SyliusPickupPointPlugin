@@ -1,0 +1,6 @@
+# By default, Sylius uses urls like https://example.com/en_US/, but Sylius also offers the option to disable
+# localized URLs (see https://docs.sylius.com/en/latest/cookbook/shop/disabling-localised-urls.html).
+# Import this file instead of config/routes.yaml when your store has localized URLs disabled.
+
+setono_sylius_pickup_point_shop:
+    resource: "@SetonoSyliusPickupPointPlugin/config/routes/shop.yaml"

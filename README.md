@@ -73,9 +73,12 @@ return [
 
 ```yaml
 # config/routes/setono_sylius_pickup_point.yaml
-setono_sylius_pickup_point_plugin:
-    resource: "@SetonoSyliusPickupPointPlugin/config/routes/shop.yaml"
+setono_sylius_pickup_point:
+    resource: "@SetonoSyliusPickupPointPlugin/config/routes.yaml"
 ```
+
+If your store has [localized URLs disabled](https://docs.sylius.com/en/latest/cookbook/shop/disabling-localised-urls.html),
+import `@SetonoSyliusPickupPointPlugin/config/routes_no_locale.yaml` instead.
 
 ### Step 3: Customize resources
 

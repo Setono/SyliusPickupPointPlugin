@@ -41,8 +41,8 @@ The plugin moved from `src/Resources/**` to repo-root locations
 | `src/Resources/config/`                      | `config/`               |
 | `src/Resources/config/services/*.xml`        | `config/services/*.php` (PHP DSL) |
 | `src/Resources/config/services/providers/*.xml` | `config/services/providers/*.php` |
-| `src/Resources/config/routing.yaml`          | `config/routes/shop.yaml` |
-| `src/Resources/config/routing_non_localized.yaml` | `config/routes/shop_non_localized.yaml` |
+| `src/Resources/config/routing.yaml`          | `config/routes.yaml` (imports `config/routes/shop.yaml`) |
+| `src/Resources/config/routing_non_localized.yaml` | `config/routes_no_locale.yaml` |
 | `src/Resources/config/doctrine/`             | (removed — no plugin-owned doctrine resource) |
 | `src/Resources/config/validation/`           | `config/validation/`    |
 | `src/Resources/config/routes/`               | `config/routes/`        |
@@ -58,14 +58,26 @@ own templates and config to drop the `Resources/` segment.
 
 ## Routing import
 
+The routing now follows the `setono/sylius-plugin-skeleton` layout: a top-level
+`config/routes.yaml` (localized, prefixed with `/{_locale}`) delegates to the
+per-section files under `config/routes/` (`config/routes/shop.yaml`). A
+`config/routes_no_locale.yaml` variant is provided for stores with localized
+URLs disabled.
+
 ```yaml
 # config/routes/setono_sylius_pickup_point.yaml
 
-setono_sylius_pickup_point_plugin:
-    resource: "@SetonoSyliusPickupPointPlugin/config/routes/shop.yaml"
+setono_sylius_pickup_point:
+    resource: "@SetonoSyliusPickupPointPlugin/config/routes.yaml"
 ```
 
 Previously: `@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml`.
+
+The plugin-owned route names are unchanged
+(`setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address`,
+`setono_sylius_pickup_point_shop_ajax_pickup_point_by_id`), and so are the
+resulting URLs (`/{_locale}/ajax/pickup-points/search`,
+`/{_locale}/ajax/pickup-points/{pickupPointId}`).
 
 ## Templates → Twig hooks
 
