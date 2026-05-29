@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
+use InvalidArgumentException;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPointIdentifier;
+use Setono\SyliusPickupPointPlugin\Encoder\PickupPointIdentifierEncoderInterface;
 use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use function sprintf;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -12,8 +15,10 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 final readonly class PickupPointToIdentifierTransformer implements DataTransformerInterface
 {
-    public function __construct(private ProviderRegistryInterface $providerRegistry)
-    {
+    public function __construct(
+        private ProviderRegistryInterface $providerRegistry,
+        private PickupPointIdentifierEncoderInterface $encoder,
+    ) {
     }
 
     /**
@@ -31,11 +36,9 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             );
         }
 
-        if (null === $value->provider || null === $value->id || null === $value->country) {
-            return null;
-        }
+        $identifier = PickupPointIdentifier::fromPickupPoint($value);
 
-        return sprintf('%s---%s---%s', $value->provider, $value->id, $value->country);
+        return null === $identifier ? null : $this->encoder->encode($identifier);
     }
 
     /**
@@ -51,13 +54,12 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
             throw new TransformationFailedException(sprintf('Expected string, got "%s"', get_debug_type($value)));
         }
 
-        $parts = explode('---', $value);
-        if (3 !== count($parts)) {
-            throw new TransformationFailedException(sprintf('Expected "provider---id---country", got "%s"', $value));
+        try {
+            $identifier = $this->encoder->decode($value);
+        } catch (InvalidArgumentException $e) {
+            throw new TransformationFailedException($e->getMessage(), 0, $e);
         }
 
-        [$providerCode, $id, $country] = $parts;
-
-        return $this->providerRegistry->get($providerCode)->findPickupPoint($id, ['country' => $country]);
+        return $this->providerRegistry->get($identifier->provider)->findPickupPoint($identifier->id, $identifier->metadata);
     }
 }

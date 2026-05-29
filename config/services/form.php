@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Setono\SyliusPickupPointPlugin\Encoder\PickupPointIdentifierEncoder;
 use Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointToIdentifierTransformer;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShipmentTypeExtension;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension;
@@ -18,6 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PickupPointToIdentifierTransformer::class)
         ->args([
             service(ProviderRegistry::class),
+            service(PickupPointIdentifierEncoder::class),
         ])
     ;
 

@@ -25,6 +25,18 @@ final class PickupPoint implements \JsonSerializable
     public ?string $longitude = null;
 
     /**
+     * Open, provider-defined data carried inside the pickup point identifier so a custom provider
+     * can round-trip whatever extra context its
+     * {@see \Setono\SyliusPickupPointPlugin\Provider\ProviderInterface::findPickupPoint()} needs
+     * to re-resolve the point by its id (a region, a warehouse, a token, …). The well-known
+     * {@see self::$country} is folded in automatically by {@see PickupPointIdentifier::fromPickupPoint()},
+     * so it need not be repeated here.
+     *
+     * @var array<string, mixed>
+     */
+    public array $metadata = [];
+
+    /**
      * @param array<string, mixed> $data
      */
     public static function fromArray(array $data): self
@@ -39,12 +51,13 @@ final class PickupPoint implements \JsonSerializable
         $pickupPoint->country = self::scalarOrNull($data['country'] ?? null);
         $pickupPoint->latitude = self::scalarOrNull($data['latitude'] ?? null);
         $pickupPoint->longitude = self::scalarOrNull($data['longitude'] ?? null);
+        $pickupPoint->metadata = self::stringKeyedArray($data['metadata'] ?? null);
 
         return $pickupPoint;
     }
 
     /**
-     * @return array<string, string|null>
+     * @return array<string, mixed>
      */
     public function jsonSerialize(): array
     {
@@ -58,6 +71,7 @@ final class PickupPoint implements \JsonSerializable
             'country' => $this->country,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'metadata' => $this->metadata,
         ];
     }
 
@@ -81,5 +95,22 @@ final class PickupPoint implements \JsonSerializable
         }
 
         return null;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function stringKeyedArray(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($value as $key => $item) {
+            $result[(string) $key] = $item;
+        }
+
+        return $result;
     }
 }

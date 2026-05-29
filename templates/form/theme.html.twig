@@ -11,13 +11,13 @@
             <div class="item">
                 <div class="field">
                     <div class="ui radio checkbox">
-                        <input id="{{ form.vars.id }}_{code}" class="setono-sylius-pickup-point-field-choice-field"
-                               type="radio" name="{{ form.vars.id }}[pickupPoint]" required value="{code}">
+                        <input id="{{ form.vars.id }}_{identifier}" class="setono-sylius-pickup-point-field-choice-field"
+                               type="radio" name="{{ form.vars.id }}[pickupPoint]" required value="{identifier}">
                     </div>
                 </div>
                 <div class="content">
                     <span class="header">
-                        <label for="{{ form.vars.id }}_{code}" class="required">
+                        <label for="{{ form.vars.id }}_{identifier}" class="required">
                             {name}, {full_address}
                             &middot; <a href="http://maps.google.com/maps?&z=16&q={latitude}+{longitude}" target="_blank">See on the map</a>
                         </label>

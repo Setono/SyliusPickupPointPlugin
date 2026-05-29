@@ -16,6 +16,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('sylius.context.cart'),
             service(ProviderRegistry::class),
+            service('serializer'),
         ])
         ->public()
     ;

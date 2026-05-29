@@ -13,12 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class PickupPointsSearchByCartAddressAction
 {
     public function __construct(
         private CartContextInterface $cartContext,
         private ProviderRegistryInterface $providerRegistry,
+        private SerializerInterface $serializer,
     ) {
     }
 
@@ -40,8 +42,17 @@ final readonly class PickupPointsSearchByCartAddressAction
             ));
         }
 
+        // The PickupPointNormalizer adds the encoded `identifier` to each serialized pickup point;
+        // it owns that step because the identifier needs the encoder service, which the value
+        // object cannot hold. Serializing (rather than json_encode) is what lets the normalizer run.
         return new JsonResponse(
-            $this->providerRegistry->get($providerCode)->findPickupPoints(Address::fromOrder($order)),
+            $this->serializer->serialize(
+                $this->providerRegistry->get($providerCode)->findPickupPoints(Address::fromOrder($order)),
+                'json',
+            ),
+            Response::HTTP_OK,
+            [],
+            true,
         );
     }
 }
