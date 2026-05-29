@@ -75,12 +75,6 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
 
     public function prepend(ContainerBuilder $container): void
     {
-        $container->prependExtensionConfig('twig', [
-            'form_themes' => [
-                '@SetonoSyliusPickupPointPlugin/form/theme.html.twig',
-            ],
-        ]);
-
         $container->prependExtensionConfig('sylius_twig_hooks', [
             'hooks' => [
                 'sylius_admin.base#javascripts' => [
