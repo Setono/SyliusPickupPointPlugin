@@ -10,6 +10,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
     $services->set(HasPickupPointSelectedValidator::class)
-        ->tag('validator.constraint_validator', ['alias' => 'setono_pickup_point_has_pickup_point_selected'])
+        ->tag('validator.constraint_validator')
     ;
 };
