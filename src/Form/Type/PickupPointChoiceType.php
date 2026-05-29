@@ -14,6 +14,10 @@ final class PickupPointChoiceType extends AbstractType
 {
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
+        // On Symfony 6.4 (our lowest supported version) FormView::$vars is an untyped
+        // property, so PHPStan sees it as `mixed` and rejects direct offset writes. The
+        // cast normalizes it to `array` so the writes type-check on both 6.4 and 7.x; the
+        // resulting "useless cast" on 7.x is silenced by the scoped ignore in phpstan.neon.
         $vars = (array) $view->vars;
         $vars['multiple'] = $options['multiple'];
         $vars['choice_name'] = $options['choice_name'];
