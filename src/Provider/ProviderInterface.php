@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
+use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
 {
@@ -18,11 +18,23 @@ interface ProviderInterface
     public function setCode(string $code): void;
 
     /**
-     * Will return an array of pickup points
+     * Returns the pickup points near the given address.
+     *
+     * Takes an {@see Address} rather than an order so providers can be used outside the checkout
+     * flow (e.g. an admin tool or a standalone lookup). Build one from an order with
+     * {@see Address::fromOrder()}.
      *
      * @return list<PickupPoint>
      */
-    public function findPickupPoints(OrderInterface $order): array;
+    public function findPickupPoints(Address $address): array;
 
-    public function findPickupPoint(string $id, string $country): ?PickupPoint;
+    /**
+     * Resolves a single pickup point from its provider-local id.
+     *
+     * @param array<string, mixed> $metadata extra, carrier-specific context needed to resolve the
+     *                                        pickup point (e.g. `['country' => 'DK']`). Untyped on
+     *                                        purpose: the data required to look up a pickup point by
+     *                                        id varies per carrier, so this stays an open SPI hook.
+     */
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint;
 }

@@ -58,6 +58,6 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
 
         [$providerCode, $id, $country] = $parts;
 
-        return $this->providerRegistry->get($providerCode)->findPickupPoint($id, $country);
+        return $this->providerRegistry->get($providerCode)->findPickupPoint($id, ['country' => $country]);
     }
 }

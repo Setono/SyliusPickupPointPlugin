@@ -7,8 +7,8 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use Faker\Factory;
 use Faker\Generator;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Sylius\Component\Core\Model\OrderInterface;
 use Webmozart\Assert\Assert;
 
 #[AsProvider(code: 'faker', name: 'Faker')]
@@ -21,12 +21,9 @@ final class FakerProvider extends Provider
         $this->faker = Factory::create();
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(Address $address): array
     {
-        $address = $order->getShippingAddress();
-        Assert::notNull($address);
-
-        $countryCode = $address->getCountryCode();
+        $countryCode = $address->countryCode;
         Assert::notNull($countryCode);
 
         $pickupPoints = [];
@@ -37,9 +34,11 @@ final class FakerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(string $id, string $country): PickupPoint
+    public function findPickupPoint(string $id, array $metadata = []): PickupPoint
     {
-        return $this->createFakePickupPoint($id, $country);
+        $country = $metadata['country'] ?? null;
+
+        return $this->createFakePickupPoint($id, is_string($country) ? $country : null);
     }
 
     private function createFakePickupPoint(string $index, ?string $countryCode = null): PickupPoint

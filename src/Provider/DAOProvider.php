@@ -7,8 +7,8 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 use function preg_replace;
 use Setono\DAO\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Sylius\Component\Core\Model\OrderInterface;
 
 #[AsProvider(code: 'dao', name: 'DAO')]
 final class DAOProvider extends Provider
@@ -17,15 +17,10 @@ final class DAOProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(Address $address): array
     {
-        $shippingAddress = $order->getShippingAddress();
-        if (null === $shippingAddress) {
-            return [];
-        }
-
-        $street = $shippingAddress->getStreet();
-        $postCode = $shippingAddress->getPostcode();
+        $street = $address->street;
+        $postCode = $address->postcode;
         if (null === $street || null === $postCode) {
             return [];
         }
@@ -37,7 +32,7 @@ final class DAOProvider extends Provider
         ]);
     }
 
-    public function findPickupPoint(string $id, string $country): ?PickupPoint
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
     {
         return $this->_findPickupPoints([
             'shopid' => $id,

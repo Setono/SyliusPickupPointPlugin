@@ -9,8 +9,8 @@ use Setono\PostNord\Request\Query\ServicePoints\ByIdsQuery;
 use Setono\PostNord\Request\Query\ServicePoints\NearestByAddressQuery;
 use Setono\PostNord\Response\ServicePoints\ServicePoint;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Sylius\Component\Core\Model\OrderInterface;
 
 /**
  * @see https://developer.postnord.com/api/docs/location
@@ -22,14 +22,9 @@ final class PostNordProvider extends Provider
     {
     }
 
-    public function findPickupPoints(OrderInterface $order): array
+    public function findPickupPoints(Address $address): array
     {
-        $shippingAddress = $order->getShippingAddress();
-        if (null === $shippingAddress) {
-            return [];
-        }
-
-        $street = $shippingAddress->getStreet();
+        $street = $address->street;
         if (null === $street) {
             return [];
         }
@@ -42,9 +37,9 @@ final class PostNordProvider extends Provider
         $streetNumber = array_pop($streetParts);
         $street = implode(' ', $streetParts);
 
-        $postCode = $shippingAddress->getPostcode();
-        $city = $shippingAddress->getCity();
-        $countryCode = $shippingAddress->getCountryCode();
+        $postCode = $address->postcode;
+        $city = $address->city;
+        $countryCode = $address->countryCode;
         if (null === $postCode || null === $city || null === $countryCode) {
             return [];
         }
@@ -69,11 +64,13 @@ final class PostNordProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(string $id, string $country): ?PickupPoint
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
     {
+        $country = $metadata['country'] ?? null;
+
         $result = $this->client->servicePoints()->getByIds(ByIdsQuery::create(
             ids: [$id],
-            countryCode: $country,
+            countryCode: is_string($country) ? $country : null,
         ));
 
         if ([] === $result->servicePoints) {

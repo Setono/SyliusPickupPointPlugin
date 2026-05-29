@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
+use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
@@ -39,6 +40,8 @@ final readonly class PickupPointsSearchByCartAddressAction
             ));
         }
 
-        return new JsonResponse($this->providerRegistry->get($providerCode)->findPickupPoints($order));
+        return new JsonResponse(
+            $this->providerRegistry->get($providerCode)->findPickupPoints(Address::fromOrder($order)),
+        );
     }
 }
