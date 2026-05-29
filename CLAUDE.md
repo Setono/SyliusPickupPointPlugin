@@ -10,6 +10,17 @@ The plugin code is in `src/`; `tests/Application/` is a full Sylius Symfony app 
 
 ## Commands
 
+> **PHP version — use the versioned binary directly, never switch the global default.**
+> This repo's `vendor/` is locked to PHP `>= 8.4` (composer.lock was resolved on 8.4),
+> so the shell default — which is often an older version like 8.1 — fails Composer's
+> platform check. Do **not** run the `8.1`/`8.2`/`8.3`/`8.4` switcher aliases from
+> `~/.zshrc`: they `brew unlink`/`brew link --force` and change the *system-wide*
+> default PHP, which can break other work in progress on this machine. Instead invoke
+> the matching binary directly, e.g.
+> `"$(brew --prefix php@8.4)/bin/php" vendor/bin/rector process --dry-run`
+> (or `composer`, `phpunit`, `phpstan`, …). Prefix any tooling that hits the platform
+> check the same way.
+
 All commands run from the repo root unless noted. Composer scripts wrap most things:
 
 - `composer phpunit` — run unit tests (`phpunit.xml.dist`, suite covers `tests/`)
