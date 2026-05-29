@@ -5,9 +5,9 @@ setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address:
         _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction
         _format: json
 
-setono_sylius_pickup_point_shop_ajax_pickup_point_by_id:
-    path: /ajax/pickup-points/from-id
+setono_sylius_pickup_point_shop_ajax_pickup_point_by_identifier:
+    path: /ajax/pickup-points/from-identifier
     methods: [GET]
     defaults:
-        _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction
+        _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdentifierAction
         _format: json

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction;
+use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdentifierAction;
 use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction;
-use Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointToIdentifierTransformer;
+use Setono\SyliusPickupPointPlugin\Encoder\PickupPointIdentifierEncoder;
 use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -21,10 +21,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->public()
     ;
 
-    $services->set(PickupPointByIdAction::class)
+    $services->set(PickupPointByIdentifierAction::class)
         ->args([
             service('serializer'),
-            service(PickupPointToIdentifierTransformer::class),
+            service(PickupPointIdentifierEncoder::class),
+            service(ProviderRegistry::class),
         ])
         ->public()
     ;
