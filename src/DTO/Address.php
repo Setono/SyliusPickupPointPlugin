@@ -18,7 +18,7 @@ final readonly class Address
 {
     public function __construct(
         public ?string $street = null,
-        public ?string $postcode = null,
+        public ?string $postalCode = null,
         public ?string $city = null,
         public ?string $countryCode = null,
     ) {

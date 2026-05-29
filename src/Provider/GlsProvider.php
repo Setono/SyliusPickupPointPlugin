@@ -23,7 +23,7 @@ final class GlsProvider extends Provider
     public function findPickupPoints(Address $address): array
     {
         $street = $address->street;
-        $postCode = $address->postcode;
+        $postCode = $address->postalCode;
         $countryCode = $address->countryCode;
         if (null === $street || null === $postCode || null === $countryCode) {
             return [];

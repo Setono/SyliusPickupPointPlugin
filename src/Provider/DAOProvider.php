@@ -20,7 +20,7 @@ final class DAOProvider extends Provider
     public function findPickupPoints(Address $address): array
     {
         $street = $address->street;
-        $postCode = $address->postcode;
+        $postCode = $address->postalCode;
         if (null === $street || null === $postCode) {
             return [];
         }

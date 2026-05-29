@@ -37,7 +37,7 @@ final class PostNordProvider extends Provider
         $streetNumber = array_pop($streetParts);
         $street = implode(' ', $streetParts);
 
-        $postCode = $address->postcode;
+        $postCode = $address->postalCode;
         $city = $address->city;
         $countryCode = $address->countryCode;
         if (null === $postCode || null === $city || null === $countryCode) {
