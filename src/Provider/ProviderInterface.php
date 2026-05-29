@@ -9,17 +9,13 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 interface ProviderInterface
 {
-    public function __toString(): string;
-
     /**
-     * A unique code identifying this provider
+     * Sets the code this provider is registered under. Called once by the container
+     * (wired by the RegisterProvidersPass) so the provider can stamp it onto the
+     * pickup points it returns. The code is resolved at compile time — either from
+     * the `#[AsProvider]` attribute or from the service tag's `code` attribute.
      */
-    public function getCode(): string;
-
-    /**
-     * Will return the name of this provider
-     */
-    public function getName(): string;
+    public function setCode(string $code): void;
 
     /**
      * Will return an array of pickup points

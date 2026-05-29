@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
-use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
-use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ final readonly class PickupPointsSearchByCartAddressAction
 {
     public function __construct(
         private CartContextInterface $cartContext,
-        private ServiceRegistryInterface $providerRegistry,
+        private ProviderRegistryInterface $providerRegistry,
     ) {
     }
 
@@ -40,9 +39,6 @@ final readonly class PickupPointsSearchByCartAddressAction
             ));
         }
 
-        /** @var ProviderInterface $provider */
-        $provider = $this->providerRegistry->get($providerCode);
-
-        return new JsonResponse($provider->findPickupPoints($order));
+        return new JsonResponse($this->providerRegistry->get($providerCode)->findPickupPoints($order));
     }
 }

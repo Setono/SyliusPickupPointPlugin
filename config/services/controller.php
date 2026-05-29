@@ -7,6 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction;
 use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction;
 use Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointToIdentifierTransformer;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
@@ -14,7 +15,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PickupPointsSearchByCartAddressAction::class)
         ->args([
             service('sylius.context.cart'),
-            service('setono_sylius_pickup_point.registry.provider'),
+            service(ProviderRegistry::class),
         ])
         ->public()
     ;

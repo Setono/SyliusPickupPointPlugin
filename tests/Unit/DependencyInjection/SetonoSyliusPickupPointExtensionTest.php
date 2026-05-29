@@ -6,6 +6,7 @@ namespace Setono\SyliusPickupPointPlugin\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Setono\SyliusPickupPointPlugin\DependencyInjection\SetonoSyliusPickupPointExtension;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
 
 final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCase
 {
@@ -32,6 +33,6 @@ final class SetonoSyliusPickupPointExtensionTest extends AbstractExtensionTestCa
     {
         $this->load();
 
-        $this->assertContainerBuilderHasService('setono_sylius_pickup_point.registry.provider');
+        $this->assertContainerBuilderHasService(ProviderRegistry::class);
     }
 }

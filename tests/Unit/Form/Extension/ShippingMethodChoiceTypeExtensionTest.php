@@ -7,8 +7,8 @@ namespace Setono\SyliusPickupPointPlugin\Tests\Unit\Form\Extension;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtension;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType;
-use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 
 final class ShippingMethodChoiceTypeExtensionTest extends TestCase
@@ -35,7 +35,7 @@ final class ShippingMethodChoiceTypeExtensionTest extends TestCase
     private function createExtension(): ShippingMethodChoiceTypeExtension
     {
         return new ShippingMethodChoiceTypeExtension(
-            $this->prophesize(ServiceRegistryInterface::class)->reveal(),
+            $this->prophesize(ProviderRegistryInterface::class)->reveal(),
         );
     }
 }

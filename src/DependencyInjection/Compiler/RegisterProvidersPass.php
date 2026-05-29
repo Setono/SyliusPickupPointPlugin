@@ -7,6 +7,8 @@ namespace Setono\SyliusPickupPointPlugin\DependencyInjection\Compiler;
 use InvalidArgumentException;
 use ReflectionClass;
 use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\Exception\NonUniqueProviderCodeException;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -15,19 +17,29 @@ final class RegisterProvidersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('setono_sylius_pickup_point.registry.provider')) {
+        if (!$container->hasDefinition(ProviderRegistry::class)) {
             return;
         }
 
-        $registry = $container->getDefinition('setono_sylius_pickup_point.registry.provider');
+        $registry = $container->getDefinition(ProviderRegistry::class);
 
+        /** @var array<string, string> $codeToNameMap */
         $codeToNameMap = [];
         foreach ($container->findTaggedServiceIds('setono_sylius_pickup_point.provider') as $id => $tagged) {
             foreach ($tagged as $attributes) {
                 [$code, $name] = $this->resolveCodeAndName($container, $id, is_array($attributes) ? $attributes : []);
 
+                if (isset($codeToNameMap[$code])) {
+                    throw new NonUniqueProviderCodeException($code);
+                }
+
                 $codeToNameMap[$code] = $name;
-                $registry->addMethodCall('register', [$code, new Reference($id)]);
+
+                // Resolve the code into the provider instance once, at compile time, so it can
+                // stamp the code onto the pickup points it returns without runtime reflection.
+                $container->getDefinition($id)->addMethodCall('setCode', [$code]);
+
+                $registry->addMethodCall('add', [new Reference($id), $code, $name]);
             }
         }
 

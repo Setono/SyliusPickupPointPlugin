@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Form\DataTransformer;
 
 use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use function sprintf;
-use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 final readonly class PickupPointToIdentifierTransformer implements DataTransformerInterface
 {
-    public function __construct(private ServiceRegistryInterface $providerRegistry)
+    public function __construct(private ProviderRegistryInterface $providerRegistry)
     {
     }
 
@@ -59,9 +58,6 @@ final readonly class PickupPointToIdentifierTransformer implements DataTransform
 
         [$providerCode, $id, $country] = $parts;
 
-        /** @var ProviderInterface $provider */
-        $provider = $this->providerRegistry->get($providerCode);
-
-        return $provider->findPickupPoint($id, $country);
+        return $this->providerRegistry->get($providerCode)->findPickupPoint($id, $country);
     }
 }

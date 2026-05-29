@@ -10,6 +10,7 @@ use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodChoiceTypeExtens
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShippingMethodTypeExtension;
 use Setono\SyliusPickupPointPlugin\Form\Type\PickupPointChoiceType;
 use Setono\SyliusPickupPointPlugin\Form\Type\PickupPointIdChoiceType;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodType;
@@ -19,7 +20,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(PickupPointToIdentifierTransformer::class)
         ->args([
-            service('setono_sylius_pickup_point.registry.provider'),
+            service(ProviderRegistry::class),
         ])
     ;
 
@@ -33,7 +34,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(ShippingMethodChoiceTypeExtension::class)
         ->args([
-            service('setono_sylius_pickup_point.registry.provider'),
+            service(ProviderRegistry::class),
         ])
         ->tag('form.type_extension', ['extended_type' => ShippingMethodChoiceType::class])
     ;

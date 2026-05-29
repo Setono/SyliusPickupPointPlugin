@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Form\Extension;
 
 use Setono\SyliusPickupPointPlugin\Model\PickupPointProviderAwareInterface;
-use Setono\SyliusPickupPointPlugin\Provider\ProviderInterface;
+use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use Sylius\Bundle\ShippingBundle\Form\Type\ShippingMethodChoiceType;
-use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
 {
     public function __construct(
-        private readonly ServiceRegistryInterface $providerRegistry,
+        private readonly ProviderRegistryInterface $providerRegistry,
     ) {
     }
 
@@ -33,11 +32,8 @@ final class ShippingMethodChoiceTypeExtension extends AbstractTypeExtension
                 return $defaultAttr;
             }
 
-            /** @var ProviderInterface $provider */
-            $provider = $this->providerRegistry->get($pickupPointProviderId);
-
             return [
-                'data-pickup-point-provider' => $provider->getCode(),
+                'data-pickup-point-provider' => $pickupPointProviderId,
             ] + $defaultAttr;
         });
     }

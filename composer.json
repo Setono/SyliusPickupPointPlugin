@@ -15,7 +15,6 @@
         "sylius/core": "^2.0",
         "sylius/core-bundle": "^2.0",
         "sylius/order": "^2.0",
-        "sylius/registry": "^1.6",
         "sylius/shipping": "^2.0",
         "sylius/shipping-bundle": "^2.0",
         "symfony/config": "^6.4 || ^7.4",
