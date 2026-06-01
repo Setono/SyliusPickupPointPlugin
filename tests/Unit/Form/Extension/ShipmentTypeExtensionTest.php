@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShipmentTypeExtension;
+use Setono\SyliusPickupPointPlugin\Form\Type\PickupPointType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -25,7 +26,7 @@ final class ShipmentTypeExtensionTest extends TestCase
         $extension = new ShipmentTypeExtension();
 
         $builder = $this->prophesize(FormBuilderInterface::class);
-        $builder->add(Argument::type('string'), Argument::type('string'), Argument::any())->willReturn($builder->reveal());
+        $builder->add('pickupPoint', PickupPointType::class, Argument::type('array'))->willReturn($builder->reveal());
 
         $extension->buildForm($builder->reveal(), []);
     }

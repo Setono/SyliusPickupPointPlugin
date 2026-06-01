@@ -39,7 +39,7 @@ final class PickupPointNormalizer implements NormalizerInterface, NormalizerAwar
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<array-key, mixed> $context
      *
      * @return array<array-key, mixed>
      */

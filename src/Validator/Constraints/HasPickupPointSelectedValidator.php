@@ -36,7 +36,7 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
             return;
         }
 
-        if (!$value->hasPickupPointId()) {
+        if (!$value->hasPickupPoint()) {
             $this->context
                 ->buildViolation($constraint->pickupPointNotBlank)
                 ->addViolation()

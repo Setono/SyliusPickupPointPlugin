@@ -34,10 +34,3 @@ parameters:
         # Test smoke-assertions: assertInstanceOf against the concrete class is intentional.
         -
             identifier: staticMethod.alreadyNarrowedType
-        # FormView::$vars is typed `array` on Symfony 7+ but untyped (mixed) on 6.4
-        # and on the FormView stub shipped by phpstan-symfony. The (array) cast in
-        # PickupPointChoiceType::buildView() reconciles both, so the "useless cast"
-        # report on the modern side must be silenced.
-        -
-            identifier: cast.useless
-            path: src/Form/Type/PickupPointChoiceType.php
