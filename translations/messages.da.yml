@@ -1,6 +1,9 @@
 setono_sylius_pickup_point:
     ui:
         shipment_to: Til afhentningssted
+        loading_pickup_points: Henter afhentningssteder…
+        no_pickup_points: Der er ingen afhentningssteder for den indtastede adresse.
+        error_loading_pickup_points: Vi kunne ikke hente afhentningsstederne. Prøv at vælge leveringsmetoden igen.
     form:
         shipment:
             pickup_point: Afhentningssted
