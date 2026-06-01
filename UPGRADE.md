@@ -23,13 +23,14 @@
 
 The plugin no longer depends on FOSRestBundle or JMS Serializer. The AJAX
 endpoints now return a `JsonResponse` produced by
-`Symfony\Component\Serializer\SerializerInterface`, serializing all public
-properties of `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` (no
-serialization-group filter is applied). If you previously read
-`response.code` or `response.full_address` off the AJAX response, those
-fields are no longer emitted server-side — `code` is composed client-side
-from `provider---id---country` and `full_address` from
-`${address}, ${zipCode} ${city}` in `public/js/setono-pickup-point.js`.
+`Symfony\Component\Serializer\SerializerInterface`. Each pickup point is
+serialized from the public properties of
+`Setono\SyliusPickupPointPlugin\DTO\PickupPoint` plus an `identifier` field —
+the opaque, URL/form-safe token produced by `PickupPointIdentifierEncoder` and
+added by `PickupPointNormalizer`. The shop JS reads `value.identifier` directly
+(it no longer composes any identifier format client-side) and still builds
+`full_address` from `${address}, ${zipCode} ${city}` in
+`public/js/setono-pickup-point.js`.
 
 ## Plugin file layout
 
@@ -73,11 +74,12 @@ setono_sylius_pickup_point:
 
 Previously: `@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml`.
 
-The plugin-owned route names are unchanged
-(`setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address`,
-`setono_sylius_pickup_point_shop_ajax_pickup_point_by_id`), and so are the
-resulting URLs (`/{_locale}/ajax/pickup-points/search`,
-`/{_locale}/ajax/pickup-points/{pickupPointId}`).
+The plugin-owned shop routes and their URLs are:
+
+- `setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address`
+  → `/{_locale}/ajax/pickup-points/from-cart`
+- `setono_sylius_pickup_point_shop_ajax_pickup_point_by_identifier`
+  → `/{_locale}/ajax/pickup-points/from-identifier` (takes an `identifier` query parameter)
 
 ## Templates → Twig hooks
 
@@ -102,7 +104,7 @@ Examples:
 | 1.x ID                                                              | 2.0 ID                                                                       |
 |---------------------------------------------------------------------|------------------------------------------------------------------------------|
 | `setono_sylius_pickup_point.command.load_pickup_points`             | (removed — see "Removed: local snapshot and message bus")                    |
-| `setono_sylius_pickup_point.controller.action.pickup_point_by_id`   | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdAction`     |
+| `setono_sylius_pickup_point.controller.action.pickup_point_by_id`   | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdentifierAction` |
 | `setono_sylius_pickup_point.controller.action.pickup_points_search_by_cart_address` | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction` |
 | `setono_sylius_pickup_point.message.handler.load_pickup_points`     | (removed — see "Removed: local snapshot and message bus")                    |
 | `setono_sylius_pickup_point.validator.has_pickup_point_selected`    | `Setono\SyliusPickupPointPlugin\Validator\Constraints\HasPickupPointSelectedValidator` |
@@ -181,26 +183,27 @@ declare it should remove the method to match the interface.
 `Setono\SyliusPickupPointPlugin\Model\PickupPointInterface` and
 `Setono\SyliusPickupPointPlugin\Model\PickupPointCode` are removed. The
 replacement is `Setono\SyliusPickupPointPlugin\DTO\PickupPoint` — a final
-class with public scalar properties and nothing else (no methods, no
-`#[Groups]` / `#[SerializedName]` attributes). It's populated from the
-carrier API response by each provider, and the values are emitted directly
-by the AJAX endpoints.
+class with public properties (scalars plus an open `metadata` map) and
+`fromArray()` / `jsonSerialize()` helpers, but no `#[Groups]` /
+`#[SerializedName]` attributes and no Sylius resource behaviour. It's populated
+from the carrier API response by each provider, and emitted (with its
+`identifier` token) by the AJAX endpoints.
 
-The `PickupPointCode` value object has been inlined as three plain
-`provider`, `id` and `country` properties on the DTO. The wire-format
-string (`provider---id---country`) is no longer produced by a DTO method —
-it lives in two places now:
+The `PickupPointCode` value object has been inlined as plain `provider`,
+`id` and `country` properties on the DTO. The old `provider---id---country`
+wire-format string is gone: the identifier is now an opaque, URL/form-safe
+token produced by
+`Setono\SyliusPickupPointPlugin\Encoder\PickupPointIdentifierEncoder`
+(base64url-encoded JSON of `provider`, `id` and an open `metadata` map). The
+server emits it as the `identifier` field of each AJAX result and the shop JS
+writes it verbatim into the hidden input — it no longer composes any format
+client-side.
 
-- `PickupPointToIdentifierTransformer::transform()` builds it from the DTO
-  before handing it back to the form as the hidden-input value.
-- The shop JS (`public/js/setono-pickup-point.js`) composes it client-side
-  when rendering the radio prototype.
-
-Provider implementations now receive the id and country as separate string
-arguments:
+Provider implementations now resolve a point from its id plus an open
+metadata map (into which the well-known country is folded):
 
 ```php
-public function findPickupPoint(string $id, string $country): ?PickupPoint;
+public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint;
 ```
 
 Consumers that hand-built or type-hinted `PickupPointInterface` should
@@ -235,12 +238,14 @@ deprecated:
 | `getPickupPointId(): ?string`                 | `getPickupPoint(): ?\Setono\SyliusPickupPointPlugin\DTO\PickupPoint`            |
 | column `pickup_point_id` (`STRING`)           | column `pickup_point` (`JSON`)                        |
 
-The trait now ships **both** columns side-by-side; nothing in the plugin
-itself reads the new column yet, so existing data continues to be served
-out of `pickup_point_id`. Your application should be migrated in two
-moves: (1) backfill the JSON column from the legacy string, (2) when
-you're ready, drop the legacy column and stop using the deprecated
-methods.
+The trait ships **both** columns side-by-side. As of 2.0 the plugin reads
+and writes only the new `pickup_point` JSON column: the checkout form
+resolves the selected point and stores the full DTO, and the shipment label
+template renders `shipment.pickupPoint` directly. The legacy
+`pickup_point_id` string column is kept only for backwards compatibility and
+is never written anymore. Migrate your data in two moves: (1) backfill the
+JSON column from the legacy string, (2) when you're ready, drop the legacy
+column and stop using the deprecated methods.
 
 ### Example data migration
 
