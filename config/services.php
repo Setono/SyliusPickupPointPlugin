@@ -10,7 +10,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import('services/fixture.php');
     $containerConfigurator->import('services/form.php');
     $containerConfigurator->import('services/registry.php');
-    $containerConfigurator->import('services/serializer.php');
     $containerConfigurator->import('services/shipping.php');
     $containerConfigurator->import('services/validator.php');
 };

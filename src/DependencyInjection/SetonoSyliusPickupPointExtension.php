@@ -77,18 +77,6 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
     {
         $container->prependExtensionConfig('sylius_twig_hooks', [
             'hooks' => [
-                'sylius_admin.base#javascripts' => [
-                    'setono_sylius_pickup_point.javascripts' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
-                        'priority' => -100,
-                    ],
-                ],
-                'sylius_shop.base#javascripts' => [
-                    'setono_sylius_pickup_point.javascripts' => [
-                        'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
-                        'priority' => -100,
-                    ],
-                ],
                 'sylius_admin.order.show.content.sections.shipments.item' => [
                     'pickup_point' => [
                         'template' => '@SetonoSyliusPickupPointPlugin/shop/label/shipment/pickupPoint.html.twig',
@@ -110,6 +98,12 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
                 'sylius_shop.checkout.select_shipping.content.form.shipments.shipment' => [
                     'pickup_point' => [
                         'template' => '@SetonoSyliusPickupPointPlugin/shop/checkout/select_shipping/shipment/pickupPoint.html.twig',
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_shop.base#javascripts' => [
+                    'setono_sylius_pickup_point.javascripts' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
                         'priority' => -100,
                     ],
                 ],

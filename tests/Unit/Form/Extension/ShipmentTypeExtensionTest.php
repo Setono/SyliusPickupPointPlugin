@@ -9,6 +9,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusPickupPointPlugin\Form\Extension\ShipmentTypeExtension;
 use Setono\SyliusPickupPointPlugin\Form\Type\PickupPointType;
+use Sylius\Bundle\CoreBundle\Form\Type\Checkout\ShipmentType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -21,13 +22,18 @@ final class ShipmentTypeExtensionTest extends TestCase
         self::assertInstanceOf(AbstractTypeExtension::class, new ShipmentTypeExtension());
     }
 
-    public function testItBuildsFormWithoutErrors(): void
+    public function testItExtendsTheCheckoutShipmentType(): void
     {
-        $extension = new ShipmentTypeExtension();
+        self::assertContains(ShipmentType::class, ShipmentTypeExtension::getExtendedTypes());
+    }
 
+    public function testItAddsThePickupPointField(): void
+    {
         $builder = $this->prophesize(FormBuilderInterface::class);
-        $builder->add('pickupPoint', PickupPointType::class, Argument::type('array'))->willReturn($builder->reveal());
+        $builder->add('pickupPoint', PickupPointType::class, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn($builder->reveal());
 
-        $extension->buildForm($builder->reveal(), []);
+        (new ShipmentTypeExtension())->buildForm($builder->reveal(), []);
     }
 }
