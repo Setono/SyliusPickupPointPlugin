@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Sylius plugin (`setono/sylius-pickup-point-plugin`, type `sylius-plugin`) that adds a pickup-point `<select>` to the shipping checkout step. Supports DAO, GLS, PostNord, Budbee, CoolRunner, and a `faker` provider for dev. Each third-party provider lives behind an optional `setono/*-bundle` dependency and is only enabled when both configured and (by default) when its bundle class is present — see `src/DependencyInjection/Configuration.php`.
+A Sylius plugin (`setono/sylius-pickup-point-plugin`, type `sylius-plugin`) that adds a pickup-point chooser to the shipping checkout step: once the page has rendered, a small framework-free script loads the points asynchronously and renders them as radio buttons (no `<select>`, no Stimulus). Supports DAO, GLS, PostNord, and a `faker` provider for dev. Each third-party provider lives behind an optional `setono/*-bundle` dependency and is only enabled when both configured and (by default) when its bundle class is present — see `src/DependencyInjection/Configuration.php`.
 
 The plugin code is in `src/`; `tests/Application/` is a full Sylius Symfony app used by phpunit, behat and the integration suite (its `bin/console` is the way to run Symfony commands against this plugin).
 
@@ -46,24 +46,23 @@ Symfony app inside `tests/Application/`:
 
 Behat integration setup (mirrors CI in `.github/workflows/build.yaml`): start MySQL, create DB + schema in `tests/Application/`, install/build yarn assets, run `symfony server:start --port=8080 --dir=public --daemon`, run headless Chrome on `127.0.0.1:9222`. The Behat base URL is `https://127.0.0.1:8080/` (see `behat.yml.dist`).
 
-The plugin's own console command (run inside `tests/Application/`): `bin/console setono-sylius-pickup-point:load-pickup-points [provider]` — dispatches `LoadPickupPoints` messages to populate the local DB.
-
 ## Architecture
 
-**Providers are the core abstraction.** `Setono\SyliusPickupPointPlugin\Provider\ProviderInterface` is implemented by one concrete class per carrier (`DAOProvider`, `GlsProvider`, `PostNordProvider`, `BudbeeProvider`, `CoolRunnerProvider`, `FakerProvider`). Each is registered as a service tagged `setono_sylius_pickup_point.provider` with `code` and `label` attributes.
+**Providers are the core abstraction.** `Setono\SyliusPickupPointPlugin\Provider\ProviderInterface` is implemented by one concrete class per carrier (`DAOProvider`, `GlsProvider`, `PostNordProvider`, `FakerProvider`). Each is registered as a service tagged `setono_sylius_pickup_point.provider` — usually via the `#[AsProvider(code, name)]` attribute — and exposes `findPickupPoints(Address)` (the list for an order address) and `findPickupPoint(id, metadata)`.
 
-**Provider decoration happens in a compiler pass.** `DependencyInjection/Compiler/RegisterProvidersPass` reads the tagged services and wraps each one in two optional decorators before registering with the `setono_sylius_pickup_point.registry.provider` (a Sylius `ServiceRegistry`):
+**Provider registration happens in a compiler pass.** `DependencyInjection/Compiler/RegisterProvidersPass` reads the tagged services, stamps each provider's `code` onto it (`setCode()`), registers it into the `setono_sylius_pickup_point.registry.provider` (`ProviderRegistry`, a Sylius `ServiceRegistry`), exposes the code→name map as the `setono_sylius_pickup_point.providers` parameter, and rejects duplicate codes (`NonUniqueProviderCodeException`). There are **no provider decorators**: the 1.x `CachedProvider`/`LocalProvider` and the messenger-driven local DB snapshot (`LoadPickupPoints*`, `PickupPointRepository`) were removed in 2.0 (see `UPGRADE.md`) — providers are now called live.
 
-1. `CachedProvider` (priority 256) — wraps when `cache.enabled: true`; keys per-order on country+postcode+street.
-2. `LocalProvider` (priority 512, outermost) — wraps when `local: true` (default); on `TimeoutException` from the underlying provider, falls back to `PickupPointRepository` (the rows populated by `LoadPickupPointsHandler`).
+When adding/changing a provider, the work happens in three places: the `Provider/` class, a service definition in `config/services/providers/`, and (usually) a corresponding `setono/*-bundle` `class_exists` check in `Configuration.php`.
 
-When adding/changing a provider, the work happens in three places: the `Provider/` class, a service definition in `src/Resources/config/services/provider/`, and (usually) a corresponding `setono/*-bundle` `class_exists` check in `Configuration.php`. Do not register decorators yourself — the compiler pass does it based on plugin config.
+**Checkout pickup-point selection (async, no framework).** This is the heart of the shop UX and it deliberately makes **zero provider calls while the shipping page renders**, so a slow or down carrier can never stall checkout:
 
-**Identity uses `PickupPointCode`.** `Model/PickupPointCode` is a value object serialized as `provider---id---country` (the country part is necessary because some carriers only guarantee id uniqueness per country). `createFromString()` parses that format; this is the on-the-wire form between the form/JS layer and PHP.
+- `Form/Extension/ShipmentTypeExtension` adds a hidden `pickupPoint` field (`Form/Type/PickupPointType`, a `HiddenType` + `Form/DataTransformer/PickupPointTransformer`). `Form/Extension/ShippingMethodChoiceTypeExtension` stamps `data-pickup-point-provider` onto each pickup-capable shipping-method radio.
+- After the page is on screen, the framework-free `public/js/setono-pickup-point.js` (wired via the `_javascripts` twig hook on `sylius_shop.base#javascripts`) fetches `GET /pickup-points` (`Controller/Action/PickupPointsAction`) **once**. That endpoint returns each pickup-capable method's points for the current cart, keyed by method code, with a per-provider `try/catch` so one failing carrier doesn't take the others down. The script builds the radio list, toggles the visible group as the shipping method changes, and shows loading/empty/error states. It (re-)initialises on both `DOMContentLoaded` and `turbo:load` because Sylius' shop navigates with Turbo (checkout steps are AJAX body swaps).
+- Each radio's value is a `value` token — the whole `DTO/PickupPoint` base64url-encoded by `Encoder/PickupPointEncoder`. Selecting a radio writes the token into the hidden field; on submit `PickupPointTransformer` decodes it straight back into the `PickupPoint` (no provider call, no re-resolve, no faker drift) and `Model/PickupPointAwareTrait::setPickupPoint()` persists it to the `pickup_point` JSON column. `Validator/Constraints/HasPickupPointSelected` enforces that a pickup-capable method actually got a point.
 
-**Async loading.** `Command/LoadPickupPointsCommand` dispatches one `Message/Command/LoadPickupPoints` per provider over `symfony/messenger`; `Message/Handler/LoadPickupPointsHandler` calls `findAllPickupPoints()` on the provider and upserts into the `PickupPointRepository`, flushing+clearing every 50 entities. This is the data source for `LocalProvider`'s fallback.
+**Identity lives on the DTO.** `DTO/PickupPoint` is a plain final class with public properties (`provider`, `id`, `country`, `name`, …, plus an open `metadata` map) and `fromArray()`/`jsonSerialize()` — not a Doctrine resource. The 1.x `Model/PickupPoint*` resources and the `PickupPointCode` (`provider---id---country`) value object were removed in 2.0.
 
-**Resource extension model (Sylius pattern).** Consumers extend `Sylius\Component\Core\Model\Shipment` with `PickupPointAwareTrait` (and implement `ShipmentInterface`) and similarly `ShippingMethod` with `PickupPointProviderAwareTrait`. The plugin's own `PickupPoint` resource is defined via `SyliusResourceBundle` (only ORM driver supported — see `SetonoSyliusPickupPointPlugin::getSupportedDrivers()`).
+**Resource extension model (Sylius pattern).** Consumers extend `Sylius\Component\Core\Model\Shipment` with `PickupPointAwareTrait` (and implement `ShipmentInterface`) and `ShippingMethod` with `PickupPointProviderAwareTrait` (both `#[ORM\Column]` attribute mappings). The plugin owns no Doctrine resource of its own anymore.
 
 ## Working agreements
 

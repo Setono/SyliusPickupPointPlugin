@@ -13,7 +13,7 @@
 
 | Package | Replacement |
 |---------|-------------|
-| `friendsofsymfony/rest-bundle` | `symfony/serializer` (Symfony Serializer + `JsonResponse`) |
+| `friendsofsymfony/rest-bundle` | `symfony/http-foundation` (a plain `JsonResponse`) |
 | `doctrine/event-manager` | Pulled transitively by Doctrine ORM 3 |
 | `behat/transliterator` | Removed along with `CachedProvider` |
 | `psr/cache`, `symfony/cache` | Removed along with `CachedProvider` |
@@ -21,16 +21,15 @@
 | `symfony/console` | Removed along with `LoadPickupPointsCommand` |
 | `sylius/resource-bundle` | Removed (no plugin-owned resource anymore) |
 
-The plugin no longer depends on FOSRestBundle or JMS Serializer. The AJAX
-endpoints now return a `JsonResponse` produced by
-`Symfony\Component\Serializer\SerializerInterface`. Each pickup point is
-serialized from the public properties of
-`Setono\SyliusPickupPointPlugin\DTO\PickupPoint` plus an `identifier` field —
-the opaque, URL/form-safe token produced by `PickupPointIdentifierEncoder` and
-added by `PickupPointNormalizer`. The shop JS reads `value.identifier` directly
-(it no longer composes any identifier format client-side) and still builds
-`full_address` from `${address}, ${zipCode} ${city}` in
-`public/js/setono-pickup-point.js`.
+The plugin no longer depends on FOSRestBundle, JMS Serializer or the Symfony
+Serializer. A single shop endpoint (`PickupPointsAction`) returns a plain
+`JsonResponse` built directly: a map of shipping-method code → that method's
+pickup points for the current cart. Each point carries display fields (`name`,
+`address`, `zipCode`, `city`, `latitude`, `longitude`) plus a `value` token —
+the *whole* point, base64url-encoded by `PickupPointEncoder`. The shipping page
+fetches this **asynchronously, after it has rendered** (so a slow or down carrier
+API never blocks the page), and the framework-free shop JS
+(`public/js/setono-pickup-point.js`) builds the radio list from the response.
 
 ## Plugin file layout
 
@@ -49,7 +48,7 @@ The plugin moved from `src/Resources/**` to repo-root locations
 | `src/Resources/config/routes/`               | `config/routes/`        |
 | `src/Resources/config/app/config.yaml`       | (removed — inlined via `Extension::prepend()`) |
 | `src/Resources/config/app/fixtures.yaml`     | (removed — example data, copy into your test app if needed) |
-| `src/Resources/config/serializer/PickupPoint.yml` | (removed — the DTO has no serializer metadata, the endpoint emits every public property) |
+| `src/Resources/config/serializer/PickupPoint.yml` | (removed — the DTO has no serializer metadata; the endpoint builds its JSON directly) |
 | `src/Resources/translations/`                | `translations/`         |
 | `src/Resources/views/`                       | `templates/`            |
 | `src/Resources/public/`                      | `public/`               |
@@ -74,12 +73,16 @@ setono_sylius_pickup_point:
 
 Previously: `@SetonoSyliusPickupPointPlugin/Resources/config/routing.yaml`.
 
-The plugin-owned shop routes and their URLs are:
+The plugin now owns a single shop route:
 
-- `setono_sylius_pickup_point_shop_ajax_pickup_points_search_by_cart_address`
-  → `/{_locale}/ajax/pickup-points/from-cart`
-- `setono_sylius_pickup_point_shop_ajax_pickup_point_by_identifier`
-  → `/{_locale}/ajax/pickup-points/from-identifier` (takes an `identifier` query parameter)
+- `setono_sylius_pickup_point_shop_pickup_points` → `/{_locale}/pickup-points`
+  — returns the pickup points of every pickup-capable shipping method for the
+  current cart, keyed by method code (fetched asynchronously by the shop JS).
+
+The two `1.x`/early-`2.x` AJAX routes
+(`…_ajax_pickup_points_search_by_cart_address` → `/ajax/pickup-points/from-cart`
+and `…_ajax_pickup_point_by_identifier` → `/ajax/pickup-points/from-identifier`)
+are gone. Drop any custom links or fetch calls to those URLs.
 
 ## Templates → Twig hooks
 
@@ -87,8 +90,8 @@ The plugin now wires its layout JS snippet and the pickup-point shipment label
 automatically via `sylius_twig_hooks`. Consumers no longer need to:
 
 - include `@SetonoSyliusPickupPointPlugin/_javascripts.html.twig` manually in
-  `layout.html.twig`; the plugin attaches it to `sylius_admin.base#javascripts`
-  and `sylius_shop.base#javascripts`.
+  `layout.html.twig`; the plugin attaches it to `sylius_shop.base#javascripts`
+  (the chooser is shop-only, so it is no longer attached to the admin layout).
 - include `@SetonoSyliusPickupPointPlugin/shop/label/shipment/pickupPoint.html.twig`
   in admin order-show templates; the plugin attaches it to
   `sylius_admin.order.show.content.sections.shipments.item`.
@@ -104,8 +107,8 @@ Examples:
 | 1.x ID                                                              | 2.0 ID                                                                       |
 |---------------------------------------------------------------------|------------------------------------------------------------------------------|
 | `setono_sylius_pickup_point.command.load_pickup_points`             | (removed — see "Removed: local snapshot and message bus")                    |
-| `setono_sylius_pickup_point.controller.action.pickup_point_by_id`   | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointByIdentifierAction` |
-| `setono_sylius_pickup_point.controller.action.pickup_points_search_by_cart_address` | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsSearchByCartAddressAction` |
+| `setono_sylius_pickup_point.controller.action.pickup_point_by_id`   | (removed — the chosen point is now self-contained; there is no per-identifier lookup) |
+| `setono_sylius_pickup_point.controller.action.pickup_points_search_by_cart_address` | `Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsAction` (now returns every method's points in one call) |
 | `setono_sylius_pickup_point.message.handler.load_pickup_points`     | (removed — see "Removed: local snapshot and message bus")                    |
 | `setono_sylius_pickup_point.validator.has_pickup_point_selected`    | `Setono\SyliusPickupPointPlugin\Validator\Constraints\HasPickupPointSelectedValidator` |
 | `setono_sylius_pickup_point.fixture.shipping_method`                | `Setono\SyliusPickupPointPlugin\Fixture\ShippingMethodFixture`               |
@@ -190,14 +193,22 @@ from the carrier API response by each provider, and emitted (with its
 `identifier` token) by the AJAX endpoints.
 
 The `PickupPointCode` value object has been inlined as plain `provider`,
-`id` and `country` properties on the DTO. The old `provider---id---country`
-wire-format string is gone: the identifier is now an opaque, URL/form-safe
-token produced by
-`Setono\SyliusPickupPointPlugin\Encoder\PickupPointIdentifierEncoder`
-(base64url-encoded JSON of `provider`, `id` and an open `metadata` map). The
-server emits it as the `identifier` field of each AJAX result and the shop JS
-writes it verbatim into the hidden input — it no longer composes any format
-client-side.
+`id` and `country` properties on the DTO, and the old `provider---id---country`
+wire-format string is gone.
+
+The checkout no longer round-trips a point *identifier*. Each pickup point in
+the AJAX response carries a `value` token produced by
+`Setono\SyliusPickupPointPlugin\Encoder\PickupPointEncoder` — base64url-encoded
+JSON of the *whole* DTO. The shop JS uses that token as the chosen radio's value
+and writes it into the hidden input; on submit
+`Setono\SyliusPickupPointPlugin\Form\DataTransformer\PickupPointTransformer`
+decodes it straight back into the `PickupPoint`. Nothing is re-resolved through
+the provider, so a slow or down carrier never blocks the submit and the
+persisted point is exactly what the shopper saw.
+
+`PickupPointIdentifier` and `PickupPointIdentifierEncoder` still exist — they
+back the `findPickupPoint()` metadata contract below — but no longer carry the
+checkout's form value.
 
 Provider implementations now resolve a point from its id plus an open
 metadata map (into which the well-known country is folded):
@@ -380,6 +391,9 @@ setono_sylius_pickup_point:
 All testing now uses PHPUnit + Prophecy via `setono/sylius-plugin: ^2.0`
 which bundles PHPStan, PHPUnit, Rector, ECS and CI composite actions.
 
-## Removed translation keys
+## Translation keys
 
-None — translation keys are unchanged from 1.x.
+No keys were removed. The async chooser adds three UI strings under
+`setono_sylius_pickup_point.ui` — `loading_pickup_points`, `no_pickup_points`
+and `error_loading_pickup_points` (its loading/empty/error states). The bundled
+`en` and `da` catalogs cover them; translate them if you ship other locales.
