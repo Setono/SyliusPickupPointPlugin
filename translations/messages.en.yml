@@ -4,6 +4,10 @@ setono_sylius_pickup_point:
         loading_pickup_points: Loading pickup points…
         no_pickup_points: No pickup points are available for the entered address.
         error_loading_pickup_points: We could not load the pickup points. Please try selecting the shipping method again.
+        change: Change
+        keep_this: Keep this
+        currently: 'Currently:'
+        selected: Selected
     form:
         shipment:
             pickup_point: Pickup point

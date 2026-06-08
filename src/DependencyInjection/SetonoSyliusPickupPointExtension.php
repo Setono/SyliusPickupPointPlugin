@@ -101,6 +101,12 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
                         'priority' => -100,
                     ],
                 ],
+                'sylius_shop.base#stylesheets' => [
+                    'setono_sylius_pickup_point.stylesheets' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/_stylesheets.html.twig',
+                        'priority' => -100,
+                    ],
+                ],
                 'sylius_shop.base#javascripts' => [
                     'setono_sylius_pickup_point.javascripts' => [
                         'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
