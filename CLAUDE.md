@@ -43,6 +43,7 @@ Symfony app inside `tests/Application/`:
 
 - `(cd tests/Application && bin/console <cmd>)` — schema diff/migrate, lint:container, lint:yaml, lint:twig, sylius:install:assets, etc.
 - Yarn assets: `(cd tests/Application && yarn install && yarn build)`. `node_modules` at the repo root is a symlink to `tests/Application/node_modules`.
+- JS unit tests (the checkout chooser): `yarn --cwd tests/Application test` (Vitest + jsdom; specs in `tests/Application/tests/js/`). Config is `vitest.config.mjs` — NOT `type: module`, because Encore's `webpack.config.js` is CommonJS. The CI `javascript-tests` job runs a composer install first since `tests/Application/package.json` has `file:` deps on `vendor/`.
 
 Behat integration setup (mirrors CI in `.github/workflows/build.yaml`): start MySQL, create DB + schema in `tests/Application/`, install/build yarn assets, run `symfony server:start --port=8080 --dir=public --daemon`, run headless Chrome on `127.0.0.1:9222`. The Behat base URL is `https://127.0.0.1:8080/` (see `behat.yml.dist`).
 
@@ -50,7 +51,7 @@ Behat integration setup (mirrors CI in `.github/workflows/build.yaml`): start My
 
 **Providers are the core abstraction.** `Setono\SyliusPickupPointPlugin\Provider\ProviderInterface` is implemented by one concrete class per carrier (`DAOProvider`, `GlsProvider`, `PostNordProvider`, `FakerProvider`). Each is registered as a service tagged `setono_sylius_pickup_point.provider` — usually via the `#[AsProvider(code, name)]` attribute — and exposes `findPickupPoints(Address)` (the list for an order address) and `findPickupPoint(id, metadata)`.
 
-**Provider registration happens in a compiler pass.** `DependencyInjection/Compiler/RegisterProvidersPass` reads the tagged services, stamps each provider's `code` onto it (`setCode()`), registers it into the `setono_sylius_pickup_point.registry.provider` (`ProviderRegistry`, a Sylius `ServiceRegistry`), exposes the code→name map as the `setono_sylius_pickup_point.providers` parameter, and rejects duplicate codes (`NonUniqueProviderCodeException`). There are **no provider decorators**: the 1.x `CachedProvider`/`LocalProvider` and the messenger-driven local DB snapshot (`LoadPickupPoints*`, `PickupPointRepository`) were removed in 2.0 (see `UPGRADE.md`) — providers are now called live.
+**Provider registration happens in a compiler pass.** `DependencyInjection/Compiler/RegisterProvidersPass` reads the tagged services, stamps each provider's `code` onto it (`setCode()`), registers it into the `setono_sylius_pickup_point.registry.provider` (`ProviderRegistry`, a Sylius `ServiceRegistry`), exposes the code→name map as the `setono_sylius_pickup_point.providers` parameter, and rejects duplicate codes (`NonUniqueProviderCodeException`). Each provider is also made **lazy via interface proxifying** (`setLazy(true)` + a `proxy` tag for `ProviderInterface`) so a provider whose constructor reaches an external service (e.g. GLS opening a SOAP client) is built only when first called; because the providers are `final`, the proxy *implements the interface* instead of subclassing the class — required for lazy services on PHP < 8.4. There are **no provider decorators**: the 1.x `CachedProvider`/`LocalProvider` and the messenger-driven local DB snapshot (`LoadPickupPoints*`, `PickupPointRepository`) were removed in 2.0 (see `UPGRADE.md`) — providers are now called live.
 
 When adding/changing a provider, the work happens in three places: the `Provider/` class, a service definition in `config/services/providers/`, and (usually) a corresponding `setono/*-bundle` `class_exists` check in `Configuration.php`.
 
@@ -87,7 +88,7 @@ When adding/changing a provider, the work happens in three places: the `Provider
 
 ## Constraints worth knowing
 
-- PHP `>=8.1`; CI matrix is PHP 8.1/8.2 × Symfony 5.4/6.4 × lowest/highest deps. Don't use 8.3+ syntax. (Coding-standards job pins 8.1 specifically to catch syntax that wouldn't parse on the lower bound.)
+- PHP `>=8.2`; CI matrix is PHP 8.2/8.3/8.4 × Symfony 6.4/7.4 × lowest/highest deps. Keep to 8.2-compatible syntax — 8.2 is the floor.
 - The `composer checks` job validates `composer.json` *and* runs `composer normalize --dry-run` — after editing `composer.json`, run `composer normalize` locally.
-- Yaml/Twig linting in CI runs through `tests/Application/bin/console lint:yaml ../../src/Resources` and the equivalent `lint:twig` — keep `src/Resources/**` valid against the test kernel.
+- The plugin's templates and config live at repo-root `templates/` and `config/` (moved out of `src/Resources/` in the 2.x layout). Lint twig with `(cd tests/Application && bin/console lint:twig ../../templates)`, valid against the test kernel.
 - `dependency-analysis` job runs `composer-require-checker` and `composer-unused` on a `require-dev`-stripped composer.json — only declare runtime deps that are actually used in `src/`, and don't leave unused ones.
