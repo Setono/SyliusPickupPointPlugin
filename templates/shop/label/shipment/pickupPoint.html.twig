@@ -1,8 +1,0 @@
-{% set pickupPoint = shipment.pickupPoint %}
-
-{% if pickupPoint %}
-    <span class="setono-sylius-pickup-point-label">
-        {{ 'setono_sylius_pickup_point.ui.shipment_to'|trans }}
-        {{ pickupPoint.name }}, {{ pickupPoint.address }}, {{ pickupPoint.zipCode }} {{ pickupPoint.city }}
-    </span>
-{% endif %}
