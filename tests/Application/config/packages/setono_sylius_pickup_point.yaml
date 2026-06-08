@@ -1,20 +1,62 @@
-imports:
-    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/config.yaml" }
-    - { resource: "@SetonoSyliusPickupPointPlugin/Resources/config/app/fixtures.yaml" }
-
-framework:
-    cache:
-        pools:
-            setono_sylius_pickup_point.provider_cache_pool:
-                adapter: cache.app
-
 setono_sylius_pickup_point:
-    cache:
-        enabled: true
-        pool: setono_sylius_pickup_point.provider_cache_pool
-    local: true
     providers:
         faker: true
         gls: true
-        post_nord: true
-        dao: true
+
+sylius_fixtures:
+    suites:
+        default:
+            fixtures:
+                geographical:
+                    options:
+                        countries:
+                            - 'DK'
+                            - 'SE'
+                            - 'FI'
+                            - 'US'
+                            - 'FR'
+                            - 'DE'
+                            - 'AU'
+                            - 'CA'
+                            - 'MX'
+                            - 'NZ'
+                            - 'PT'
+                            - 'ES'
+                            - 'CN'
+                        zones:
+                            WORLD:
+                                name: 'World'
+                                countries:
+                                    - 'DK'
+                                    - 'SE'
+                                    - 'FI'
+                                    - 'US'
+                                    - 'FR'
+                                    - 'DE'
+                                    - 'AU'
+                                    - 'CA'
+                                    - 'MX'
+                                    - 'NZ'
+                                    - 'PT'
+                                    - 'ES'
+                                    - 'CN'
+
+                setono_sylius_pickup_point_shipping_method:
+                    options:
+                        custom:
+                            faker:
+                                code: "faker"
+                                name: "Fake delivery"
+                                enabled: true
+                                zone: "WORLD"
+                                pickup_point_provider: faker
+                                channels:
+                                    - "FASHION_WEB"
+                            gls:
+                                code: "gls"
+                                name: "GLS pickup"
+                                enabled: true
+                                zone: "WORLD"
+                                pickup_point_provider: gls
+                                channels:
+                                    - "FASHION_WEB"

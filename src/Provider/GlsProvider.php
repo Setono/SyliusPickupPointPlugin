@@ -6,59 +6,35 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use function preg_replace;
 use Setono\GLS\Webservice\Client\ClientInterface;
-use Setono\GLS\Webservice\Exception\ConnectionException;
-use Setono\GLS\Webservice\Exception\NoResultException;
 use Setono\GLS\Webservice\Exception\ParcelShopNotFoundException;
 use Setono\GLS\Webservice\Model\ParcelShop;
-use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 
+#[AsProvider(code: 'gls', name: 'GLS')]
 final class GlsProvider extends Provider
 {
-    private ClientInterface $client;
-
-    private FactoryInterface $pickupPointFactory;
-
-    private array $countryCodes;
-
     public function __construct(
-        ClientInterface $client,
-        FactoryInterface $pickupPointFactory,
-        array $countryCodes = ['DK', 'SE'],
+        private readonly ClientInterface $client,
     ) {
-        $this->client = $client;
-        $this->pickupPointFactory = $pickupPointFactory;
-        $this->countryCodes = $countryCodes;
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(Address $address): array
     {
-        $shippingAddress = $order->getShippingAddress();
-        if (null === $shippingAddress) {
-            return [];
-        }
-
-        $street = $shippingAddress->getStreet();
-        $postCode = $shippingAddress->getPostcode();
-        $countryCode = $shippingAddress->getCountryCode();
+        $street = $address->street;
+        $postCode = $address->postalCode;
+        $countryCode = $address->countryCode;
         if (null === $street || null === $postCode || null === $countryCode) {
             return [];
         }
 
-        try {
-            $parcelShops = $this->client->searchNearestParcelShops(
-                $street,
-                preg_replace('/\s+/', '', $postCode),
-                $countryCode,
-                10,
-            );
-        } catch (ConnectionException $e) {
-            throw new TimeoutException($e);
-        }
+        $parcelShops = $this->client->searchNearestParcelShops(
+            $street,
+            preg_replace('/\s+/', '', $postCode),
+            $countryCode,
+            10,
+        );
 
         $pickupPoints = [];
         foreach ($parcelShops as $item) {
@@ -68,61 +44,29 @@ final class GlsProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
     {
         try {
-            $parcelShop = $this->client->getOneParcelShop($code->getIdPart());
-
-            return $this->transform($parcelShop);
-        } catch (ParcelShopNotFoundException $e) {
+            $parcelShop = $this->client->getOneParcelShop($id);
+        } catch (ParcelShopNotFoundException) {
             return null;
-        } catch (ConnectionException $e) {
-            throw new TimeoutException($e);
         }
+
+        return $this->transform($parcelShop);
     }
 
-    public function findAllPickupPoints(): iterable
+    private function transform(ParcelShop $parcelShop): PickupPoint
     {
-        try {
-            foreach ($this->countryCodes as $countryCode) {
-                $parcelShops = $this->client->getAllParcelShops($countryCode);
-
-                foreach ($parcelShops as $item) {
-                    yield $this->transform($item);
-                }
-            }
-        } catch (ConnectionException $e) {
-            throw new TimeoutException($e);
-        } catch (NoResultException $e) {
-            return [];
-        }
-    }
-
-    public function getCode(): string
-    {
-        return 'gls';
-    }
-
-    public function getName(): string
-    {
-        return 'GLS';
-    }
-
-    private function transform(ParcelShop $parcelShop): PickupPointInterface
-    {
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
-        $pickupPoint->setCode(new PickupPointCode($parcelShop->getNumber(), $this->getCode(), $parcelShop->getCountryCode()));
-        $pickupPoint->setName($parcelShop->getCompanyName());
-        $pickupPoint->setAddress($parcelShop->getStreetName());
-        $pickupPoint->setZipCode($parcelShop->getZipCode());
-        $pickupPoint->setCity($parcelShop->getCity());
-        $pickupPoint->setCountry($parcelShop->getCountryCode());
-        $pickupPoint->setLatitude((float) $parcelShop->getLatitude());
-        $pickupPoint->setLongitude((float) $parcelShop->getLongitude());
+        $pickupPoint = new PickupPoint();
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $parcelShop->getNumber();
+        $pickupPoint->name = $parcelShop->getCompanyName();
+        $pickupPoint->address = $parcelShop->getStreetName();
+        $pickupPoint->zipCode = $parcelShop->getZipCode();
+        $pickupPoint->city = $parcelShop->getCity();
+        $pickupPoint->country = $parcelShop->getCountryCode();
+        $pickupPoint->latitude = (string) $parcelShop->getLatitude();
+        $pickupPoint->longitude = (string) $parcelShop->getLongitude();
 
         return $pickupPoint;
     }

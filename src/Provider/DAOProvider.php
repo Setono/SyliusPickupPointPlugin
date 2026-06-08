@@ -5,76 +5,46 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use function preg_replace;
-use Psr\Http\Client\NetworkExceptionInterface;
 use Setono\DAO\Client\ClientInterface;
-use Setono\SyliusPickupPointPlugin\Exception\TimeoutException;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
-use Webmozart\Assert\Assert;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 
+#[AsProvider(code: 'dao', name: 'DAO')]
 final class DAOProvider extends Provider
 {
-    private ClientInterface $client;
-
-    private FactoryInterface $pickupPointFactory;
-
-    public function __construct(ClientInterface $client, FactoryInterface $pickupPointFactory)
+    public function __construct(private readonly ClientInterface $client)
     {
-        $this->client = $client;
-        $this->pickupPointFactory = $pickupPointFactory;
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(Address $address): array
     {
-        $shippingAddress = $order->getShippingAddress();
-        if (null === $shippingAddress) {
-            return [];
-        }
-
-        $street = $shippingAddress->getStreet();
-        $postCode = $shippingAddress->getPostcode();
+        $street = $address->street;
+        $postCode = $address->postalCode;
         if (null === $street || null === $postCode) {
             return [];
         }
 
-        yield from $this->_findPickupPoints([
+        return $this->_findPickupPoints([
             'postnr' => preg_replace('/\s+/', '', $postCode),
             'adresse' => $street,
             'antal' => 10,
         ]);
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
     {
-        foreach ($this->_findPickupPoints([
-            'shopid' => $code->getIdPart(),
-        ]) as $pickupPoint) {
-            return $pickupPoint;
-        }
-
-        return null;
-    }
-
-    public function findAllPickupPoints(): iterable
-    {
-        yield from $this->_findPickupPoints([
-            'postnr' => '9999', // Notice that this is a hack to get all pickup points
-            'antal' => 5000,
-        ]);
+        return $this->_findPickupPoints([
+            'shopid' => $id,
+        ])[0] ?? null;
     }
 
     /**
-     * @return iterable<PickupPointInterface>
+     * @return list<PickupPoint>
      */
-    private function _findPickupPoints(array $params): iterable
+    private function _findPickupPoints(array $params): array
     {
-        try {
-            $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
-        } catch (NetworkExceptionInterface $e) {
-            throw new TimeoutException($e);
-        }
+        $result = $this->client->get('/DAOPakkeshop/FindPakkeshop.php', $params);
 
         $pickupPoints = $result['resultat']['pakkeshops'] ?? [];
 
@@ -82,39 +52,26 @@ final class DAOProvider extends Provider
             return [];
         }
 
+        $list = [];
         foreach ($pickupPoints as $pickupPoint) {
-            yield $this->populatePickupPoint($pickupPoint);
+            $list[] = $this->populatePickupPoint($pickupPoint);
         }
+
+        return $list;
     }
 
-    public function getCode(): string
+    private function populatePickupPoint(array $servicePoint): PickupPoint
     {
-        return 'dao';
-    }
-
-    public function getName(): string
-    {
-        return 'DAO';
-    }
-
-    private function populatePickupPoint(array $servicePoint): PickupPointInterface
-    {
-        $countryCode = 'DK'; // DAO only operates in Denmark
-
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
-        $pickupPoint->setCode(new PickupPointCode($servicePoint['shopId'], $this->getCode(), $countryCode));
-        $pickupPoint->setName($servicePoint['navn']);
-        $pickupPoint->setAddress($servicePoint['adresse']);
-        $pickupPoint->setZipCode($servicePoint['postnr']);
-        $pickupPoint->setCity($servicePoint['bynavn']);
-        $pickupPoint->setCountry($countryCode);
-
-        $pickupPoint->setLatitude((float) $servicePoint['latitude']);
-        $pickupPoint->setLongitude((float) $servicePoint['longitude']);
+        $pickupPoint = new PickupPoint();
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = (string) $servicePoint['shopId'];
+        $pickupPoint->name = $servicePoint['navn'];
+        $pickupPoint->address = $servicePoint['adresse'];
+        $pickupPoint->zipCode = $servicePoint['postnr'];
+        $pickupPoint->city = $servicePoint['bynavn'];
+        $pickupPoint->country = 'DK'; // DAO only operates in Denmark
+        $pickupPoint->latitude = (string) $servicePoint['latitude'];
+        $pickupPoint->longitude = (string) $servicePoint['longitude'];
 
         return $pickupPoint;
     }

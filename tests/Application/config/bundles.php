@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-return [
+$bundles = [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
@@ -30,14 +30,8 @@ return [
     Sylius\Bundle\CoreBundle\SyliusCoreBundle::class => ['all' => true],
     Sylius\Bundle\ResourceBundle\SyliusResourceBundle::class => ['all' => true],
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
-    winzou\Bundle\StateMachineBundle\winzouStateMachineBundle::class => ['all' => true],
-    Sonata\BlockBundle\SonataBlockBundle::class => ['all' => true],
-    Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class => ['all' => true],
-    JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
-    FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => ['all' => true],
     Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
-    League\FlysystemBundle\FlysystemBundle::class => ['all' => true],
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
     Payum\Bundle\PayumBundle\PayumBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
@@ -47,21 +41,33 @@ return [
     Sylius\Bundle\ThemeBundle\SyliusThemeBundle::class => ['all' => true],
     Sylius\Bundle\AdminBundle\SyliusAdminBundle::class => ['all' => true],
     Sylius\Bundle\ShopBundle\SyliusShopBundle::class => ['all' => true],
-    Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
-    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
-    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
-    ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
-    Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
+    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
+    ApiPlatform\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class => ['all' => true],
+    Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
-    SyliusLabs\Polyfill\Symfony\Security\Bundle\SyliusLabsPolyfillSymfonySecurityBundle::class => ['all' => true],
-    FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true],
-    Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle::class => ['all' => true],
-    Setono\PostNordBundle\SetonoPostNordBundle::class => ['all' => true],
-    Setono\DAOBundle\SetonoDAOBundle::class => ['all' => true],
-    Setono\CoolRunnerBundle\SetonoCoolRunnerBundle::class => ['all' => true],
-    Setono\BudbeeBundle\SetonoBudbeeBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
-    Sylius\Calendar\SyliusCalendarBundle::class => ['all' => true],
+    League\FlysystemBundle\FlysystemBundle::class => ['all' => true],
+    Sylius\TwigExtra\Symfony\SyliusTwigExtraBundle::class => ['all' => true],
+    Sylius\TwigHooks\SyliusTwigHooksBundle::class => ['all' => true],
+    Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
+    Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
+    Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
+    Symfony\UX\Autocomplete\AutocompleteBundle::class => ['all' => true],
+    Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
+    Sylius\Abstraction\StateMachine\SyliusStateMachineAbstractionBundle::class => ['all' => true],
+    DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle::class => ['all' => true],
+    Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
 ];
+
+// Filter out bundles whose class is missing — needed for the `static-code-analysis`
+// CI matrix which removes `sylius/sylius` (and with it many transitively-installed
+// bundles) before booting the kernel.
+return array_filter(
+    $bundles,
+    static fn (string $class): bool => class_exists($class),
+    \ARRAY_FILTER_USE_KEY,
+);

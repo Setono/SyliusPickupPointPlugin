@@ -1,0 +1,36 @@
+parameters:
+    level: max
+
+    paths:
+        - src
+        - tests
+
+    excludePaths:
+        - tests/Application/*
+        # Carrier-specific providers reference classes from `suggest`-only bundles
+        # that are not installed in this plugin's dev environment.
+        - src/Provider/DAOProvider.php
+        - src/Provider/GlsProvider.php
+        - src/Provider/PostNordProvider.php
+
+    bootstrapFiles:
+        - tests/Application/config/bootstrap.php
+
+    # Doctrine Configuration
+    doctrine:
+        repositoryClass: Doctrine\ORM\EntityRepository
+
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        -
+            identifier: missingType.generics
+        -
+            identifier: missingType.iterableValue
+        # Trait analysis: PHPStan won't analyse traits used only by consumer-side entities.
+        -
+            identifier: trait.unused
+        # Test smoke-assertions: assertInstanceOf against the concrete class is intentional.
+        -
+            identifier: staticMethod.alreadyNarrowedType

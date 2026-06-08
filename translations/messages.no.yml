@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Til hentested
+        loading_pickup_points: Henter hentesteder…
+        no_pickup_points: Det finnes ingen hentesteder for den oppgitte adressen.
+        error_loading_pickup_points: Vi kunne ikke hente hentestedene. Prøv å velge leveringsmetode på nytt.
+        change: Endre
+        keep_this: Behold dette
+        currently: 'Nåværende:'
+        selected: Valgt
+    form:
+        shipment:
+            pickup_point: Hentested
+            select_pickup_point: Velg hentested
+        shipping_method:
+            pickup_point_provider: Leverandør av hentested
+            select_pickup_point_provider: Velg leverandør av hentested

@@ -1,3 +1,0 @@
-setono_budbee:
-    api_key: '%env(BUDBEE_API_KEY)%'
-    api_secret: '%env(BUDBEE_API_SECRET)%'

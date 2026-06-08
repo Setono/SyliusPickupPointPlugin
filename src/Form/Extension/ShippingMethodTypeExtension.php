@@ -12,16 +12,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShippingMethodTypeExtension extends AbstractTypeExtension
 {
-    private array $providers;
-
-    public function __construct(array $providers)
+    /**
+     * @param array<string, string> $providers a map of provider code => human-readable name
+     *                                          (e.g. ['gls' => 'GLS']), injected from the
+     *                                          `setono_sylius_pickup_point.providers` container
+     *                                          parameter built by RegisterProvidersPass. Flipped
+     *                                          to name => code for the provider choice field.
+     */
+    public function __construct(private readonly array $providers)
     {
-        $this->providers = $providers;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointProvider', ChoiceType::class, [
+            // A shipping method need not be a pickup-point method, so a provider is optional.
+            'required' => false,
             'placeholder' => 'setono_sylius_pickup_point.form.shipping_method.select_pickup_point_provider',
             'label' => 'setono_sylius_pickup_point.form.shipping_method.pickup_point_provider',
             'choices' => array_flip($this->providers),

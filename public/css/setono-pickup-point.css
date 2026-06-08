@@ -1,0 +1,26 @@
+/*
+ * Styling for the checkout pickup-point chooser. The bulk of the look is built from Bootstrap 5.3
+ * utility classes in public/js/setono-pickup-point.js; this file only covers what utilities cannot
+ * express. Everything keys off Bootstrap/Sylius CSS variables so it follows the active theme (e.g.
+ * the brand "success" colour).
+ */
+
+/* Dashed rule between the shipping method and its pickup section. */
+.setono-pickup-point__divider {
+    border: 0;
+    border-top: var(--bs-border-width) dashed var(--bs-border-color);
+    opacity: 1;
+}
+
+/* The pickup-point list scrolls rather than pushing the page down. */
+.setono-pickup-point__list {
+    max-height: 22rem;
+    overflow-y: auto;
+}
+
+/* The filled check shown next to the chosen point in the compact summary. */
+.setono-pickup-point__check {
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+}

@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Noutopisteeseen
+        loading_pickup_points: Ladataan noutopisteitä…
+        no_pickup_points: Annetulle osoitteelle ei ole saatavilla noutopisteitä.
+        error_loading_pickup_points: Noutopisteiden lataaminen epäonnistui. Yritä valita toimitustapa uudelleen.
+        change: Vaihda
+        keep_this: Pidä tämä
+        currently: 'Nykyinen:'
+        selected: Valittu
+    form:
+        shipment:
+            pickup_point: Noutopiste
+            select_pickup_point: Valitse noutopiste
+        shipping_method:
+            pickup_point_provider: Noutopisteen palveluntarjoaja
+            select_pickup_point_provider: Valitse noutopisteen palveluntarjoaja

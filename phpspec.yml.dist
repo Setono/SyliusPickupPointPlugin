@@ -1,4 +1,0 @@
-suites:
-    main:
-        namespace: Setono\SyliusPickupPointPlugin
-        psr4_prefix: Setono\SyliusPickupPointPlugin

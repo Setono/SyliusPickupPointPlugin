@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Para o ponto de recolha
+        loading_pickup_points: A carregar pontos de recolha…
+        no_pickup_points: Não há pontos de recolha disponíveis para a morada introduzida.
+        error_loading_pickup_points: Não foi possível carregar os pontos de recolha. Tente selecionar novamente o método de envio.
+        change: Alterar
+        keep_this: Manter este
+        currently: 'Atual:'
+        selected: Selecionado
+    form:
+        shipment:
+            pickup_point: Ponto de recolha
+            select_pickup_point: Selecionar ponto de recolha
+        shipping_method:
+            pickup_point_provider: Fornecedor de ponto de recolha
+            select_pickup_point_provider: Selecionar fornecedor de ponto de recolha

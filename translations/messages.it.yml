@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Al punto di ritiro
+        loading_pickup_points: Caricamento dei punti di ritiro…
+        no_pickup_points: Non sono disponibili punti di ritiro per l'indirizzo inserito.
+        error_loading_pickup_points: Non è stato possibile caricare i punti di ritiro. Prova a selezionare di nuovo il metodo di spedizione.
+        change: Modifica
+        keep_this: Mantieni questo
+        currently: 'Attuale:'
+        selected: Selezionato
+    form:
+        shipment:
+            pickup_point: Punto di ritiro
+            select_pickup_point: Seleziona un punto di ritiro
+        shipping_method:
+            pickup_point_provider: Fornitore del punto di ritiro
+            select_pickup_point_provider: Seleziona un fornitore del punto di ritiro

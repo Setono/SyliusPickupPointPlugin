@@ -1,0 +1,23 @@
+{% set form = hookable_metadata.context.form %}
+
+{% if form.pickupPoint is defined %}
+    {#
+        Carrier only: the hidden field is what is submitted, and the data attributes hand the localized
+        strings to public/js/setono-pickup-point.js. The visible chooser is built by that script and
+        inserted into the selected pickup-capable shipping method's card, because the points are fetched
+        asynchronously after the page has rendered (a slow/down provider never blocks the page).
+    #}
+    <div data-pickup-point-field
+         data-label-text="{{ 'setono_sylius_pickup_point.form.shipment.pickup_point'|trans }}"
+         data-loading-text="{{ 'setono_sylius_pickup_point.ui.loading_pickup_points'|trans }}"
+         data-empty-text="{{ 'setono_sylius_pickup_point.ui.no_pickup_points'|trans }}"
+         data-error-text="{{ 'setono_sylius_pickup_point.ui.error_loading_pickup_points'|trans }}"
+         data-change-text="{{ 'setono_sylius_pickup_point.ui.change'|trans }}"
+         data-keep-text="{{ 'setono_sylius_pickup_point.ui.keep_this'|trans }}"
+         data-currently-text="{{ 'setono_sylius_pickup_point.ui.currently'|trans }}"
+         data-selected-text="{{ 'setono_sylius_pickup_point.ui.selected'|trans }}"
+         hidden
+    >
+        {{ form_widget(form.pickupPoint, {'attr': {'data-pickup-point-input': ''}}) }}
+    </div>
+{% endif %}

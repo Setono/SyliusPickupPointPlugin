@@ -1,0 +1,10 @@
+{% set pickupPoint = hookable_metadata.context.shipment.pickupPoint %}
+
+{% if pickupPoint %}
+    <td class="setono-sylius-pickup-point-label">
+        <strong>{{ 'setono_sylius_pickup_point.ui.shipment_to'|trans }}</strong><br>
+        {{ pickupPoint.name }}, {{ pickupPoint.address }}, {{ pickupPoint.zipCode }} {{ pickupPoint.city }}
+    </td>
+{% else %}
+    <td>&nbsp;</td>
+{% endif %}

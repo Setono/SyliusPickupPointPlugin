@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Do punktu odbioru
+        loading_pickup_points: Ładowanie punktów odbioru…
+        no_pickup_points: Brak dostępnych punktów odbioru dla podanego adresu.
+        error_loading_pickup_points: Nie udało się załadować punktów odbioru. Spróbuj ponownie wybrać metodę dostawy.
+        change: Zmień
+        keep_this: Zachowaj ten
+        currently: 'Obecnie:'
+        selected: Wybrany
+    form:
+        shipment:
+            pickup_point: Punkt odbioru
+            select_pickup_point: Wybierz punkt odbioru
+        shipping_method:
+            pickup_point_provider: Dostawca punktu odbioru
+            select_pickup_point_provider: Wybierz dostawcę punktu odbioru

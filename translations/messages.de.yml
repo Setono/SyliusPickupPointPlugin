@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: An Abholstation
+        loading_pickup_points: Abholstationen werden geladen…
+        no_pickup_points: Für die angegebene Adresse sind keine Abholstationen verfügbar.
+        error_loading_pickup_points: Die Abholstationen konnten nicht geladen werden. Bitte wählen Sie die Versandart erneut aus.
+        change: Ändern
+        keep_this: Beibehalten
+        currently: 'Aktuell:'
+        selected: Ausgewählt
+    form:
+        shipment:
+            pickup_point: Abholstation
+            select_pickup_point: Abholstation auswählen
+        shipping_method:
+            pickup_point_provider: Anbieter der Abholstation
+            select_pickup_point_provider: Anbieter der Abholstation auswählen

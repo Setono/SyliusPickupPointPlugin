@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Átvételi pontra
+        loading_pickup_points: Átvételi pontok betöltése…
+        no_pickup_points: A megadott címhez nem érhetők el átvételi pontok.
+        error_loading_pickup_points: Nem sikerült betölteni az átvételi pontokat. Kérjük, válassza ki újra a szállítási módot.
+        change: Módosítás
+        keep_this: Ennek megtartása
+        currently: 'Jelenleg:'
+        selected: Kiválasztva
+    form:
+        shipment:
+            pickup_point: Átvételi pont
+            select_pickup_point: Válasszon átvételi pontot
+        shipping_method:
+            pickup_point_provider: Átvételi pont szolgáltatója
+            select_pickup_point_provider: Válassza ki az átvételi pont szolgáltatóját

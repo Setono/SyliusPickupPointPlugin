@@ -5,66 +5,47 @@ declare(strict_types=1);
 namespace Setono\SyliusPickupPointPlugin\DependencyInjection;
 
 use LogicException;
-use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Webmozart\Assert\Assert;
 
-final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
+final class SetonoSyliusPickupPointExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /** @psalm-suppress PossiblyNullArgument */
+        /** @var array{
+         *     providers: array{faker: bool, dao: bool, gls: bool, post_nord: bool}
+         * } $config
+         */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $container->setParameter('setono_sylius_pickup_point.local', $config['local']);
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
 
-        $this->registerResources('setono_sylius_pickup_point', $config['driver'], $config['resources'], $container);
+        $loader->load('services.php');
 
-        $loader->load('services.xml');
+        $container->registerAttributeForAutoconfiguration(
+            AsProvider::class,
+            static function (ChildDefinition $definition, AsProvider $attribute): void {
+                $definition->addTag('setono_sylius_pickup_point.provider', [
+                    'code' => $attribute->code,
+                    'name' => $attribute->name,
+                ]);
+            },
+        );
 
         $bundles = $container->hasParameter('kernel.bundles') ? $container->getParameter('kernel.bundles') : [];
         Assert::isArray($bundles);
-
-        $cacheEnabled = $config['cache']['enabled'];
-        if ($cacheEnabled) {
-            if (!interface_exists(AdapterInterface::class)) {
-                throw new LogicException('Using cache is only supported when symfony/cache is installed.');
-            }
-
-            if (null === $config['cache']['pool']) {
-                throw new LogicException('You should specify pool in order to use cache for pickup point providers.');
-            }
-
-            $container->setAlias('setono_sylius_pickup_point.cache', $config['cache']['pool']);
-        }
-
-        $container->setParameter('setono_sylius_pickup_point.cache.enabled', $cacheEnabled);
 
         if ($config['providers']['faker']) {
             if ('prod' === $container->getParameter('kernel.environment')) {
                 throw new LogicException("You can't use faker provider in production environment.");
             }
 
-            $loader->load('services/providers/faker.xml');
-        }
-
-        if ($config['providers']['budbee']) {
-            if (!isset($bundles['SetonoBudbeeBundle'])) {
-                throw new LogicException('You should use SetonoBudbeeBundle or disable budbee provider.');
-            }
-
-            $loader->load('services/providers/budbee.xml');
-        }
-
-        if ($config['providers']['coolrunner']) {
-            if (!isset($bundles['SetonoCoolRunnerBundle'])) {
-                throw new LogicException('You should use SetonoCoolRunnerBundle or disable coolrunner provider.');
-            }
-
-            $loader->load('services/providers/coolrunner.xml');
+            $loader->load('services/providers/faker.php');
         }
 
         if ($config['providers']['dao']) {
@@ -72,7 +53,7 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
                 throw new LogicException('You should use SetonoDAOBundle or disable dao provider.');
             }
 
-            $loader->load('services/providers/dao.xml');
+            $loader->load('services/providers/dao.php');
         }
 
         if ($config['providers']['gls']) {
@@ -80,7 +61,7 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
                 throw new LogicException('You should use SetonoGlsWebserviceBundle or disable gls provider.');
             }
 
-            $loader->load('services/providers/gls.xml');
+            $loader->load('services/providers/gls.php');
         }
 
         if ($config['providers']['post_nord']) {
@@ -88,7 +69,51 @@ final class SetonoSyliusPickupPointExtension extends AbstractResourceExtension
                 throw new LogicException('You should use SetonoPostNordBundle or disable post_nord provider.');
             }
 
-            $loader->load('services/providers/post_nord.xml');
+            $loader->load('services/providers/post_nord.php');
         }
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('sylius_twig_hooks', [
+            'hooks' => [
+                'sylius_admin.order.show.content.sections.shipments.item' => [
+                    'pickup_point' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/admin/order/show/shipment/pickupPoint.html.twig',
+                        'priority' => 0,
+                    ],
+                ],
+                'sylius_admin.shipping_method.create.content.form.configuration' => [
+                    'pickup_point_provider' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/admin/shipping_method/form/configuration/pickupPointProvider.html.twig',
+                        'priority' => 50,
+                    ],
+                ],
+                'sylius_admin.shipping_method.update.content.form.configuration' => [
+                    'pickup_point_provider' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/admin/shipping_method/form/configuration/pickupPointProvider.html.twig',
+                        'priority' => 50,
+                    ],
+                ],
+                'sylius_shop.checkout.select_shipping.content.form.shipments.shipment' => [
+                    'pickup_point' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/shop/checkout/select_shipping/shipment/pickupPoint.html.twig',
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_shop.checkout#stylesheets' => [
+                    'setono_sylius_pickup_point.stylesheets' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/_stylesheets.html.twig',
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_shop.checkout#javascripts' => [
+                    'setono_sylius_pickup_point.javascripts' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
+                        'priority' => -100,
+                    ],
+                ],
+            ],
+        ]);
     }
 }

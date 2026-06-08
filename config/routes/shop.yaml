@@ -1,0 +1,6 @@
+setono_sylius_pickup_point_shop_pickup_points:
+    path: /pickup-points
+    methods: [GET]
+    defaults:
+        _controller: Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsAction
+        _format: json

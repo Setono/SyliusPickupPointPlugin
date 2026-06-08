@@ -6,31 +6,24 @@ namespace Setono\SyliusPickupPointPlugin\Provider;
 
 use Faker\Factory;
 use Faker\Generator;
-use Setono\SyliusPickupPointPlugin\Model\PickupPoint;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointCode;
-use Setono\SyliusPickupPointPlugin\Model\PickupPointInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
 use Webmozart\Assert\Assert;
 
+#[AsProvider(code: 'faker', name: 'Faker')]
 final class FakerProvider extends Provider
 {
-    private Generator $faker;
+    private readonly Generator $faker;
 
-    private FactoryInterface $pickupPointFactory;
-
-    public function __construct(FactoryInterface $pickupPointFactory)
+    public function __construct()
     {
         $this->faker = Factory::create();
-        $this->pickupPointFactory = $pickupPointFactory;
     }
 
-    public function findPickupPoints(OrderInterface $order): iterable
+    public function findPickupPoints(Address $address): array
     {
-        $address = $order->getShippingAddress();
-        Assert::notNull($address);
-
-        $countryCode = $address->getCountryCode();
+        $countryCode = $address->countryCode;
         Assert::notNull($countryCode);
 
         $pickupPoints = [];
@@ -41,26 +34,11 @@ final class FakerProvider extends Provider
         return $pickupPoints;
     }
 
-    public function findPickupPoint(PickupPointCode $code): ?PickupPointInterface
+    public function findPickupPoint(string $id, array $metadata = []): PickupPoint
     {
-        return $this->createFakePickupPoint($code->getIdPart(), $code->getCountryPart());
-    }
+        $country = $metadata['country'] ?? null;
 
-    public function findAllPickupPoints(): iterable
-    {
-        for ($i = 0; $i < 10; ++$i) {
-            yield $this->createFakePickupPoint((string) $i);
-        }
-    }
-
-    public function getCode(): string
-    {
-        return 'faker';
-    }
-
-    public function getName(): string
-    {
-        return 'Faker';
+        return $this->createFakePickupPoint($id, is_string($country) ? $country : null);
     }
 
     private function createFakePickupPoint(string $index, ?string $countryCode = null): PickupPoint
@@ -69,19 +47,16 @@ final class FakerProvider extends Provider
             $countryCode = $this->faker->countryCode;
         }
 
-        /** @var PickupPointInterface|object $pickupPoint */
-        $pickupPoint = $this->pickupPointFactory->createNew();
-
-        Assert::isInstanceOf($pickupPoint, PickupPointInterface::class);
-
-        $pickupPoint->setCode(new PickupPointCode($index, $this->getCode(), $countryCode));
-        $pickupPoint->setName("Post office #$index");
-        $pickupPoint->setAddress($this->faker->streetAddress);
-        $pickupPoint->setZipCode((string) $this->faker->numberBetween(11111, 99999));
-        $pickupPoint->setCity($this->faker->city);
-        $pickupPoint->setCountry($countryCode);
-        $pickupPoint->setLatitude($this->faker->latitude);
-        $pickupPoint->setLongitude($this->faker->longitude);
+        $pickupPoint = new PickupPoint();
+        $pickupPoint->provider = $this->getCode();
+        $pickupPoint->id = $index;
+        $pickupPoint->name = "Post office #$index";
+        $pickupPoint->address = $this->faker->streetAddress;
+        $pickupPoint->zipCode = (string) $this->faker->numberBetween(11111, 99999);
+        $pickupPoint->city = $this->faker->city;
+        $pickupPoint->country = $countryCode;
+        $pickupPoint->latitude = (string) $this->faker->latitude;
+        $pickupPoint->longitude = (string) $this->faker->longitude;
 
         return $pickupPoint;
     }

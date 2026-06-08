@@ -10,29 +10,24 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Shipping\Resolver\ShippingMethodsResolverInterface;
 
-final class OrderShippingMethodSelectionRequirementChecker implements OrderShippingMethodSelectionRequirementCheckerInterface
+final readonly class OrderShippingMethodSelectionRequirementChecker implements OrderShippingMethodSelectionRequirementCheckerInterface
 {
-    private OrderShippingMethodSelectionRequirementCheckerInterface $decorated;
-
-    private ShippingMethodsResolverInterface $shippingMethodsResolver;
-
-    public function __construct(OrderShippingMethodSelectionRequirementCheckerInterface $decorated, ShippingMethodsResolverInterface $shippingMethodsResolver)
-    {
-        $this->decorated = $decorated;
-        $this->shippingMethodsResolver = $shippingMethodsResolver;
+    public function __construct(
+        private OrderShippingMethodSelectionRequirementCheckerInterface $decorated,
+        private ShippingMethodsResolverInterface $shippingMethodsResolver,
+    ) {
     }
 
     public function isShippingMethodSelectionRequired(OrderInterface $order): bool
     {
-        $required = $this->decorated->isShippingMethodSelectionRequired($order);
-        if (true === $required) {
+        if ($this->decorated->isShippingMethodSelectionRequired($order)) {
             return true;
         }
 
-        // the original Sylius checker returns false in two cases
+        // The original Sylius checker returns false in two cases
         // 1. If shipping is not required
         // 2. If there only is one available shipping method
-        // we need to cover both cases here
+        // We need to cover both cases here
 
         if (!$order->isShippingRequired()) {
             return false;

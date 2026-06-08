@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final class HasPickupPointSelectedValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (null === $value || '' === $value) {
             return;
@@ -36,7 +36,7 @@ final class HasPickupPointSelectedValidator extends ConstraintValidator
             return;
         }
 
-        if (!$value->hasPickupPointId()) {
+        if (!$value->hasPickupPoint()) {
             $this->context
                 ->buildViolation($constraint->pickupPointNotBlank)
                 ->addViolation()

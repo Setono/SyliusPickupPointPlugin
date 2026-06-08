@@ -1,0 +1,4 @@
+setono_pickup_point:
+    shipment:
+        pickup_point:
+            not_blank: El punto de recogida no puede estar vacío.
