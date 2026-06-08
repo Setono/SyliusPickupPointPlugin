@@ -1,6 +1,7 @@
 setono_sylius_pickup_point:
     providers:
         faker: true
+        gls: true
 
 sylius_fixtures:
     suites:
@@ -49,5 +50,13 @@ sylius_fixtures:
                                 enabled: true
                                 zone: "WORLD"
                                 pickup_point_provider: faker
+                                channels:
+                                    - "FASHION_WEB"
+                            gls:
+                                code: "gls"
+                                name: "GLS pickup"
+                                enabled: true
+                                zone: "WORLD"
+                                pickup_point_provider: gls
                                 channels:
                                     - "FASHION_WEB"

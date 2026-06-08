@@ -59,6 +59,7 @@ $bundles = [
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Sylius\Abstraction\StateMachine\SyliusStateMachineAbstractionBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    Setono\GlsWebserviceBundle\SetonoGlsWebserviceBundle::class => ['all' => true],
     Setono\SyliusPickupPointPlugin\SetonoSyliusPickupPointPlugin::class => ['all' => true],
 ];
 

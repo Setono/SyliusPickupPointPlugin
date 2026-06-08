@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Setono\GLS\Webservice\Client\ClientInterface;
 use Setono\SyliusPickupPointPlugin\Provider\GlsProvider;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -11,7 +12,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set('setono_sylius_pickup_point.provider.gls', GlsProvider::class)
         ->args([
-            service('setono_gls_webservice.client'),
+            service(ClientInterface::class),
         ])
         ->tag('setono_sylius_pickup_point.provider')
     ;
