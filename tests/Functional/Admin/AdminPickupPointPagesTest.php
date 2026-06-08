@@ -39,10 +39,10 @@ final class AdminPickupPointPagesTest extends WebTestCase
         $client = self::createClient();
         $this->logInAsAdmin($client);
 
-        $order = $this->findOrderWithShipment();
-
-        $shipment = $order->getShipments()->first();
-        self::assertInstanceOf(ShipmentInterface::class, $shipment);
+        // Use any persisted shipment (deterministic) rather than scanning fixture orders — the Sylius order
+        // fixtures are randomized, so an order that actually has a shipment can fall outside any fixed window.
+        $shipment = $this->repository('sylius.repository.shipment')->findOneBy([]);
+        self::assertInstanceOf(ShipmentInterface::class, $shipment, 'No shipment found — were the test fixtures loaded?');
 
         $pickupPoint = new PickupPoint();
         $pickupPoint->provider = 'faker';
@@ -57,6 +57,9 @@ final class AdminPickupPointPagesTest extends WebTestCase
         /** @var EntityManagerInterface $manager */
         $manager = self::getContainer()->get('doctrine.orm.entity_manager');
         $manager->flush();
+
+        $order = $shipment->getOrder();
+        self::assertInstanceOf(OrderInterface::class, $order);
 
         $client->request('GET', '/admin/orders/' . $order->getId());
 
@@ -84,17 +87,6 @@ final class AdminPickupPointPagesTest extends WebTestCase
         self::assertInstanceOf(UserInterface::class, $admin, 'No admin user found — were the test fixtures loaded?');
 
         $client->loginUser($admin, 'admin');
-    }
-
-    private function findOrderWithShipment(): OrderInterface
-    {
-        foreach ($this->repository('sylius.repository.order')->findBy([], null, 100) as $order) {
-            if ($order instanceof OrderInterface && !$order->getShipments()->isEmpty()) {
-                return $order;
-            }
-        }
-
-        self::fail('No order with a shipment found — were the test fixtures loaded?');
     }
 
     private function repository(string $id): ObjectRepository
