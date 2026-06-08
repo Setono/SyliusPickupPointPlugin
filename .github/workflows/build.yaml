@@ -57,6 +57,17 @@ jobs:
                     symfony: "${{ matrix.symfony }}"
                     testsuite: "unit"
 
+    code-coverage:
+        runs-on: "ubuntu-latest"
+        steps:
+            -   uses: "setono/sylius-plugin/code-coverage@v2"
+                with:
+                    # Covers the unit suite (the action runs phpunit with pcov + uploads to Codecov); the
+                    # functional suite is excluded because it needs a database this job does not provision.
+                    # CODECOV_TOKEN must be set in the repository secrets.
+                    codecov-token: "${{ secrets.CODECOV_TOKEN }}"
+                    testsuite: "unit"
+
     functional-tests:
         runs-on: "ubuntu-latest"
         strategy:
