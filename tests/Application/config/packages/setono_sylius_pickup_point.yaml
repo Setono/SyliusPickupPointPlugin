@@ -50,6 +50,12 @@ sylius_fixtures:
                         channel: 'FASHION_WEB'
                         fulfilled: true
 
+                # Fulfilled orders are already paid, so neutralize the payments fixture — otherwise it tries to
+                # complete already-complete payments ("Transition 'complete' is not enabled for sylius_payment").
+                payments:
+                    options:
+                        percentage_completed: 0
+
                 setono_sylius_pickup_point_shipping_method:
                     options:
                         custom:
