@@ -20,9 +20,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
  */
 final readonly class PickupPointTransformer implements DataTransformerInterface
 {
-    public function __construct(
-        private PickupPointEncoderInterface $encoder,
-    ) {
+    public function __construct(private PickupPointEncoderInterface $encoder)
+    {
     }
 
     public function transform(mixed $value): ?string

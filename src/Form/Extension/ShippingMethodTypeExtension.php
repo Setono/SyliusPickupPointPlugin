@@ -26,6 +26,8 @@ final class ShippingMethodTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pickupPointProvider', ChoiceType::class, [
+            // A shipping method need not be a pickup-point method, so a provider is optional.
+            'required' => false,
             'placeholder' => 'setono_sylius_pickup_point.form.shipping_method.select_pickup_point_provider',
             'label' => 'setono_sylius_pickup_point.form.shipping_method.pickup_point_provider',
             'choices' => array_flip($this->providers),
