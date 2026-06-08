@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: До пункту видачі
+        loading_pickup_points: Завантаження пунктів видачі…
+        no_pickup_points: Для вказаної адреси немає доступних пунктів видачі.
+        error_loading_pickup_points: Не вдалося завантажити пункти видачі. Спробуйте ще раз вибрати спосіб доставки.
+        change: Змінити
+        keep_this: Залишити цей
+        currently: 'Зараз:'
+        selected: Вибрано
+    form:
+        shipment:
+            pickup_point: Пункт видачі
+            select_pickup_point: Виберіть пункт видачі
+        shipping_method:
+            pickup_point_provider: Постачальник пункту видачі
+            select_pickup_point_provider: Виберіть постачальника пункту видачі

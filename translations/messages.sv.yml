@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Till utlämningsställe
+        loading_pickup_points: Hämtar utlämningsställen…
+        no_pickup_points: Det finns inga utlämningsställen för den angivna adressen.
+        error_loading_pickup_points: Vi kunde inte hämta utlämningsställena. Försök att välja leveranssätt igen.
+        change: Ändra
+        keep_this: Behåll detta
+        currently: 'Nuvarande:'
+        selected: Vald
+    form:
+        shipment:
+            pickup_point: Utlämningsställe
+            select_pickup_point: Välj utlämningsställe
+        shipping_method:
+            pickup_point_provider: Leverantör av utlämningsställe
+            select_pickup_point_provider: Välj leverantör av utlämningsställe

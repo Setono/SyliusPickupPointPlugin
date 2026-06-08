@@ -78,6 +78,12 @@ When adding/changing a provider, the work happens in three places: the `Provider
   correctness, not feature correctness; the UI flow is the only check
   that catches twig-hook misconfiguration, broken JSON shape, or missing
   asset wiring.
+- **Always translate new message keys into every supported locale.** When you
+  add a key under `translations/` (`messages.*.yml`, `validators.*.yml`),
+  provide it in all of these locales, not just `en`/`da`:
+  - Nordic: Danish (`da`), Swedish (`sv`), Norwegian (`no`), Finnish (`fi`)
+  - Large EU: German (`de`), French (`fr`), Spanish (`es`), Italian (`it`), Dutch (`nl`), Polish (`pl`)
+  - Other common Sylius locales: Portuguese (`pt`), Czech (`cs`), Hungarian (`hu`), Romanian (`ro`), Ukrainian (`uk`)
 
 ## Constraints worth knowing
 

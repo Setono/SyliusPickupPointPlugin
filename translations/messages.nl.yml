@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Naar afhaalpunt
+        loading_pickup_points: Afhaalpunten laden…
+        no_pickup_points: Er zijn geen afhaalpunten beschikbaar voor het ingevoerde adres.
+        error_loading_pickup_points: We konden de afhaalpunten niet laden. Selecteer de verzendmethode opnieuw.
+        change: Wijzigen
+        keep_this: Deze behouden
+        currently: 'Huidig:'
+        selected: Geselecteerd
+    form:
+        shipment:
+            pickup_point: Afhaalpunt
+            select_pickup_point: Selecteer een afhaalpunt
+        shipping_method:
+            pickup_point_provider: Afhaalpuntaanbieder
+            select_pickup_point_provider: Selecteer een afhaalpuntaanbieder

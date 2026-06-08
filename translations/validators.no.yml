@@ -1,0 +1,4 @@
+setono_pickup_point:
+    shipment:
+        pickup_point:
+            not_blank: Hentested kan ikke være tomt.

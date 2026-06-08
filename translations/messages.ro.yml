@@ -1,0 +1,17 @@
+setono_sylius_pickup_point:
+    ui:
+        shipment_to: Către punctul de ridicare
+        loading_pickup_points: Se încarcă punctele de ridicare…
+        no_pickup_points: Nu există puncte de ridicare disponibile pentru adresa introdusă.
+        error_loading_pickup_points: Nu am putut încărca punctele de ridicare. Încercați să selectați din nou metoda de livrare.
+        change: Modifică
+        keep_this: Păstrează acesta
+        currently: 'În prezent:'
+        selected: Selectat
+    form:
+        shipment:
+            pickup_point: Punct de ridicare
+            select_pickup_point: Selectați un punct de ridicare
+        shipping_method:
+            pickup_point_provider: Furnizor de puncte de ridicare
+            select_pickup_point_provider: Selectați un furnizor de puncte de ridicare
