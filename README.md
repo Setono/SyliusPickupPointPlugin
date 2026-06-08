@@ -17,6 +17,7 @@ Add a pickup-point chooser to your shipping checkout step.
 - GLS
 - PostNord
 - Fake provider (for development/playing purposes — not enabled in `prod`)
+- ...or [add your own](#creating-a-custom-provider)
 
 ## Compatibility
 
