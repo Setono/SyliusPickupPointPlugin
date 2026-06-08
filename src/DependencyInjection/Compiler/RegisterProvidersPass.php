@@ -35,9 +35,17 @@ final class RegisterProvidersPass implements CompilerPassInterface
 
                 $codeToNameMap[$code] = $name;
 
+                $definition = $container->getDefinition($id);
+
                 // Resolve the code into the provider instance once, at compile time, so it can
                 // stamp the code onto the pickup points it returns without runtime reflection.
-                $container->getDefinition($id)->addMethodCall('setCode', [$code]);
+                $definition->addMethodCall('setCode', [$code]);
+
+                // Providers are lazy so that one whose construction reaches out to an external service
+                // — e.g. the GLS provider opening a SOAP client against a possibly-down WSDL — is built
+                // only when actually called (inside PickupPointsAction's per-provider try/catch), rather
+                // than failing the resolution of the whole registry, the checkout form, or the endpoint.
+                $definition->setLazy(true);
 
                 $registry->addMethodCall('add', [new Reference($id), $code, $name]);
             }
