@@ -7,6 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Setono\SyliusPickupPointPlugin\Controller\Action\PickupPointsAction;
 use Setono\SyliusPickupPointPlugin\Encoder\PickupPointEncoder;
 use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistry;
+use Sylius\Component\Shipping\Resolver\ShippingMethodsResolverInterface;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
@@ -16,7 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('sylius.context.cart'),
             service(ProviderRegistry::class),
             service(PickupPointEncoder::class),
-            service('sylius.repository.shipping_method'),
+            service(ShippingMethodsResolverInterface::class),
         ])
         ->public()
     ;

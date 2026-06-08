@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusPickupPointPlugin\Controller\Action;
 
-use Doctrine\Persistence\ObjectRepository;
 use Setono\SyliusPickupPointPlugin\DTO\Address;
 use Setono\SyliusPickupPointPlugin\Encoder\PickupPointEncoderInterface;
 use Setono\SyliusPickupPointPlugin\Model\ShippingMethodInterface;
@@ -12,14 +11,20 @@ use Setono\SyliusPickupPointPlugin\Registry\ProviderRegistryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Context\CartNotFoundException;
+use Sylius\Component\Shipping\Resolver\ShippingMethodsResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Returns, for the current cart, the pickup points of every enabled shipping method that has a provider,
- * keyed by shipping method code. The checkout page calls this asynchronously *after* it has rendered, so a
- * slow or down carrier API never blocks the shipping page — and a single failing provider only empties its
- * own entry (the per-provider try/catch) instead of taking the others down.
+ * Returns, for the current cart, the pickup points of every shipping method that is available for the
+ * cart's shipment(s) and has a provider, keyed by shipping method code. It resolves the available methods
+ * with the shipping-methods resolver — the same methods Sylius renders as the radios (channel + zone +
+ * shipping category), not merely every channel-enabled method — so it only calls the providers behind
+ * methods the shopper can actually select.
+ *
+ * The checkout page calls this asynchronously *after* it has rendered, so a slow or down carrier API never
+ * blocks the shipping page — and a single failing provider only empties its own entry (the per-provider
+ * try/catch) instead of taking the others down.
  *
  * Each point carries an opaque `value` token ({@see PickupPointEncoderInterface}) that the shop JS uses as
  * the selected radio's value; on submit the hidden field's transformer decodes it back into the point, so
@@ -27,14 +32,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final readonly class PickupPointsAction
 {
-    /**
-     * @param ObjectRepository<ShippingMethodInterface> $shippingMethodRepository
-     */
     public function __construct(
         private CartContextInterface $cartContext,
         private ProviderRegistryInterface $providerRegistry,
         private PickupPointEncoderInterface $encoder,
-        private ObjectRepository $shippingMethodRepository,
+        private ShippingMethodsResolverInterface $shippingMethodsResolver,
     ) {
     }
 
@@ -54,17 +56,25 @@ final readonly class PickupPointsAction
 
         $result = [];
 
-        foreach ($this->shippingMethodRepository->findBy(['enabled' => true]) as $method) {
-            if (!$method instanceof ShippingMethodInterface || !$method->hasPickupPointProvider()) {
-                continue;
-            }
+        foreach ($order->getShipments() as $shipment) {
+            foreach ($this->shippingMethodsResolver->getSupportedMethods($shipment) as $method) {
+                if (!$method instanceof ShippingMethodInterface || !$method->hasPickupPointProvider()) {
+                    continue;
+                }
 
-            $providerCode = $method->getPickupPointProvider();
-            if (null === $providerCode || !$this->providerRegistry->has($providerCode)) {
-                continue;
-            }
+                $code = (string) $method->getCode();
+                if (isset($result[$code])) {
+                    // Already computed for an earlier shipment; the points only depend on the provider.
+                    continue;
+                }
 
-            $result[(string) $method->getCode()] = $this->pickupPoints($providerCode, $address);
+                $providerCode = $method->getPickupPointProvider();
+                if (null === $providerCode || !$this->providerRegistry->has($providerCode)) {
+                    continue;
+                }
+
+                $result[$code] = $this->pickupPoints($providerCode, $address);
+            }
         }
 
         return new JsonResponse($result);
@@ -84,8 +94,16 @@ final readonly class PickupPointsAction
 
         $result = [];
         foreach ($pickupPoints as $pickupPoint) {
+            try {
+                $value = $this->encoder->encode($pickupPoint);
+            } catch (\JsonException) {
+                // A point we cannot encode (e.g. a carrier returning a non-UTF-8 string) is skipped
+                // rather than 500-ing the whole endpoint; the other points and carriers still load.
+                continue;
+            }
+
             $result[] = [
-                'value' => $this->encoder->encode($pickupPoint),
+                'value' => $value,
                 'name' => $pickupPoint->name,
                 'address' => $pickupPoint->address,
                 'zipCode' => $pickupPoint->zipCode,

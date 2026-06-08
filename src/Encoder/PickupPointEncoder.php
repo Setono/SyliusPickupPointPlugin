@@ -15,11 +15,14 @@ use function sprintf;
  * asynchronously (the render never blocks on a provider) and still avoids re-resolving the point on
  * submit (which would block again and, for the faker provider, return a different random point).
  *
- * Mirrors {@see PickupPointIdentifierEncoder}, but carries the full point (name, address, …) — not just
+ * Mirrors {@see PickupPointIdentifierEncoder}, but carries the full point (name, address, ...) — not just
  * its identifier — because nothing re-fetches the details server-side anymore.
  */
 final class PickupPointEncoder implements PickupPointEncoderInterface
 {
+    /**
+     * @throws \JsonException if the point cannot be encoded (e.g. it holds a non-UTF-8 string)
+     */
     public function encode(PickupPoint $pickupPoint): string
     {
         $json = json_encode($pickupPoint, \JSON_THROW_ON_ERROR);

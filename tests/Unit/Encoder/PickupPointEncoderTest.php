@@ -43,6 +43,16 @@ final class PickupPointEncoderTest extends TestCase
         self::assertSame(1, preg_match('/^[A-Za-z0-9\-_]+$/', $this->encoder->encode($pickupPoint)));
     }
 
+    public function testItThrowsEncodingANonUtf8String(): void
+    {
+        $pickupPoint = new PickupPoint();
+        $pickupPoint->name = "\xFF"; // not valid UTF-8, so json_encode cannot serialize it
+
+        $this->expectException(\JsonException::class);
+
+        $this->encoder->encode($pickupPoint);
+    }
+
     public function testItThrowsDecodingInvalidBase64(): void
     {
         $this->expectException(InvalidArgumentException::class);

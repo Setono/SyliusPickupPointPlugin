@@ -10,6 +10,8 @@ interface PickupPointEncoderInterface
 {
     /**
      * Encodes a full pickup point into an opaque, transport-safe token.
+     *
+     * @throws \JsonException if the point cannot be encoded (e.g. it holds a non-UTF-8 string)
      */
     public function encode(PickupPoint $pickupPoint): string;
 
