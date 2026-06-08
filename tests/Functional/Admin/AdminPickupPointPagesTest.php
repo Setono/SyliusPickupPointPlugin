@@ -22,6 +22,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 final class AdminPickupPointPagesTest extends WebTestCase
 {
+    /**
+     * Sylius' debug error handler registers an exception handler while handling the request and never
+     * restores it. Pop it here so PHPUnit does not fail the test for leaving an exception handler
+     * registered — a hard failure since PHPUnit 11 that `failOnRisky="false"` does not suppress.
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        restore_exception_handler();
+    }
+
     public function testTheOrderShowPageRendersTheSelectedPickupPoint(): void
     {
         $client = self::createClient();
