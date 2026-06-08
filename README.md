@@ -202,6 +202,108 @@ points at a template containing `{{ form_row(form.pickupPointProvider) }}`,
 attached to `sylius_admin.shipping_method.update.content.form.options` (or a
 form section you already render).
 
+## Creating a custom provider
+
+A provider returns the pickup points near an order's address and re-resolves a single point by its id. To add
+your own carrier, implement `Setono\SyliusPickupPointPlugin\Provider\ProviderInterface` — or, more simply,
+extend the abstract `Setono\SyliusPickupPointPlugin\Provider\Provider`, which already handles the registered
+code (`getCode()`), so you only implement two methods.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\PickupPoint;
+
+use Setono\SyliusPickupPointPlugin\Attribute\AsProvider;
+use Setono\SyliusPickupPointPlugin\DTO\Address;
+use Setono\SyliusPickupPointPlugin\DTO\PickupPoint;
+use Setono\SyliusPickupPointPlugin\Provider\Provider;
+
+#[AsProvider(code: 'acme', name: 'ACME')]
+final class AcmeProvider extends Provider
+{
+    public function __construct(
+        private readonly AcmeClient $client, // your carrier's API client
+    ) {
+    }
+
+    /**
+     * @return list<PickupPoint>
+     */
+    public function findPickupPoints(Address $address): array
+    {
+        // Every Address field is nullable (the cart may not have a full address yet) — bail when a needed one is missing.
+        if (null === $address->postalCode || null === $address->countryCode) {
+            return [];
+        }
+
+        $points = [];
+        foreach ($this->client->search($address->postalCode, $address->countryCode) as $shop) {
+            $points[] = $this->transform($shop);
+        }
+
+        // Return them ordered by distance from the address: the first one is auto-selected at checkout.
+        return $points;
+    }
+
+    public function findPickupPoint(string $id, array $metadata = []): ?PickupPoint
+    {
+        // Called when re-resolving a single point by id; $metadata carries the context you stored (see below).
+        $shop = $this->client->get($id, $metadata['country'] ?? null);
+
+        return null === $shop ? null : $this->transform($shop);
+    }
+
+    private function transform(object $shop): PickupPoint
+    {
+        $point = new PickupPoint();
+        $point->provider = $this->getCode(); // always stamp the code the provider is registered under
+        $point->id = (string) $shop->id;     // unique within this provider
+        $point->name = $shop->name;
+        $point->address = $shop->street;
+        $point->zipCode = $shop->zip;
+        $point->city = $shop->city;
+        $point->country = $shop->countryCode;
+        $point->latitude = (string) $shop->lat;
+        $point->longitude = (string) $shop->lng;
+
+        return $point;
+    }
+}
+```
+
+**Register it.** With Symfony autoconfiguration on (the default), the `#[AsProvider(code, name)]` attribute is all
+you need — the plugin turns it into the `setono_sylius_pickup_point.provider` tag and the compiler pass does the
+rest. Without autoconfiguration, tag the service yourself:
+
+```yaml
+# config/services.yaml
+services:
+    App\PickupPoint\AcmeProvider:
+        tags:
+            - { name: 'setono_sylius_pickup_point.provider', code: 'acme', name: 'ACME' }
+```
+
+The `code` is the machine identifier (registry key, the value stored on the shipping method, and the `provider`
+part of the pickup-point token); `name` is the carrier's brand name shown to merchants in the admin form.
+
+**Use it.** A custom provider is just a registered service — it does **not** go in the `setono_sylius_pickup_point.providers`
+config (that toggle is only for the plugin's bundled optional providers). To put it to work, edit a shipping
+method in the admin and set its **Pickup point provider** to yours (`ACME`); its points are then fetched live at
+that method's checkout.
+
+**Good to know:**
+
+- Providers are called **live and lazily** — construction is deferred until the provider is first used, and the
+  `/pickup-points` endpoint wraps each provider in its own `try/catch`, so a slow or throwing carrier degrades
+  gracefully instead of blocking checkout.
+- The submitted token is the whole `PickupPoint`, decoded straight back on submit — `findPickupPoint()` is only
+  for re-resolving a point from a bare id/metadata. Put any extra context your API needs to do that into
+  `PickupPoint::$metadata` (it round-trips inside the identifier); the well-known `country` is folded in for you.
+- Build an `Address` from an order with `Address::fromOrder($order)` when calling a provider outside checkout.
+
 ## Play
 
 To see the pickup points list, use the following example address at checkout:
