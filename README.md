@@ -4,7 +4,7 @@
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-github-actions]][link-github-actions]
 
-Add a `<select>` that contains pickup points to your shipping checkout step.
+Add a pickup-point chooser to your shipping checkout step.
 
 - [Screenshots](#screenshots)
 - [Installation](#installation)
@@ -30,13 +30,11 @@ Migrating from 1.x to 2.x: see [UPGRADE.md](UPGRADE.md).
 
 ### Shop
 
-This is the shipping method step in the checkout process where you can choose a pickup point.
+This is the shipping method step in the checkout process where you can choose a pickup point. The points
+are loaded asynchronously after the page renders, the nearest one is pre-selected, and the shopper can
+expand the list to pick another.
 
 ![Screenshot showing checkout select shipping step with pickup points available](docs/images/shop-checkout-select-shipping-pickup-point.png)
-
-On the complete order step in checkout you can see the pickup point you have chosen.
-
-![Screenshot showing checkout complete step with pickup point address](docs/images/shop-checkout-complete-shipping-pickup-point.png)
 
 ### Admin
 
@@ -189,8 +187,8 @@ parameters:
 bin/console assets:install
 ```
 
-The plugin's JavaScript is auto-included on the admin and shop layouts via Twig
-hooks (`sylius_admin.base#javascripts` / `sylius_shop.base#javascripts`).
+The plugin's JavaScript and CSS are auto-included on the shop checkout via Twig
+hooks (`sylius_shop.checkout#javascripts` / `sylius_shop.checkout#stylesheets`).
 
 ### Step 8: Admin shipping method form
 
