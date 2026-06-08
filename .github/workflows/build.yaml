@@ -85,11 +85,7 @@ jobs:
                     php-version: "8.4"
                     extensions: "intl, mbstring"
                     coverage: "none"
-            # composer.lock is gitignored (this is a plugin), so resolve fresh ("highest") rather than the
-            # default locked install which would fail without a lock file.
             -   uses: "ramsey/composer-install@v4"
-                with:
-                    dependency-versions: "highest"
             -   uses: "actions/setup-node@v4"
                 with:
                     node-version: "22"
