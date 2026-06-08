@@ -3,6 +3,7 @@
 [![Latest Version][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-github-actions]][link-github-actions]
+[![Code Coverage][ico-codecov]][link-codecov]
 
 Add a pickup-point chooser to your shipping checkout step.
 
@@ -337,6 +338,8 @@ So, to play with all 3 providers at once — use a `DK` address.
 [ico-version]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-pickup-point-plugin/license
 [ico-github-actions]: https://github.com/Setono/SyliusPickupPointPlugin/workflows/build/badge.svg
+[ico-codecov]: https://codecov.io/gh/Setono/SyliusPickupPointPlugin/graph/badge.svg?token=6RI7L6EBT6
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-pickup-point-plugin
 [link-github-actions]: https://github.com/Setono/SyliusPickupPointPlugin/actions
+[link-codecov]: https://codecov.io/gh/Setono/SyliusPickupPointPlugin
