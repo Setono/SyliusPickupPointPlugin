@@ -72,3 +72,22 @@ jobs:
                     dependencies: "${{ matrix.dependencies }}"
                     symfony: "${{ matrix.symfony }}"
                     testsuite: "functional"
+
+    javascript-tests:
+        runs-on: "ubuntu-latest"
+        steps:
+            -   uses: "actions/checkout@v4"
+            # The chooser JS unit tests live in tests/Application, whose package.json has file: deps on the
+            # installed Sylius/Symfony assets — so PHP + a composer install are needed to populate vendor/
+            # before yarn can resolve them.
+            -   uses: "shivammathur/setup-php@v2"
+                with:
+                    php-version: "8.4"
+                    extensions: "intl, mbstring"
+                    coverage: "none"
+            -   uses: "ramsey/composer-install@v4"
+            -   uses: "actions/setup-node@v4"
+                with:
+                    node-version: "22"
+            -   run: "yarn --cwd tests/Application install"
+            -   run: "yarn --cwd tests/Application test"
