@@ -18,6 +18,8 @@ final class PickupPointIdentifierEncoder implements PickupPointIdentifierEncoder
     {
         $json = json_encode($identifier, \JSON_THROW_ON_ERROR);
 
+        // base64url (RFC 4648 §5): base64-encode, then make it URL- and form-safe by swapping the two
+        // non-safe characters (`+` -> `-`, `/` -> `_`) and dropping the `=` padding. `decode()` reverses it.
         return rtrim(strtr(base64_encode($json), '+/', '-_'), '=');
     }
 
