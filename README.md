@@ -189,6 +189,10 @@ bin/console assets:install
 
 The plugin's JavaScript and CSS are auto-included on the shop checkout via Twig
 hooks (`sylius_shop.checkout#javascripts` / `sylius_shop.checkout#stylesheets`).
+The chooser is a framework-free ES module (loaded with `<script type="module">`)
+that builds its UI by cloning overridable Twig `<template>`s, so you can restyle or
+extend it without forking — see
+[docs/customizing-the-chooser.md](docs/customizing-the-chooser.md).
 
 ### Step 8: Admin shipping method form
 

@@ -108,6 +108,10 @@ final class SetonoSyliusPickupPointExtension extends Extension implements Prepen
                     ],
                 ],
                 'sylius_shop.checkout#javascripts' => [
+                    'setono_sylius_pickup_point.templates' => [
+                        'template' => '@SetonoSyliusPickupPointPlugin/shop/checkout/_pickup_point_templates.html.twig',
+                        'priority' => -90,
+                    ],
                     'setono_sylius_pickup_point.javascripts' => [
                         'template' => '@SetonoSyliusPickupPointPlugin/_javascripts.html.twig',
                         'priority' => -100,

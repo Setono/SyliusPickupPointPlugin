@@ -28,8 +28,12 @@ pickup points for the current cart. Each point carries display fields (`name`,
 `address`, `zipCode`, `city`, `latitude`, `longitude`) plus a `value` token —
 the *whole* point, base64url-encoded by `PickupPointEncoder`. The shipping page
 fetches this **asynchronously, after it has rendered** (so a slow or down carrier
-API never blocks the page), and the framework-free shop JS
-(`public/js/setono-pickup-point.js`) builds the radio list from the response.
+API never blocks the page), and the framework-free shop JS — a native ES module
+(`public/js/setono-pickup-point.js`, loaded with `<script type="module">`) — builds
+the chooser by cloning overridable Twig `<template>`s from
+`_pickup_point_templates.html.twig`. It is extensible without forking: subclass the
+exported `PickupPointChooser`, listen for the `setono:pickup-point(s):*` CustomEvents,
+or set `window.setonoSyliusPickupPointConfig` — see `docs/customizing-the-chooser.md`.
 
 ## Plugin file layout
 

@@ -1,0 +1,68 @@
+{#
+    Overridable markup for the checkout pickup-point chooser. public/js/setono-pickup-point.js clones these
+    <template>s and fills their [data-slot] / [data-role] / [data-action] hooks; a consumer can restyle the
+    chooser by overriding this partial (or just one of the blocks below) — no JavaScript needed — as long as
+    those hooks are preserved. Emitted once per checkout page via the sylius_shop.checkout#javascripts hook.
+#}
+{% block setono_sylius_pickup_point_section %}
+    <template id="setono-pickup-point-section">
+        <div class="setono-pickup-point px-3 pb-3">
+            <hr class="setono-pickup-point__divider my-3">
+            <div class="fw-bold mb-2">
+                <span data-slot="label">{{ 'setono_sylius_pickup_point.form.shipment.pickup_point'|trans }}</span>
+                <span class="text-danger" data-role="required" hidden>*</span>
+            </div>
+            <div data-role="body"></div>
+        </div>
+    </template>
+{% endblock %}
+
+{% block setono_sylius_pickup_point_summary %}
+    <template id="setono-pickup-point-summary">
+        <div class="d-flex align-items-center gap-3 bg-body border border-primary rounded-3 p-3">
+            <span class="setono-pickup-point__check rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+            </span>
+            <div class="flex-grow-1">
+                <div class="fw-bold" data-slot="name"></div>
+                <div class="text-body-secondary small" data-slot="address"></div>
+            </div>
+            <button type="button" class="btn btn-link text-primary fw-semibold text-decoration-none p-0" data-action="change">{{ 'setono_sylius_pickup_point.ui.change'|trans }}</button>
+        </div>
+    </template>
+{% endblock %}
+
+{% block setono_sylius_pickup_point_list %}
+    <template id="setono-pickup-point-list">
+        <div>
+            <div class="d-flex justify-content-between align-items-center gap-2 mb-2" data-role="header" hidden>
+                <div class="small text-body-secondary">{{ 'setono_sylius_pickup_point.ui.currently'|trans }} <span class="fw-bold text-body" data-slot="current-name"></span></div>
+                <button type="button" class="btn btn-sm btn-outline-primary flex-shrink-0" data-action="keep">{{ 'setono_sylius_pickup_point.ui.keep_this'|trans }}</button>
+            </div>
+            <div class="setono-pickup-point__list list-group" data-role="list"></div>
+        </div>
+    </template>
+{% endblock %}
+
+{% block setono_sylius_pickup_point_row %}
+    <template id="setono-pickup-point-row">
+        <label class="list-group-item d-flex align-items-center gap-3">
+            <input type="radio" class="form-check-input flex-shrink-0 m-0" data-role="radio">
+            <div class="flex-grow-1">
+                <div class="fw-bold" data-slot="name"></div>
+                <div class="text-body-secondary small" data-slot="address"></div>
+            </div>
+            <span class="badge bg-primary text-white flex-shrink-0" data-role="badge" hidden>{{ 'setono_sylius_pickup_point.ui.selected'|trans }}</span>
+        </label>
+    </template>
+{% endblock %}
+
+{% block setono_sylius_pickup_point_message %}
+    <template id="setono-pickup-point-message">
+        <div class="setono-sylius-pickup-point-field-message text-body-secondary small py-2">
+            <span data-state="loading">{{ 'setono_sylius_pickup_point.ui.loading_pickup_points'|trans }}</span>
+            <span data-state="empty" hidden>{{ 'setono_sylius_pickup_point.ui.no_pickup_points'|trans }}</span>
+            <span data-state="error" hidden>{{ 'setono_sylius_pickup_point.ui.error_loading_pickup_points'|trans }}</span>
+        </div>
+    </template>
+{% endblock %}
