@@ -41,6 +41,15 @@ sylius_fixtures:
                                     - 'ES'
                                     - 'CN'
 
+                # Force orders to be fully fulfilled so they always have shipments. The default (non-fulfilled)
+                # order fixture leaves orders in random checkout states, occasionally producing zero shipments —
+                # which made the admin order-show functional test (it needs a shipment) flaky.
+                order:
+                    options:
+                        amount: 20
+                        channel: 'FASHION_WEB'
+                        fulfilled: true
+
                 setono_sylius_pickup_point_shipping_method:
                     options:
                         custom:
